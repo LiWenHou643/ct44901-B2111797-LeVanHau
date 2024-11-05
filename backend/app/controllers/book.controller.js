@@ -22,6 +22,7 @@ exports.findAll = async (req, res, next) => {
     try {
         const bookService = new BookService(MongoDB.client);
         const { name } = req.query;
+        console.log(name);
         if (name) documents = await bookService.findByName(name);
         else documents = await bookService.find({});
     } catch (error) {

@@ -76,7 +76,6 @@ class ContactService {
     async find(filter) {
         // Find books based on the filter
         const books = await this.Book.find(filter).toArray(); // Convert cursor to an array of books
-
         // Map over each book and fetch the publisher (manxb) information
         const result = [];
 
@@ -86,13 +85,17 @@ class ContactService {
 
             // Construct the response object with book and publisher data
             const res = {
-                _id: book._id,
+                id: book._id,
                 tensach: book.tensach,
                 dongia: book.dongia,
                 soquyen: book.soquyen,
                 namxuatban: book.namxuatban,
                 tacgia: book.tacgia,
-                nxb: publisher, // Include the publisher document
+                nxb: {
+                    manxb: publisher._id,
+                    tennxb: publisher.tennxb,
+                    diachi: publisher.diachi,
+                }, // Include the publisher document
             };
 
             result.push(res); // Add to the result array
@@ -102,19 +105,73 @@ class ContactService {
     }
 
     async findByName(name) {
-        return await this.find({
-            name: { $regex: new RegExp(new RegExp(name)), $options: 'i' },
-        });
+        // Create the filter with a case-insensitive regex for 'name'
+        const filter = {
+            tensach: { $regex: new RegExp(name, 'i') }, // 'i' makes it case-insensitive
+        };
+
+        // Fetch books that match the filter
+        const books = await this.Book.find(filter).toArray();
+
+        // For each book, fetch the publisher details (manxb)
+        const result = [];
+
+        for (const book of books) {
+            // Fetch the publisher using the manxb field
+            const publisher = await this.Publisher.findOne({ _id: book.manxb });
+
+            // Combine the book data with the publisher info
+            result.push({
+                id: book._id,
+                tensach: book.tensach,
+                dongia: book.dongia,
+                soquyen: book.soquyen,
+                namxuatban: book.namxuatban,
+                tacgia: book.tacgia,
+                nxb: {
+                    manxb: publisher._id,
+                    tennxb: publisher.tennxb,
+                    diachi: publisher.diachi,
+                }, // Include the publisher document
+            });
+        }
+
+        return result; // Return the list of books with publisher data
     }
 
     async findById(id) {
+        // Validate the format of the id
         if (!ObjectId.isValid(id)) {
             throw new Error('Sai định dạng id');
         }
 
-        return await this.Book.findOne({
+        // Fetch the book by its _id
+        const book = await this.Book.findOne({
             _id: new ObjectId(id),
         });
+
+        // If no book is found, return null or throw an error (depending on your use case)
+        if (!book) {
+            throw new Error('Book not found');
+        }
+
+        // Fetch the publisher (nxb) based on the manxb field in the book
+        const publisher = await this.Publisher.findOne({ _id: book.manxb });
+
+        // Return the book along with the publisher data
+        return {
+            id: book._id,
+            tensach: book.tensach,
+            dongia: book.dongia,
+            soquyen: book.soquyen,
+            namxuatban: book.namxuatban,
+            tacgia: book.tacgia,
+            nxb: {
+                manxb: publisher._id,
+                tennxb: publisher.tennxb,
+                diachi: publisher.diachi,
+            }, // Include the publisher document
+        };
     }
 
     async update(id, payload) {
