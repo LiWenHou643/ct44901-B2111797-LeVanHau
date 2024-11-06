@@ -55,103 +55,61 @@ class ReaderService {
     }
 
     async find(filter) {
-        // Find books based on the filter
-        const books = await this.Book.find(filter).toArray(); // Convert cursor to an array of books
-        // Map over each book and fetch the publisher (manxb) information
-        const result = [];
+        const readers = await this.Reader.find(filter).toArray();
+        const result = readers.map((reader) => ({
+            madocgia: reader._id,
+            holot: reader.holot,
+            ten: reader.ten,
+            ngaysinh: reader.ngaysinh,
+            phai: reader.phai,
+            diachi: reader.diachi,
+            dienthoai: reader.dienthoai,
+        }));
 
-        for (const book of books) {
-            // Fetch the publisher from the Publisher collection using the manxb (publisher ID)
-            const publisher = await this.Publisher.findOne({ _id: book.manxb });
-
-            // Construct the response object with book and publisher data
-            const res = {
-                masach: book._id,
-                tensach: book.tensach,
-                dongia: book.dongia,
-                soquyen: book.soquyen,
-                namxuatban: book.namxuatban,
-                tacgia: book.tacgia,
-                nxb: {
-                    manxb: publisher._id,
-                    tennxb: publisher.tennxb,
-                    diachi: publisher.diachi,
-                }, // Include the publisher document
-            };
-
-            result.push(res); // Add to the result array
-        }
-
-        return result; // Return the combined results
+        return result;
     }
 
     async findByName(name) {
-        // Create the filter with a case-insensitive regex for 'name'
         const filter = {
-            tensach: { $regex: new RegExp(name, 'i') }, // 'i' makes it case-insensitive
+            ten: { $regex: new RegExp(name, 'i') },
         };
 
-        // Fetch books that match the filter
-        const books = await this.Book.find(filter).toArray();
+        const readers = await this.Reader.find(filter).toArray();
 
-        // For each book, fetch the publisher details (manxb)
-        const result = [];
-
-        for (const book of books) {
-            // Fetch the publisher using the manxb field
-            const publisher = await this.Publisher.findOne({ _id: book.manxb });
-
-            // Combine the book data with the publisher info
-            result.push({
-                masach: book._id,
-                tensach: book.tensach,
-                dongia: book.dongia,
-                soquyen: book.soquyen,
-                namxuatban: book.namxuatban,
-                tacgia: book.tacgia,
-                nxb: {
-                    manxb: publisher._id,
-                    tennxb: publisher.tennxb,
-                    diachi: publisher.diachi,
-                }, // Include the publisher document
-            });
-        }
+        const result = readers.map((reader) => ({
+            madocgia: reader._id,
+            holot: reader.holot,
+            ten: reader.ten,
+            ngaysinh: reader.ngaysinh,
+            phai: reader.phai,
+            diachi: reader.diachi,
+            dienthoai: reader.dienthoai,
+        }));
 
         return result; // Return the list of books with publisher data
     }
 
     async findById(id) {
-        // Validate the format of the id
         if (!ObjectId.isValid(id)) {
             throw new Error('Sai định dạng id');
         }
 
-        // Fetch the book by its _id
-        const book = await this.Book.findOne({
+        const reader = await this.Reader.findOne({
             _id: new ObjectId(id),
         });
 
-        // If no book is found, return null or throw an error (depending on your use case)
-        if (!book) {
-            throw new Error('Book not found');
+        if (!reader) {
+            throw new Error('Không tìm thấy đọc giả');
         }
 
-        // Fetch the publisher (nxb) based on the manxb field in the book
-        const publisher = await this.Publisher.findOne({ _id: book.manxb });
-
-        // Return the book along with the publisher data
         return {
-            masach: book._id,
-            tensach: book.tensach,
-            dongia: book.dongia,
-            soquyen: book.soquyen,
-            namxuatban: book.namxuatban,
-            tacgia: book.tacgia,
-            nxb: {
-                manxb: publisher._id,
-                tennxb: publisher.tennxb,
-                diachi: publisher.diachi,
-            }, // Include the publisher document
+            madocgia: reader._id,
+            holot: reader.holot,
+            ten: reader.ten,
+            ngaysinh: reader.ngaysinh,
+            phai: reader.phai,
+            diachi: reader.diachi,
+            dienthoai: reader.dienthoai,
         };
     }
 
