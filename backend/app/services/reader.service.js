@@ -86,7 +86,7 @@ class ReaderService {
             dienthoai: reader.dienthoai,
         }));
 
-        return result; // Return the list of books with publisher data
+        return result;
     }
 
     async findById(id) {
