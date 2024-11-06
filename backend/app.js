@@ -2,13 +2,15 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const bookRouter = require('./app/routes/book.route.js');
-const bookService = require('./app/services/book.service.js');
+const readerRouter = require('./app/routes/reader.route.js');
+
 const MongoDB = require('./app/utils/mongodb.util.js');
 const ApiError = require('./app/api-error.js');
 
 app.use(cors());
 app.use(express.json());
 app.use('/api/books', bookRouter);
+app.use('/api/readers', readerRouter);
 
 app.use((req, res, next) => {
     return next(new ApiError(404, 'Not Found'));
