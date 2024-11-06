@@ -66,7 +66,7 @@ exports.update = async (req, res, next) => {
         }
         return res.send({
             message: 'Cập nhật dữ liệu thành công',
-            contact: document,
+            book: document,
         });
     } catch (error) {
         return next(

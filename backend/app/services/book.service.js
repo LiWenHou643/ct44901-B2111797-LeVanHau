@@ -23,7 +23,6 @@ class ContactService {
         return book;
     }
 
-    // Create a new book with a reference to the publisher (manxb)
     async create(payload) {
         const book = this.extractBookData(payload);
 
@@ -55,20 +54,26 @@ class ContactService {
             book.manxb = publisher._id;
         }
 
-        // Insert the book with the resolved publisher ID
         const result = await this.Book.insertOne(book);
 
-        if (result.insertedId) {
-            // Retrieve the full book including publisher info
-            const insertedBook = await this.Book.findOne({
-                _id: result.insertedId,
-            });
+        // Fetch the full document to ensure references (e.g., publisher) are correct
+        const insertedBook = await this.Book.findOne({
+            _id: result.insertedId,
+        });
 
-            // Add publisher info to the book object
-            insertedBook.publisher = publisher;
-
-            return insertedBook; // Return the book with publisher info
-        }
+        return {
+            id: insertedBook._id,
+            tensach: insertedBook.tensach,
+            dongia: insertedBook.dongia,
+            soquyen: insertedBook.soquyen,
+            namxuatban: insertedBook.namxuatban,
+            tacgia: insertedBook.tacgia,
+            nxb: {
+                manxb: publisher._id,
+                tennxb: publisher.tennxb,
+                diachi: publisher.diachi,
+            },
+        };
 
         throw new Error('Failed to insert the book');
     }
@@ -179,18 +184,46 @@ class ContactService {
             _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
         };
 
-        console.log(id);
-        const update = this.extractBookData(payload);
-        const result = await this.Book.findOneAndUpdate(
+        const updateBook = this.extractBookData(payload);
+        const updatedBook = await this.Book.findOneAndUpdate(
             filter,
             {
-                $set: update,
+                $set: updateBook,
             },
             {
                 returnDocument: 'after',
             }
         );
-        return result;
+
+        const updatePublisher = {
+            tennxb: payload.nxb.tennxb,
+            diachi: payload.nxb.diachi,
+        };
+
+        const publisherId = payload.nxb.manxb;
+        const updatedPublisher = await this.Publisher.findOneAndUpdate(
+            { _id: new ObjectId(publisherId) },
+            {
+                $set: updatePublisher,
+            },
+            {
+                returnDocument: 'after',
+            }
+        );
+
+        return {
+            id: updatedBook._id,
+            tensach: updatedBook.tensach,
+            dongia: updatedBook.dongia,
+            soquyen: updatedBook.soquyen,
+            namxuatban: updatedBook.namxuatban,
+            tacgia: updatedBook.tacgia,
+            nxb: {
+                manxb: updatedPublisher._id,
+                tennxb: updatedPublisher.tennxb,
+                diachi: updatedPublisher.diachi,
+            },
+        };
     }
 
     async delete(id) {
