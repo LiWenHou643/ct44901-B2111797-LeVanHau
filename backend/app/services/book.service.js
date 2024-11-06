@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 
-class ContactService {
+class BookService {
     constructor(client) {
         this.Book = client.db().collection('sach');
         this.Publisher = client.db().collection('nhaxuatban');
@@ -62,7 +62,7 @@ class ContactService {
         });
 
         return {
-            id: insertedBook._id,
+            masach: insertedBook._id,
             tensach: insertedBook.tensach,
             dongia: insertedBook.dongia,
             soquyen: insertedBook.soquyen,
@@ -75,7 +75,7 @@ class ContactService {
             },
         };
 
-        throw new Error('Failed to insert the book');
+        throw new Error('Lỗi khi thêm mới sách');
     }
 
     async find(filter) {
@@ -90,7 +90,7 @@ class ContactService {
 
             // Construct the response object with book and publisher data
             const res = {
-                id: book._id,
+                masach: book._id,
                 tensach: book.tensach,
                 dongia: book.dongia,
                 soquyen: book.soquyen,
@@ -127,7 +127,7 @@ class ContactService {
 
             // Combine the book data with the publisher info
             result.push({
-                id: book._id,
+                masach: book._id,
                 tensach: book.tensach,
                 dongia: book.dongia,
                 soquyen: book.soquyen,
@@ -165,7 +165,7 @@ class ContactService {
 
         // Return the book along with the publisher data
         return {
-            id: book._id,
+            masach: book._id,
             tensach: book.tensach,
             dongia: book.dongia,
             soquyen: book.soquyen,
@@ -212,7 +212,7 @@ class ContactService {
         );
 
         return {
-            id: updatedBook._id,
+            masach: updatedBook._id,
             tensach: updatedBook.tensach,
             dongia: updatedBook.dongia,
             soquyen: updatedBook.soquyen,
@@ -224,6 +224,8 @@ class ContactService {
                 diachi: updatedPublisher.diachi,
             },
         };
+
+        throw new Error('Lỗi khi cập nhật sách');
     }
 
     async delete(id) {
@@ -239,4 +241,4 @@ class ContactService {
     }
 }
 
-module.exports = ContactService;
+module.exports = BookService;

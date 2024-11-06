@@ -3,16 +3,16 @@ const MongoDB = require('../utils/mongodb.util.js');
 const BookService = require('../services/book.service.js');
 
 exports.create = async (req, res, next) => {
-    if (!req.body?.tensach) {
-        return next(new ApiError(400, 'Tên không được để trống'));
-    }
     try {
         const bookService = new BookService(MongoDB.client);
         const document = await bookService.create(req.body);
         return res.send(document);
     } catch (error) {
         return next(
-            new ApiError(500, error.message || 'Có lỗi xảy ra khi tạo')
+            new ApiError(
+                500,
+                error.message || 'Có lỗi xảy ra khi thêm mới sách'
+            )
         );
     }
 };
@@ -22,12 +22,11 @@ exports.findAll = async (req, res, next) => {
     try {
         const bookService = new BookService(MongoDB.client);
         const { name } = req.query;
-        console.log(name);
         if (name) documents = await bookService.findByName(name);
         else documents = await bookService.find({});
     } catch (error) {
         return next(
-            new ApiError(500, error.message || 'Có lỗi xảy ra khi lấy dữ liệu')
+            new ApiError(500, error.message || 'Có lỗi xảy ra khi lấy sách')
         );
     }
 
@@ -39,7 +38,7 @@ exports.findOne = async (req, res, next) => {
         const bookService = new BookService(MongoDB.client);
         const document = await bookService.findById(req.params.id);
         if (!document) {
-            return next(new ApiError(404, 'Không tìm thấy dữ liệu'));
+            return next(new ApiError(404, 'Không tìm thấy sách'));
         }
         return res.send(document);
     } catch (error) {
@@ -47,7 +46,7 @@ exports.findOne = async (req, res, next) => {
             new ApiError(
                 500,
                 error.message ||
-                    `Có lỗi xảy ra khi lấy dữ liệu bằng id: ${req.params.id}`
+                    `Có lỗi xảy ra khi lấy sách bằng id: ${req.params.id}`
             )
         );
     }
@@ -62,10 +61,10 @@ exports.update = async (req, res, next) => {
         const bookService = new BookService(MongoDB.client);
         const document = await bookService.update(req.params.id, req.body);
         if (!document) {
-            return next(new ApiError(404, 'Không tìm thấy dữ liệu'));
+            return next(new ApiError(404, 'Không tìm thấy sách'));
         }
         return res.send({
-            message: 'Cập nhật dữ liệu thành công',
+            message: 'Cập nhật sách thành công',
             book: document,
         });
     } catch (error) {
@@ -73,7 +72,7 @@ exports.update = async (req, res, next) => {
             new ApiError(
                 500,
                 error.message ||
-                    `Có lỗi khi cập nhật dữ liệu có id: ${req.params.id}`
+                    `Có lỗi khi cập nhật sách có id: ${req.params.id}`
             )
         );
     }
@@ -84,15 +83,14 @@ exports.delete = async (req, res, next) => {
         const bookService = new BookService(MongoDB.client);
         const document = await bookService.delete(req.params.id);
         if (!document) {
-            return next(new ApiError(404, 'Không tìm thấy dữ liệu'));
+            return next(new ApiError(404, 'Không tìm thấy sách'));
         }
         return res.send({ message: 'Xóa thành công' });
     } catch (error) {
         return next(
             new ApiError(
                 500,
-                error.message ||
-                    `Có lỗi khi xóa dữ liệu có id: ${req.params.id}`
+                error.message || `Có lỗi khi xóa sách có id: ${req.params.id}`
             )
         );
     }
@@ -108,21 +106,6 @@ exports.deleteAll = async (req, res, next) => {
     } catch (error) {
         return next(
             new ApiError(500, error.message || 'Có lỗi khi xóa tất cả dữ liệu')
-        );
-    }
-};
-
-exports.findAllFavorite = async (req, res, next) => {
-    try {
-        const bookService = new BookService(MongoDB.client);
-        const documents = await bookService.findAllFavorite();
-        if (!documents) {
-            return next(new ApiError(404, 'Không tìm thấy dữ liệu yêu thích'));
-        }
-        return res.send(documents);
-    } catch (error) {
-        return next(
-            new ApiError(500, error.message || 'Có lỗi xảy ra khi lấy dữ liệu')
         );
     }
 };
