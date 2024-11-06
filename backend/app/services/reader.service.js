@@ -5,7 +5,7 @@ class ReaderService {
         this.Reader = client.db().collection('docgia');
     }
 
-    extractBookData(payload) {
+    extractReaderData(payload) {
         const reader = {
             holot: payload.holot,
             ten: payload.ten,
@@ -35,7 +35,7 @@ class ReaderService {
             );
         }
 
-        const reader = this.extractBookData(payload);
+        const reader = this.extractReaderData(payload);
 
         const result = await this.Reader.insertOne(reader);
 
@@ -118,27 +118,11 @@ class ReaderService {
             _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
         };
 
-        const updateBook = this.extractBookData(payload);
-        const updatedBook = await this.Book.findOneAndUpdate(
+        const updateReader = this.extractReaderData(payload);
+        const updatedReader = await this.Reader.findOneAndUpdate(
             filter,
             {
-                $set: updateBook,
-            },
-            {
-                returnDocument: 'after',
-            }
-        );
-
-        const updatePublisher = {
-            tennxb: payload.nxb.tennxb,
-            diachi: payload.nxb.diachi,
-        };
-
-        const publisherId = payload.nxb.manxb;
-        const updatedPublisher = await this.Publisher.findOneAndUpdate(
-            { _id: new ObjectId(publisherId) },
-            {
-                $set: updatePublisher,
+                $set: updateReader,
             },
             {
                 returnDocument: 'after',
@@ -146,29 +130,25 @@ class ReaderService {
         );
 
         return {
-            masach: updatedBook._id,
-            tensach: updatedBook.tensach,
-            dongia: updatedBook.dongia,
-            soquyen: updatedBook.soquyen,
-            namxuatban: updatedBook.namxuatban,
-            tacgia: updatedBook.tacgia,
-            nxb: {
-                manxb: updatedPublisher._id,
-                tennxb: updatedPublisher.tennxb,
-                diachi: updatedPublisher.diachi,
-            },
+            madocgia: updatedReader._id,
+            holot: updatedReader.holot,
+            ten: updatedReader.ten,
+            ngaysinh: updatedReader.ngaysinh,
+            phai: updatedReader.phai,
+            diachi: updatedReader.diachi,
+            dienthoai: updatedReader.dienthoai,
         };
     }
 
     async delete(id) {
-        const result = await this.Book.findOneAndDelete({
+        const result = await this.Reader.findOneAndDelete({
             _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
         });
         return result;
     }
 
     async deleteAll() {
-        const result = await this.Book.deleteMany({});
+        const result = await this.Reader.deleteMany({});
         return result.deletedCount;
     }
 }
