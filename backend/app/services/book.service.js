@@ -237,10 +237,6 @@ class ContactService {
         const result = await this.Book.deleteMany({});
         return result.deletedCount;
     }
-
-    async findAllFavorite() {
-        return await this.find({ favorite: true });
-    }
 }
 
 module.exports = ContactService;

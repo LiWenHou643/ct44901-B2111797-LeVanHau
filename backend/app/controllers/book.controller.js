@@ -103,7 +103,7 @@ exports.deleteAll = async (req, res, next) => {
         const bookService = new BookService(MongoDB.client);
         const deletedCount = await bookService.deleteAll();
         return res.send({
-            message: `${deletedCount} được xóa thành công`,
+            message: `${deletedCount} quyển sách được xóa thành công`,
         });
     } catch (error) {
         return next(
