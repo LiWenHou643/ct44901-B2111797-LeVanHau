@@ -1,0 +1,85 @@
+.reload-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    transition: color 0.3s;
+}
+
+.reload-btn i {
+    margin-right: 5px;
+    /* Add some space between the icon and text */
+    transition: transform 0.4s ease;
+    /* Ensure smooth rotation */
+}
+
+/* Rotate the icon clockwise on hover */
+.reload-btn:hover i {
+    animation: spinClockwise 1s linear infinite;
+}
+
+@keyframes spinClockwise {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+.table {
+    border-collapse: separate;
+    /* Prevent collapse of table cell borders */
+    border-spacing: 0;
+    /* No spacing between cells */
+    width: 100%;
+    border-top-left-radius: 20px;
+    /* Adds rounded corners to the entire table */
+    border-top-right-radius: 20px;
+    /* Adds rounded corners to the entire table */
+    overflow: hidden;
+    /* Ensures content inside is clipped to the rounded corners */
+    border: 1px solid #ddd;
+    /* Add a border around the table */
+}
+
+
+.table th,
+.table td {
+    padding: 10px;
+    text-align: left;
+}
+
+.table tr th {
+    background-color: #6fb9ff;
+    cursor: pointer;
+    /* Make headers clickable */
+}
+
+.table th:hover {
+    background-color: #5db0ff;
+}
+
+.table tr:hover {
+    background-color: #eaeaea;
+}
+
+.table td {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+tr:nth-last-child(1) td {
+    border-bottom: none;
+    /* Right border for the last column */
+}
+
+.fa-arrow-up,
+.fa-arrow-down {
+    margin-left: 5px;
+}

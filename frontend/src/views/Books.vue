@@ -3,13 +3,11 @@
         <div class="header">
             <h2>Books Management</h2>
 
-            <!-- Reload Icon -->
             <button @click="reloadBooks" class="reload-btn">
                 <i class="fa fa-sync-alt"></i>
             </button>
         </div>
 
-        <!-- Include the BookTable component and pass books as a prop -->
         <BookTable :books="books" />
     </div>
 </template>
@@ -61,34 +59,5 @@ export default {
     align-items: center;
     justify-content: start;
     margin-bottom: 20px;
-}
-
-.reload-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    margin-left: 10px;
-    transition: color 0.3s;
-}
-
-.reload-btn i {
-    margin-right: 5px; /* Add some space between the icon and text */
-    transition: transform 0.4s ease; /* Ensure smooth rotation */
-}
-
-/* Rotate the icon clockwise on hover */
-.reload-btn:hover i {
-    animation: spinClockwise 1s linear infinite;
-}
-
-@keyframes spinClockwise {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
 }
 </style>

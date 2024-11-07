@@ -1,5 +1,13 @@
 <template>
     <div class="reader-management">
+        <div class="header">
+            <h2>Readers Management</h2>
+
+            <button @click="reloadReaders" class="reload-btn">
+                <i class="fa fa-sync-alt"></i>
+            </button>
+        </div>
+
         <ReaderTable :readers="readers" />
     </div>
 </template>
@@ -40,3 +48,16 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.reader-management {
+    margin: 20px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    margin-bottom: 20px;
+}
+</style>

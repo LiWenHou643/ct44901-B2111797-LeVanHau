@@ -1,10 +1,11 @@
+a
 <template>
     <table class="table">
         <thead>
             <tr>
-                <th @click="sortTable('ten')">
+                <th @click="sortTable('hotennv')">
                     Full Name
-                    <span v-if="sortBy === 'ten'">
+                    <span v-if="sortBy === 'hotennv'">
                         <i
                             v-if="sortOrder === 'asc'"
                             class="fa fa-arrow-up"
@@ -12,19 +13,9 @@
                         <i v-else class="fa fa-arrow-down"></i>
                     </span>
                 </th>
-                <th @click="sortTable('ngaysinh')">
-                    Date of Birth
-                    <span v-if="sortBy === 'ngaysinh'">
-                        <i
-                            v-if="sortOrder === 'asc'"
-                            class="fa fa-arrow-up"
-                        ></i>
-                        <i v-else class="fa fa-arrow-down"></i>
-                    </span>
-                </th>
-                <th @click="sortTable('phai')">
-                    Gender
-                    <span v-if="sortBy === 'phai'">
+                <th @click="sortTable('chucvu')">
+                    Position
+                    <span v-if="sortBy === 'chucvu'">
                         <i
                             v-if="sortOrder === 'asc'"
                             class="fa fa-arrow-up"
@@ -55,12 +46,14 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="reader in sortedReaders" :key="reader.madocgia">
-                <td>{{ reader.holot }} {{ reader.ten }}</td>
-                <td>{{ reader.ngaysinh }}</td>
-                <td>{{ reader.phai }}</td>
-                <td>{{ reader.diachi }}</td>
-                <td>{{ reader.dienthoai }}</td>
+            <tr
+                v-for="(employee, index) in sortedEmployees"
+                :key="employee.msnv"
+            >
+                <td>{{ employee.hotennv }}</td>
+                <td>{{ employee.chucvu }}</td>
+                <td>{{ employee.diachi }}</td>
+                <td>{{ employee.dienthoai }}</td>
             </tr>
         </tbody>
     </table>
@@ -68,9 +61,9 @@
 
 <script>
 export default {
-    name: 'ReaderTable',
+    name: 'EmployeeTable',
     props: {
-        readers: Array, // Pass readers as a prop from parent component
+        employees: Array, // Pass employees as a prop from parent component
     },
     data() {
         return {
@@ -79,9 +72,9 @@ export default {
         };
     },
     computed: {
-        // Computed property to return sorted readers
-        sortedReaders() {
-            return this.readers.slice().sort((a, b) => {
+        // Computed property to return sorted employees
+        sortedEmployees() {
+            return this.employees.slice().sort((a, b) => {
                 const fieldA = this.getNestedValue(a, this.sortBy);
                 const fieldB = this.getNestedValue(b, this.sortBy);
 
@@ -98,7 +91,6 @@ export default {
     methods: {
         // Method to sort the table when clicking on header
         sortTable(field) {
-            console.log(field);
             if (this.sortBy === field) {
                 this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
             } else {
@@ -106,7 +98,7 @@ export default {
                 this.sortOrder = 'asc'; // Default to ascending order when switching columns
             }
         },
-        // Helper method to get nested object values (in case there are nested fields)
+        // Helper method to get nested object values (e.g., 'nxb.tennxb')
         getNestedValue(object, path) {
             return path
                 .split('.')

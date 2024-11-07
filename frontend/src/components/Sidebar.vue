@@ -36,42 +36,15 @@
             </li>
 
             <li class="nav-item">
-                <a
-                    href="#"
-                    @click="toggleMenu('borrowings')"
-                    :class="{ active: isActive('borrowings') }"
-                    class="nav-link"
-                >
+                <router-link to="/borrowings" class="sub-nav-link">
                     <i class="fa fa-exchange-alt"></i> Borrowings
-                </a>
-                <ul v-show="activeMenu === 'borrowings'" class="sub-nav">
-                    <li>
-                        <router-link to="/borrowings" class="sub-nav-link">
-                            <i class="fa fa-cogs"></i> Manage Borrowings
-                        </router-link>
-                    </li>
-                </ul>
+                </router-link>
             </li>
 
             <li class="nav-item">
-                <a
-                    href="#"
-                    @click="toggleMenu('employees')"
-                    :class="{ active: isActive('employees') }"
-                    class="nav-link"
-                >
+                <router-link :to="{ name: 'employees' }" class="sub-nav-link">
                     <i class="fa fa-id-badge"></i> Employees
-                </a>
-                <ul v-show="activeMenu === 'employees'" class="sub-nav">
-                    <li>
-                        <router-link
-                            :to="{ name: 'employees' }"
-                            class="sub-nav-link"
-                        >
-                            <i class="fa fa-cogs"></i> Manage Employees
-                        </router-link>
-                    </li>
-                </ul>
+                </router-link>
             </li>
 
             <li class="nav-item logout">

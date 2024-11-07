@@ -2,9 +2,9 @@
     <table class="table">
         <thead>
             <tr>
-                <th @click="sortTable('tensach')">
-                    Book Title
-                    <span v-if="sortBy === 'tensach'">
+                <th @click="sortTable('madocgia')">
+                    Mã đọc giả
+                    <span v-if="sortBy === 'madocgia'">
                         <i
                             v-if="sortOrder === 'asc'"
                             class="fa fa-arrow-up"
@@ -12,9 +12,9 @@
                         <i v-else class="fa fa-arrow-down"></i>
                     </span>
                 </th>
-                <th @click="sortTable('tacgia')">
-                    Author
-                    <span v-if="sortBy === 'tacgia'">
+                <th @click="sortTable('masach')">
+                    Mã sách
+                    <span v-if="sortBy === 'masach'">
                         <i
                             v-if="sortOrder === 'asc'"
                             class="fa fa-arrow-up"
@@ -22,9 +22,9 @@
                         <i v-else class="fa fa-arrow-down"></i>
                     </span>
                 </th>
-                <th @click="sortTable('nxb.tennxb')">
-                    Publisher
-                    <span v-if="sortBy === 'nxb.tennxb'">
+                <th @click="sortTable('msnv')">
+                    Mã nhân viên
+                    <span v-if="sortBy === 'msnv'">
                         <i
                             v-if="sortOrder === 'asc'"
                             class="fa fa-arrow-up"
@@ -32,9 +32,9 @@
                         <i v-else class="fa fa-arrow-down"></i>
                     </span>
                 </th>
-                <th @click="sortTable('dongia')">
-                    Price
-                    <span v-if="sortBy === 'dongia'">
+                <th @click="sortTable('ngaymuon')">
+                    Ngày mượn
+                    <span v-if="sortBy === 'ngaymuon'">
                         <i
                             v-if="sortOrder === 'asc'"
                             class="fa fa-arrow-up"
@@ -42,29 +42,9 @@
                         <i v-else class="fa fa-arrow-down"></i>
                     </span>
                 </th>
-                <th @click="sortTable('soquyen')">
-                    Stock
-                    <span v-if="sortBy === 'soquyen'">
-                        <i
-                            v-if="sortOrder === 'asc'"
-                            class="fa fa-arrow-up"
-                        ></i>
-                        <i v-else class="fa fa-arrow-down"></i>
-                    </span>
-                </th>
-                <th @click="sortTable('namxuatban')">
-                    Publishing Year
-                    <span v-if="sortBy === 'namxuatban'">
-                        <i
-                            v-if="sortOrder === 'asc'"
-                            class="fa fa-arrow-up"
-                        ></i>
-                        <i v-else class="fa fa-arrow-down"></i>
-                    </span>
-                </th>
-                <th @click="sortTable('nxb.diachi')">
-                    Publisher Address
-                    <span v-if="sortBy === 'nxb.diachi'">
+                <th @click="sortTable('ngaytra')">
+                    Ngày trả
+                    <span v-if="sortBy === 'ngaytra'">
                         <i
                             v-if="sortOrder === 'asc'"
                             class="fa fa-arrow-up"
@@ -75,14 +55,12 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="book in sortedBooks" :key="book.masach">
-                <td>{{ book.tensach }}</td>
-                <td>{{ book.tacgia }}</td>
-                <td>{{ book.nxb.tennxb }}</td>
-                <td>{{ formattedPrice(book.dongia) }}</td>
-                <td>{{ book.soquyen }}</td>
-                <td>{{ book.namxuatban }}</td>
-                <td>{{ book.nxb.diachi }}</td>
+            <tr v-for="borrowing in sortedBorrowings" :key="borrowing._id">
+                <td>{{ borrowing.madocgia }}</td>
+                <td>{{ borrowing.masach }}</td>
+                <td>{{ borrowing.msnv }}</td>
+                <td>{{ borrowing.ngaymuon }}</td>
+                <td>{{ borrowing.ngaytra }}</td>
             </tr>
         </tbody>
     </table>
@@ -90,24 +68,23 @@
 
 <script>
 export default {
-    name: 'BookTable',
+    name: 'BorrowingTable',
     props: {
-        books: Array,
+        borrowings: Array,
     },
     data() {
         return {
-            sortBy: '',
-            sortOrder: 'asc',
+            sortBy: '', // Field to sort by
+            sortOrder: 'asc', // Sort order: 'asc' or 'desc'
         };
     },
     computed: {
-        sortedBooks() {
-            return this.books.slice().sort((a, b) => {
+        sortedBorrowings() {
+            return this.borrowings.slice().sort((a, b) => {
                 const fieldA = this.getNestedValue(a, this.sortBy);
                 const fieldB = this.getNestedValue(b, this.sortBy);
 
                 if (fieldA === fieldB) return 0;
-                console.log(this.sortOrder);
 
                 if (this.sortOrder === 'asc') {
                     return fieldA < fieldB ? -1 : 1;
@@ -120,7 +97,6 @@ export default {
     methods: {
         // Method to sort the table when clicking on header
         sortTable(field) {
-            // Toggle the sort order if clicking on the same column again
             if (this.sortBy === field) {
                 this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
             } else {
@@ -128,19 +104,13 @@ export default {
                 this.sortOrder = 'asc'; // Default to ascending order when switching columns
             }
         },
-        // Helper method to get nested object values, e.g., 'nxb.tennxb'
         getNestedValue(object, path) {
             return path
                 .split('.')
                 .reduce((obj, key) => obj && obj[key], object);
         },
-        // Format price as currency
-        formattedPrice(price) {
-            return new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'VND', // Change this to USD or other currency if needed
-            }).format(price);
-        },
     },
 };
 </script>
+
+<style scoped></style>
