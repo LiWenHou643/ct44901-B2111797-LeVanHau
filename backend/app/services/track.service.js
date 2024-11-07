@@ -73,9 +73,7 @@ class TrackService {
     }
 
     async find(filter) {
-        console.log(filter);
         const borrows = await this.Borrow.find(filter).toArray();
-        console.log(borrows);
         const result = borrows.map((borrow) => ({
             _id: borrow._id,
             madocgia: borrow.madocgia,
