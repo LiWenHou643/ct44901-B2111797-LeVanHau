@@ -34,6 +34,7 @@
                     <i class="fa fa-users"></i> Readers
                 </router-link>
             </li>
+
             <li class="nav-item">
                 <a
                     href="#"
@@ -51,6 +52,7 @@
                     </li>
                 </ul>
             </li>
+
             <li class="nav-item">
                 <a
                     href="#"
@@ -71,8 +73,9 @@
                     </li>
                 </ul>
             </li>
-            <li class="nav-item">
-                <a href="#" @click="logout" class="nav-link logout">
+
+            <li class="nav-item logout">
+                <a href="#" @click="logout" class="nav-link">
                     <i class="fa fa-sign-out-alt"></i> Logout
                 </a>
             </li>
@@ -147,8 +150,23 @@ export default {
     color: #f3f4f6;
 }
 
-.nav-item a.logout:hover {
-    background-color: #ad0000;
+.nav-item.logout {
+    position: absolute;
+    bottom: 10px; /* Push the logout button to the bottom */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%; /* Make the logout button take up full width */
+    background-color: #a80b00; /* Red color for logout button */
+    border-radius: 10px;
+    transition: background-color 0.3s;
+}
+
+.nav-item.logout a {
+    color: #f3f4f6;
+}
+
+.nav-item.logout a:hover {
+    background-color: #d80e00; /* Darker red color on hover */
 }
 
 .nav-item a i {
