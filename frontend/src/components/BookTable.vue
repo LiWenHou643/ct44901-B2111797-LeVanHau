@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th @click="sortTable('tensach')">
-                    Book Title
+                    Tên sách
                     <span v-if="sortBy === 'tensach'">
                         <i
                             v-if="sortOrder === 'asc'"
@@ -13,7 +13,7 @@
                     </span>
                 </th>
                 <th @click="sortTable('tacgia')">
-                    Author
+                    Tác giả
                     <span v-if="sortBy === 'tacgia'">
                         <i
                             v-if="sortOrder === 'asc'"
@@ -23,7 +23,7 @@
                     </span>
                 </th>
                 <th @click="sortTable('nxb.tennxb')">
-                    Publisher
+                    Nhà xuất bản
                     <span v-if="sortBy === 'nxb.tennxb'">
                         <i
                             v-if="sortOrder === 'asc'"
@@ -33,7 +33,7 @@
                     </span>
                 </th>
                 <th @click="sortTable('dongia')">
-                    Price
+                    Đơn giá
                     <span v-if="sortBy === 'dongia'">
                         <i
                             v-if="sortOrder === 'asc'"
@@ -43,7 +43,7 @@
                     </span>
                 </th>
                 <th @click="sortTable('soquyen')">
-                    Stock
+                    Số quyển
                     <span v-if="sortBy === 'soquyen'">
                         <i
                             v-if="sortOrder === 'asc'"
@@ -53,7 +53,7 @@
                     </span>
                 </th>
                 <th @click="sortTable('namxuatban')">
-                    Publishing Year
+                    Năm xuất bản
                     <span v-if="sortBy === 'namxuatban'">
                         <i
                             v-if="sortOrder === 'asc'"

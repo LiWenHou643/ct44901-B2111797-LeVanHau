@@ -1,11 +1,16 @@
 <template>
     <div class="book-management">
         <div class="header">
-            <h2>Books Management</h2>
+            <div class="d-flex">
+                <h2>Books Management</h2>
 
-            <button @click="reloadBooks" class="reload-btn">
-                <i class="fa fa-sync-alt"></i>
-            </button>
+                <button @click="reloadBooks" class="reload-btn">
+                    <i class="fa fa-sync-alt"></i>
+                </button>
+            </div>
+            <router-link :to="{ name: 'books-create' }" class="btn btn-dark">
+                <i class="fa fa-plus"></i> Add Book
+            </router-link>
         </div>
 
         <BookTable :books="books" />
@@ -57,7 +62,7 @@ export default {
 .header {
     display: flex;
     align-items: center;
-    justify-content: start;
+    justify-content: space-between;
     margin-bottom: 20px;
 }
 </style>

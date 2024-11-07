@@ -27,7 +27,7 @@
 
             <li class="nav-item">
                 <router-link
-                    to="/readers"
+                    :to="{ name: 'readers' }"
                     class="nav-link"
                     :class="{ active: isActive('readers') }"
                 >
@@ -36,7 +36,7 @@
             </li>
 
             <li class="nav-item">
-                <router-link to="/borrowings" class="sub-nav-link">
+                <router-link :to="{ name: 'borrowings' }" class="sub-nav-link">
                     <i class="fa fa-exchange-alt"></i> Borrowings
                 </router-link>
             </li>
@@ -119,7 +119,7 @@ export default {
 
 .nav-item a:hover,
 .nav-item a.active {
-    background-color: #111827;
+    background-color: #212529;
     color: #f3f4f6;
 }
 
