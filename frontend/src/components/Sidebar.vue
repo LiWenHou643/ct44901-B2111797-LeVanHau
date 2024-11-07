@@ -1,0 +1,175 @@
+<template>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>Admin Dashboard</h3>
+        </div>
+
+        <ul class="nav-list">
+            <li class="nav-item">
+                <router-link
+                    to="/"
+                    class="nav-link"
+                    :class="{ active: isActive('dashboard') }"
+                >
+                    <i class="fa fa-tachometer-alt"></i> Dashboard
+                </router-link>
+            </li>
+
+            <li class="nav-item">
+                <router-link
+                    :to="{ name: 'books' }"
+                    class="nav-link"
+                    :class="{ active: isActive('books') }"
+                >
+                    <i class="fa fa-book"></i> Books
+                </router-link>
+            </li>
+
+            <li class="nav-item">
+                <router-link
+                    to="/readers"
+                    class="nav-link"
+                    :class="{ active: isActive('readers') }"
+                >
+                    <i class="fa fa-users"></i> Readers
+                </router-link>
+            </li>
+            <li class="nav-item">
+                <a
+                    href="#"
+                    @click="toggleMenu('borrowings')"
+                    :class="{ active: isActive('borrowings') }"
+                    class="nav-link"
+                >
+                    <i class="fa fa-exchange-alt"></i> Borrowings
+                </a>
+                <ul v-show="activeMenu === 'borrowings'" class="sub-nav">
+                    <li>
+                        <router-link to="/borrowings" class="sub-nav-link">
+                            <i class="fa fa-cogs"></i> Manage Borrowings
+                        </router-link>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a
+                    href="#"
+                    @click="toggleMenu('employees')"
+                    :class="{ active: isActive('employees') }"
+                    class="nav-link"
+                >
+                    <i class="fa fa-id-badge"></i> Employees
+                </a>
+                <ul v-show="activeMenu === 'employees'" class="sub-nav">
+                    <li>
+                        <router-link
+                            :to="{ name: 'employees' }"
+                            class="sub-nav-link"
+                        >
+                            <i class="fa fa-cogs"></i> Manage Employees
+                        </router-link>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a href="#" @click="logout" class="nav-link logout">
+                    <i class="fa fa-sign-out-alt"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+</template>
+<script>
+export default {
+    data() {
+        return {
+            activeMenu: 'dashboard', // Tracks which menu is active
+        };
+    },
+    methods: {
+        toggleMenu(menu) {
+            console.log('Current activeMenu:', this.activeMenu);
+            this.activeMenu = this.activeMenu === menu ? null : menu; // Toggle active menu
+        },
+        isActive(menu) {
+            // Check if the current route is the one related to the menu
+            return (
+                this.$route.name === menu ||
+                (menu === 'dashboard' && this.$route.path === '/')
+            );
+        },
+        logout() {
+            // Handle the logout logic (e.g., clear session, redirect, etc.)
+            console.log('Logging out...');
+        },
+    },
+};
+</script>
+
+<style scoped>
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #f3f4f6;
+    color: #111827;
+    padding: 20px;
+    position: fixed;
+}
+
+.sidebar-header h3 {
+    text-align: center;
+    font-size: 24px;
+    border-bottom: 1px solid #bebebe;
+    padding: 5px 0 10px;
+    margin-bottom: 30px;
+}
+
+.nav-list {
+    list-style: none;
+    padding: 0;
+}
+
+.nav-item {
+    margin: 10px 0;
+}
+
+.nav-item a {
+    color: #374151;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.nav-item a:hover,
+.nav-item a.active {
+    background-color: #111827;
+    color: #f3f4f6;
+}
+
+.nav-item a.logout:hover {
+    background-color: #ad0000;
+}
+
+.nav-item a i {
+    padding: 0 10px;
+    width: 40px;
+}
+
+.sub-nav {
+    list-style: none;
+    padding-left: 20px;
+}
+
+.sub-nav li {
+    margin: 5px 0;
+}
+
+.sub-nav li a {
+    padding: 8px;
+}
+
+.sub-nav li a:hover {
+    background-color: #555;
+}
+</style>

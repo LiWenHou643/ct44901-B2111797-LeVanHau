@@ -1,33 +1,39 @@
-import { createWebHistory, createRouter } from 'vue-router';
-import ContactBook from '@/views/ContactBook.vue';
-import NotFound from '@/views/NotFound.vue';
-import ContactEdit from '@/views/ContactEdit.vue';
-import ContactAdd from '@/views/ContactAdd.vue';
+import AppLayout from '@/views/AppLayout.vue';
 
+import { createRouter, createWebHistory } from 'vue-router';
 const routes = [
     {
         path: '/',
-        name: 'contactbook',
-        component: ContactBook,
-    },
-    {
-        path: '/:pathMatch(.*)*',
-        name: 'notfound',
-        component: NotFound,
-    },
-    {
-        path: '/contacts/:id',
-        name: 'contact.edit',
-        component: ContactEdit,
-        props: true, // Truyền các biến trong $route.params vào làm props
-    },
-    {
-        path: '/contacts/add',
-        name: 'contact.add',
-        component: ContactAdd,
+        component: AppLayout,
+        children: [
+            {
+                path: '',
+                name: 'dashboard',
+                component: () => import('@/views/Dashboard.vue'),
+            },
+            {
+                path: 'books',
+                name: 'books',
+                component: () => import('@/views/Books.vue'),
+            },
+            {
+                path: 'readers',
+                name: 'readers',
+                component: () => import('@/views/Readers.vue'),
+            },
+            {
+                path: 'borrowings',
+                name: 'borrowings',
+                component: () => import('@/views/Borrowings.vue'),
+            },
+            {
+                path: 'employees',
+                name: 'employees',
+                component: () => import('@/views/Employees.vue'),
+            },
+        ],
     },
 ];
-
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes,
