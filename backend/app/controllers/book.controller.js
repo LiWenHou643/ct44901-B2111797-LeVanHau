@@ -33,6 +33,23 @@ exports.findAll = async (req, res, next) => {
     return res.send(documents);
 };
 
+exports.findAllPublishers = async (req, res, next) => {
+    let documents = [];
+    try {
+        const bookService = new BookService(MongoDB.client);
+        documents = await bookService.findPublishers({});
+    } catch (error) {
+        return next(
+            new ApiError(
+                500,
+                error.message || 'Có lỗi xảy ra khi lấy nhà xuất bản'
+            )
+        );
+    }
+
+    return res.send(documents);
+};
+
 exports.findOne = async (req, res, next) => {
     try {
         const bookService = new BookService(MongoDB.client);

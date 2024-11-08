@@ -78,8 +78,8 @@ class BookService {
         throw new Error('Lỗi khi thêm mới sách');
     }
 
-    async findPublisher() {
-        const publishers = await this.Publisher.find().toArray();
+    async findPublishers(filter) {
+        const publishers = await this.Publisher.find(filter).toArray();
 
         return publishers.map((publisher) => ({
             manxb: publisher._id,
