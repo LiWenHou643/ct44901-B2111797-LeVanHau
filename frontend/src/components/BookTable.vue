@@ -22,16 +22,6 @@
                         <i v-else class="fa fa-arrow-down"></i>
                     </span>
                 </th>
-                <th @click="sortTable('nxb.tennxb')">
-                    Nhà xuất bản
-                    <span v-if="sortBy === 'nxb.tennxb'">
-                        <i
-                            v-if="sortOrder === 'asc'"
-                            class="fa fa-arrow-up"
-                        ></i>
-                        <i v-else class="fa fa-arrow-down"></i>
-                    </span>
-                </th>
                 <th @click="sortTable('dongia')">
                     Đơn giá
                     <span v-if="sortBy === 'dongia'">
@@ -55,6 +45,16 @@
                 <th @click="sortTable('namxuatban')">
                     Năm xuất bản
                     <span v-if="sortBy === 'namxuatban'">
+                        <i
+                            v-if="sortOrder === 'asc'"
+                            class="fa fa-arrow-up"
+                        ></i>
+                        <i v-else class="fa fa-arrow-down"></i>
+                    </span>
+                </th>
+                <th @click="sortTable('nxb.tennxb')">
+                    Nhà xuất bản
+                    <span v-if="sortBy === 'nxb.tennxb'">
                         <i
                             v-if="sortOrder === 'asc'"
                             class="fa fa-arrow-up"
