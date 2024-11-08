@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th @click="sortTable('ten')">
-                    Full Name
+                    Họ tên
                     <span v-if="sortBy === 'ten'">
                         <i
                             v-if="sortOrder === 'asc'"
@@ -13,7 +13,7 @@
                     </span>
                 </th>
                 <th @click="sortTable('ngaysinh')">
-                    Date of Birth
+                    Ngày sinh
                     <span v-if="sortBy === 'ngaysinh'">
                         <i
                             v-if="sortOrder === 'asc'"
@@ -23,7 +23,7 @@
                     </span>
                 </th>
                 <th @click="sortTable('phai')">
-                    Gender
+                    Giới tính
                     <span v-if="sortBy === 'phai'">
                         <i
                             v-if="sortOrder === 'asc'"
@@ -33,7 +33,7 @@
                     </span>
                 </th>
                 <th @click="sortTable('diachi')">
-                    Address
+                    Địa chỉ
                     <span v-if="sortBy === 'diachi'">
                         <i
                             v-if="sortOrder === 'asc'"
@@ -43,7 +43,7 @@
                     </span>
                 </th>
                 <th @click="sortTable('dienthoai')">
-                    Phone Number
+                    Điện thoại
                     <span v-if="sortBy === 'dienthoai'">
                         <i
                             v-if="sortOrder === 'asc'"

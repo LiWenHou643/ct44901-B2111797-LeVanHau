@@ -128,6 +128,7 @@
 </template>
 
 <script>
+import bookService from '@/services/book.service';
 export default {
     name: 'BookForm',
     data() {
@@ -142,22 +143,25 @@ export default {
             },
             selectedPublisher: '', // For selecting an existing publisher
             newPublisher: { tennxb: '', diachi: '' }, // For creating a new publisher
-            publishers: [
-                // Sample data, replace with actual data from your backend or API
-                { manxb: '1', tennxb: 'Publisher A', diachi: 'Address A' },
-                { manxb: '2', tennxb: 'Publisher B', diachi: 'Address B' },
-                { manxb: '3', tennxb: 'Publisher C', diachi: 'Address C' },
-            ],
+            publishers: [],
         };
     },
     methods: {
-        submitForm() {
+        async submitForm() {
             // If no existing publisher is selected, create a new publisher
             if (!this.selectedPublisher) {
                 this.book.tennxb = this.newPublisher.tennxb;
                 this.book.diachi = this.newPublisher.diachi;
             } else {
                 this.book.nxb = this.selectedPublisher; // Use existing publisherId
+            }
+
+            try {
+                await bookService.create(this.book);
+                alert('Sách được thêm thành công.');
+                this.$router.push({ name: 'books' });
+            } catch (error) {
+                console.log(error);
             }
         },
     },

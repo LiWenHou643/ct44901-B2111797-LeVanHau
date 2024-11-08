@@ -19,6 +19,7 @@
 
 <script>
 import BookTable from '@/components/BookTable.vue'; // Import the BookTable component
+import bookService from '@/services/book.service';
 
 export default {
     name: 'Books',
@@ -34,16 +35,12 @@ export default {
         this.fetchBooks(); // Fetch books data when the component is created
     },
     methods: {
-        // Fetch books data from the API
-        fetchBooks() {
-            fetch('http://localhost:3000/api/books/')
-                .then((response) => response.json())
-                .then((data) => {
-                    this.books = data;
-                })
-                .catch((error) => {
-                    console.error('Error fetching books:', error);
-                });
+        async fetchBooks() {
+            try {
+                this.books = await bookService.getAll();
+            } catch (error) {
+                console.log(error);
+            }
         },
 
         // Reload books data when the reload icon is clicked

@@ -4,7 +4,7 @@ a
         <thead>
             <tr>
                 <th @click="sortTable('hotennv')">
-                    Full Name
+                    Họ tên
                     <span v-if="sortBy === 'hotennv'">
                         <i
                             v-if="sortOrder === 'asc'"
@@ -14,7 +14,7 @@ a
                     </span>
                 </th>
                 <th @click="sortTable('chucvu')">
-                    Position
+                    Chức vụ
                     <span v-if="sortBy === 'chucvu'">
                         <i
                             v-if="sortOrder === 'asc'"
@@ -24,7 +24,7 @@ a
                     </span>
                 </th>
                 <th @click="sortTable('diachi')">
-                    Address
+                    Địa chỉ
                     <span v-if="sortBy === 'diachi'">
                         <i
                             v-if="sortOrder === 'asc'"
@@ -34,7 +34,7 @@ a
                     </span>
                 </th>
                 <th @click="sortTable('dienthoai')">
-                    Phone Number
+                    Điện thoại
                     <span v-if="sortBy === 'dienthoai'">
                         <i
                             v-if="sortOrder === 'asc'"
@@ -46,10 +46,7 @@ a
             </tr>
         </thead>
         <tbody>
-            <tr
-                v-for="(employee, index) in sortedEmployees"
-                :key="employee.msnv"
-            >
+            <tr v-for="employee in sortedEmployees" :key="employee.msnv">
                 <td>{{ employee.hotennv }}</td>
                 <td>{{ employee.chucvu }}</td>
                 <td>{{ employee.diachi }}</td>

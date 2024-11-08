@@ -78,6 +78,16 @@ class BookService {
         throw new Error('Lỗi khi thêm mới sách');
     }
 
+    async findPublisher() {
+        const publishers = await this.Publisher.find().toArray();
+
+        return publishers.map((publisher) => ({
+            manxb: publisher._id,
+            tennxb: publisher.tennxb,
+            diachi: publisher.diachi,
+        }));
+    }
+
     async find(filter) {
         // Find books based on the filter
         const books = await this.Book.find(filter).toArray(); // Convert cursor to an array of books

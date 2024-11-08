@@ -63,7 +63,7 @@
                     </span>
                 </th>
                 <th @click="sortTable('nxb.diachi')">
-                    Publisher Address
+                    Địa chỉ NXB
                     <span v-if="sortBy === 'nxb.diachi'">
                         <i
                             v-if="sortOrder === 'asc'"

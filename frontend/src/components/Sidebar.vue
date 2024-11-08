@@ -1,7 +1,7 @@
 <template>
     <div class="sidebar">
         <div class="sidebar-header">
-            <h3>Admin Dashboard</h3>
+            <h3>Quản lý sách</h3>
         </div>
 
         <ul class="nav-list">
@@ -11,7 +11,7 @@
                     class="nav-link"
                     :class="{ active: isActive('dashboard') }"
                 >
-                    <i class="fa fa-tachometer-alt"></i> Dashboard
+                    <i class="fa fa-tachometer-alt"></i> Thống kê
                 </router-link>
             </li>
 
@@ -21,7 +21,7 @@
                     class="nav-link"
                     :class="{ active: isActive('books') }"
                 >
-                    <i class="fa fa-book"></i> Books
+                    <i class="fa fa-book"></i> Sách
                 </router-link>
             </li>
 
@@ -31,19 +31,19 @@
                     class="nav-link"
                     :class="{ active: isActive('readers') }"
                 >
-                    <i class="fa fa-users"></i> Readers
+                    <i class="fa fa-users"></i> Đọc giả
                 </router-link>
             </li>
 
             <li class="nav-item">
                 <router-link :to="{ name: 'borrowings' }" class="sub-nav-link">
-                    <i class="fa fa-exchange-alt"></i> Borrowings
+                    <i class="fa fa-exchange-alt"></i> Mượn sách
                 </router-link>
             </li>
 
             <li class="nav-item">
                 <router-link :to="{ name: 'employees' }" class="sub-nav-link">
-                    <i class="fa fa-id-badge"></i> Employees
+                    <i class="fa fa-id-badge"></i> Nhân viên
                 </router-link>
             </li>
 
