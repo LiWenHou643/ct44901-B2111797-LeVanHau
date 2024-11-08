@@ -129,6 +129,8 @@
 
 <script>
 import bookService from '@/services/book.service';
+import publisherService from '@/services/publisher.service';
+
 export default {
     name: 'BookForm',
     data() {
@@ -146,6 +148,9 @@ export default {
             publishers: [],
         };
     },
+    created() {
+        this.fetchPublishers(); // Fetch books data when the component is created
+    },
     methods: {
         async submitForm() {
             // If no existing publisher is selected, create a new publisher
@@ -153,13 +158,22 @@ export default {
                 this.book.tennxb = this.newPublisher.tennxb;
                 this.book.diachi = this.newPublisher.diachi;
             } else {
-                this.book.nxb = this.selectedPublisher; // Use existing publisherId
+                this.book.manxb = this.selectedPublisher; // Use existing publisherId
             }
 
             try {
                 await bookService.create(this.book);
                 alert('Sách được thêm thành công.');
                 this.$router.push({ name: 'books' });
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
+        async fetchPublishers() {
+            try {
+                const response = await publisherService.getAll();
+                this.publishers = response;
             } catch (error) {
                 console.log(error);
             }
