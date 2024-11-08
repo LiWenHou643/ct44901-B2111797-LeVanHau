@@ -29,8 +29,10 @@ class BookService {
         let publisher;
 
         if (book.manxb) {
-            // If the publisher exists (manxb is provided), we query for the publisher
-            publisher = await this.Publisher.findOne({ _id: book.manxb });
+            publisher = await this.Publisher.findOne({
+                _id: new ObjectId(book.manxb),
+            });
+            book.manxb = new ObjectId(book.manxb); // Convert the string to an ObjectId
         } else {
             // If publisher doesn't exist (no manxb), create a new publisher
             publisher = await this.Publisher.findOne({

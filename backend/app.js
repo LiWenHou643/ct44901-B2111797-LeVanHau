@@ -11,6 +11,11 @@ const MongoDB = require('./app/utils/mongodb.util.js');
 const ApiError = require('./app/api-error.js');
 
 app.use(cors());
+app.use(
+    cors({
+        origin: 'http://localhost:3001',
+    })
+);
 app.use(express.json());
 app.use('/api/books', bookRouter);
 app.use('/api/readers', readerRouter);
