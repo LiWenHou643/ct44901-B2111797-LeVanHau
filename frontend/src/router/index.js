@@ -27,6 +27,11 @@ const routes = [
                 component: () => import('@/views/Readers.vue'),
             },
             {
+                path: 'readers/create',
+                name: 'readers-create',
+                component: () => import('@/views/ReadersCreate.vue'),
+            },
+            {
                 path: 'borrowings',
                 name: 'borrowings',
                 component: () => import('@/views/Borrowings.vue'),

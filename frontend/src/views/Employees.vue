@@ -46,15 +46,16 @@ export default {
     },
     methods: {
         // Fetch books data from the API
-        fetchEmployees() {
-            fetch('http://localhost:3000/api/employees/')
-                .then((response) => response.json())
-                .then((data) => {
-                    this.employees = data;
-                })
-                .catch((error) => {
-                    console.error('Error fetching books:', error);
-                });
+        async fetchEmployees() {
+            try {
+                // Call the employeeService to fetch the data
+                const response = await employeeService.getAll();
+
+                // Set the employees data to the response data
+                this.employees = response;
+            } catch (error) {
+                console.error('Error fetching employees:', error);
+            }
         },
 
         // Reload books data when the reload icon is clicked
@@ -65,17 +66,15 @@ export default {
         async deleteAllEmployees() {
             // Show a confirmation dialog
             const confirmed = window.confirm(
-                'Are you sure you want to delete all employees?'
+                'Xác nhận muốn xóa tất cả nhân viên?'
             );
 
             if (confirmed) {
                 try {
                     // If confirmed, delete all books via the BookService
-                    await employeeService.deleteAll();
-
-                    // Clear the books list in the frontend after deletion
+                    const msg = await employeeService.deleteAll();
                     this.reloadEmployees();
-                    alert('All books have been deleted.');
+                    alert(`${msg.message}`);
                 } catch (error) {
                     console.error('Error deleting books:', error);
                     alert('There was an error deleting all books.');

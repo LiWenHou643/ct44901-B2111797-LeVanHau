@@ -1,19 +1,30 @@
 <template>
     <div class="reader-management">
         <div class="header">
-            <h2>Readers Management</h2>
+            <div class="d-flex">
+                <h2>Quản lý đọc giả</h2>
 
-            <button @click="reloadReaders" class="reload-btn">
-                <i class="fa fa-sync-alt"></i>
-            </button>
+                <button @click="reloadReaders" class="reload-btn">
+                    <i class="fa fa-sync-alt"></i>
+                </button>
+            </div>
+
+            <router-link :to="{ name: 'readers-create' }" class="btn btn-dark">
+                <i class="fa fa-plus"></i> Thêm mới
+            </router-link>
         </div>
 
-        <ReaderTable :readers="readers" />
+        <ReaderTable :readers="readers" @reload-readers="reloadReaders" />
+
+        <button @click="deleteAllEmployees" class="delete-all-btn">
+            <i class="fa fa-trash"></i>
+        </button>
     </div>
 </template>
 
 <script>
 import ReaderTable from '@/components/ReaderTable.vue';
+import readerService from '@/services/reader.service';
 
 export default {
     name: 'Readers',
@@ -30,15 +41,13 @@ export default {
     },
     methods: {
         // Fetch Readers data from the API
-        fetchReaders() {
-            fetch('http://localhost:3000/api/readers/')
-                .then((response) => response.json())
-                .then((data) => {
-                    this.readers = data;
-                })
-                .catch((error) => {
-                    console.error('Error fetching Readers:', error);
-                });
+        async fetchReaders() {
+            try {
+                const response = await readerService.getAll();
+                this.readers = response;
+            } catch (error) {
+                console.error('Error fetching readers:', error);
+            }
         },
 
         // Reload Readers data when the reload icon is clicked
@@ -57,7 +66,31 @@ export default {
 .header {
     display: flex;
     align-items: center;
-    justify-content: start;
+    justify-content: space-between;
     margin-bottom: 20px;
+}
+
+.delete-all-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #ff6f61;
+    color: white;
+    border: none;
+    font-size: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s;
+}
+
+.delete-all-btn:hover {
+    background-color: #d44e43;
+}
+
+.delete-all-btn i {
+    margin: 0;
 }
 </style>
