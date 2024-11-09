@@ -36,13 +36,21 @@
             </li>
 
             <li class="nav-item">
-                <router-link :to="{ name: 'borrowings' }" class="sub-nav-link">
+                <router-link
+                    :to="{ name: 'borrowings' }"
+                    class="sub-nav-link"
+                    :class="{ active: isActive('borrowings') }"
+                >
                     <i class="fa fa-exchange-alt"></i> Mượn sách
                 </router-link>
             </li>
 
             <li class="nav-item">
-                <router-link :to="{ name: 'employees' }" class="sub-nav-link">
+                <router-link
+                    :to="{ name: 'employees' }"
+                    class="sub-nav-link"
+                    :class="{ active: isActive('employees') }"
+                >
                     <i class="fa fa-id-badge"></i> Nhân viên
                 </router-link>
             </li>
