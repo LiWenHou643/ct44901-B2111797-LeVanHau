@@ -1,4 +1,3 @@
-a
 <template>
     <table class="table">
         <thead>
@@ -43,20 +42,72 @@ a
                         <i v-else class="fa fa-arrow-down"></i>
                     </span>
                 </th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
+            <tr v-if="sortedEmployees.length === 0">
+                <td colspan="4" class="text-center">
+                    Không có dữ liệu nhân viên nào!
+                </td>
+            </tr>
             <tr v-for="employee in sortedEmployees" :key="employee.msnv">
-                <td>{{ employee.hotennv }}</td>
-                <td>{{ employee.chucvu }}</td>
-                <td>{{ employee.diachi }}</td>
-                <td>{{ employee.dienthoai }}</td>
+                <td>
+                    <!-- Editable field for name -->
+                    <span v-if="!employee.isEditing">{{
+                        employee.hotennv
+                    }}</span>
+                    <input v-else v-model="employee.hotennv" class="editable" />
+                </td>
+                <td>
+                    <!-- Editable field for position -->
+                    <span v-if="!employee.isEditing">{{
+                        employee.chucvu
+                    }}</span>
+                    <input v-else v-model="employee.chucvu" class="editable" />
+                </td>
+                <td>
+                    <!-- Editable field for address -->
+                    <span v-if="!employee.isEditing">{{
+                        employee.diachi
+                    }}</span>
+                    <input v-else v-model="employee.diachi" class="editable" />
+                </td>
+                <td>
+                    <!-- Editable field for phone number -->
+                    <span v-if="!employee.isEditing">{{
+                        employee.dienthoai
+                    }}</span>
+                    <input
+                        v-else
+                        v-model="employee.dienthoai"
+                        class="editable"
+                    />
+                </td>
+                <td>
+                    <!-- Edit/Save button -->
+                    <button
+                        class="btn btn-success"
+                        @click="toggleEdit(employee)"
+                    >
+                        {{ employee.isEditing ? 'Lưu' : 'Sửa' }}
+                    </button>
+                    <!-- Cancel button if in editing mode -->
+                    <button
+                        class="btn btn-secondary"
+                        v-if="employee.isEditing"
+                        @click="cancelEdit(employee)"
+                    >
+                        Hủy
+                    </button>
+                </td>
             </tr>
         </tbody>
     </table>
 </template>
 
 <script>
+import employeeService from '@/services/employee.service';
 export default {
     name: 'EmployeeTable',
     props: {
@@ -101,6 +152,63 @@ export default {
                 .split('.')
                 .reduce((obj, key) => obj && obj[key], object);
         },
+
+        async toggleEdit(employee) {
+            if (employee.isEditing) {
+                try {
+                    const editEmployee = {};
+                    await this.saveEmployee(editEmployee);
+                } catch (error) {
+                    console.error('Error saving employee', error);
+                    alert('Failed to save employee data.');
+                }
+            } else {
+                employee.originalData = { ...employee };
+            }
+            employee.isEditing = !employee.isEditing;
+        },
+
+        async saveEmployee(employee) {
+            try {
+                const updatedEmployee = await employeeService.update(
+                    employee.msnv,
+                    employee
+                );
+                alert(
+                    `Employee information updated for: ${updatedEmployee.hotennv}`
+                );
+            } catch (error) {
+                console.error('Error updating employee:', error);
+                alert(
+                    'There was an error updating the employee. Please try again.'
+                );
+            }
+        },
+
+        cancelEdit(book) {
+            Object.assign(employee, employee.originalData);
+            employee.isEditing = false;
+        },
     },
 };
 </script>
+
+<style scoped>
+input {
+    width: 100%;
+    box-sizing: border-box; /* Include padding and borders in element's width */
+    max-width: 100%; /* Prevent input from expanding beyond the cell */
+}
+
+button {
+    height: 25px;
+    padding: 0 10px;
+    font-size: 14px;
+    margin-right: 5px;
+}
+
+.editable {
+    border: 1px solid #ccc;
+    padding: 4px;
+}
+</style>

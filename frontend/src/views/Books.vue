@@ -2,18 +2,22 @@
     <div class="book-management">
         <div class="header">
             <div class="d-flex">
-                <h2>Books Management</h2>
+                <h2>Quản lý sách</h2>
 
                 <button @click="reloadBooks" class="reload-btn">
                     <i class="fa fa-sync-alt"></i>
                 </button>
             </div>
             <router-link :to="{ name: 'books-create' }" class="btn btn-dark">
-                <i class="fa fa-plus"></i> Add Book
+                <i class="fa fa-plus"></i> Thêm mới
             </router-link>
         </div>
 
         <BookTable :books="books" />
+
+        <button @click="deleteAllBooks" class="delete-all-btn">
+            <i class="fa fa-trash"></i>
+        </button>
     </div>
 </template>
 
@@ -47,6 +51,30 @@ export default {
         reloadBooks() {
             this.fetchBooks(); // Call the fetchBooks method to refetch the data
         },
+
+        async deleteAllBooks() {
+            // Show a confirmation dialog
+            const confirmed = window.confirm(
+                'Are you sure you want to delete all books?'
+            );
+
+            if (confirmed) {
+                try {
+                    // If confirmed, delete all books via the BookService
+                    await bookService.deleteAll();
+
+                    // Clear the books list in the frontend after deletion
+                    this.books = [];
+                    alert('All books have been deleted.');
+                } catch (error) {
+                    console.error('Error deleting books:', error);
+                    alert('There was an error deleting all books.');
+                }
+            } else {
+                // If the user cancels the confirmation
+                alert('Delete operation was canceled.');
+            }
+        },
     },
 };
 </script>
@@ -61,5 +89,29 @@ export default {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 20px;
+}
+
+.delete-all-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #ff6f61;
+    color: white;
+    border: none;
+    font-size: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s;
+}
+
+.delete-all-btn:hover {
+    background-color: #d44e43;
+}
+
+.delete-all-btn i {
+    margin: 0;
 }
 </style>

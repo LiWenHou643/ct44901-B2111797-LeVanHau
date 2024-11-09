@@ -72,10 +72,15 @@
                         <i v-else class="fa fa-arrow-down"></i>
                     </span>
                 </th>
-                <th>Actions</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
+            <tr v-if="sortedBooks.length === 0">
+                <td colspan="8" class="text-center">
+                    Không có dữ liệu sách nào!
+                </td>
+            </tr>
             <tr v-for="(book, index) in sortedBooks" :key="book.masach">
                 <td>
                     <span v-if="!book.isEditing">{{ book.tensach }}</span>
@@ -125,14 +130,14 @@
                 </td>
                 <td>
                     <button class="btn btn-success" @click="toggleEdit(book)">
-                        {{ book.isEditing ? 'Save' : 'Edit' }}
+                        {{ book.isEditing ? 'Lưu' : 'Sửa' }}
                     </button>
                     <button
                         class="btn btn-secondary"
                         v-if="book.isEditing"
                         @click="cancelEdit(book)"
                     >
-                        Cancel
+                        Hủy
                     </button>
                 </td>
             </tr>

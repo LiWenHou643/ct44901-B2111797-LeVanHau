@@ -1,11 +1,20 @@
 <template>
     <div class="book-management">
         <div class="header">
-            <h2>Books Management</h2>
+            <div class="d-flex">
+                <h2>Books Management</h2>
 
-            <button @click="reloadEmployees" class="reload-btn">
-                <i class="fa fa-sync-alt"></i>
-            </button>
+                <button @click="reloadEmployees" class="reload-btn">
+                    <i class="fa fa-sync-alt"></i>
+                </button>
+            </div>
+
+            <router-link
+                :to="{ name: 'employees-create' }"
+                class="btn btn-dark"
+            >
+                <i class="fa fa-plus"></i> Thêm mới
+            </router-link>
         </div>
 
         <EmployeeTable :employees="employees" />
@@ -56,7 +65,7 @@ export default {
 .header {
     display: flex;
     align-items: center;
-    justify-content: start;
+    justify-content: space-between;
     margin-bottom: 20px;
 }
 </style>

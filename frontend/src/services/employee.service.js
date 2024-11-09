@@ -1,6 +1,6 @@
 import createApiClient from './api.service';
-class BookService {
-    constructor(baseUrl = '/api/books') {
+class EmployeeService {
+    constructor(baseUrl = '/api/employees') {
         this.api = createApiClient(baseUrl);
     }
     async getAll() {
@@ -26,4 +26,4 @@ class BookService {
         return (await this.api.delete('/')).data;
     }
 }
-export default new BookService();
+export default new EmployeeService();
