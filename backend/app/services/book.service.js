@@ -4,6 +4,7 @@ class BookService {
     constructor(client) {
         this.Book = client.db().collection('sach');
         this.Publisher = client.db().collection('nhaxuatban');
+        this.Track = client.db().collection('theodoimuonsach');
     }
 
     extractBookData(payload) {
@@ -193,7 +194,7 @@ class BookService {
 
     async update(id, payload) {
         if (!ObjectId.isValid(id)) {
-            throw new Error('Invalid ID');
+            throw new Error('Sai định dạng id');
         }
 
         const filter = {
@@ -212,7 +213,7 @@ class BookService {
         );
 
         if (updatedBook === null) {
-            throw new Error('Book not found');
+            throw new Error('Không tìm thấy sách');
         }
 
         const updatePublisher = {
@@ -232,7 +233,7 @@ class BookService {
         );
 
         if (updatedBook === null || updatedPublisher === null) {
-            throw new Error('Publisher not found');
+            throw new Error('Không tìm thấy nhà xuất bản');
         }
 
         return {
@@ -256,6 +257,15 @@ class BookService {
         const result = await this.Book.findOneAndDelete({
             _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
         });
+
+        if (result === null) {
+            throw new Error('Không tìm thấy sách');
+        }
+
+        const result2 = await this.Track.findOneAndDelete({
+            masach: id,
+        });
+
         return result;
     }
 
