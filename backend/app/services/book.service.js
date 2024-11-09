@@ -192,8 +192,12 @@ class BookService {
     }
 
     async update(id, payload) {
+        if (!ObjectId.isValid(id)) {
+            throw new Error('Invalid ID');
+        }
+
         const filter = {
-            _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
+            _id: new ObjectId(id),
         };
 
         const updateBook = this.extractBookData(payload);
@@ -207,12 +211,16 @@ class BookService {
             }
         );
 
+        if (updatedBook === null) {
+            throw new Error('Book not found');
+        }
+
         const updatePublisher = {
-            tennxb: payload.nxb.tennxb,
-            diachi: payload.nxb.diachi,
+            tennxb: payload.tennxb,
+            diachi: payload.diachi,
         };
 
-        const publisherId = payload.nxb.manxb;
+        const publisherId = updatedBook.manxb;
         const updatedPublisher = await this.Publisher.findOneAndUpdate(
             { _id: new ObjectId(publisherId) },
             {
@@ -222,6 +230,10 @@ class BookService {
                 returnDocument: 'after',
             }
         );
+
+        if (updatedBook === null || updatedPublisher === null) {
+            throw new Error('Publisher not found');
+        }
 
         return {
             masach: updatedBook._id,
