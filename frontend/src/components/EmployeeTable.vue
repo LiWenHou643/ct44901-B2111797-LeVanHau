@@ -103,6 +103,15 @@
                     >
                         Hủy
                     </button>
+
+                    <!-- Delete button -->
+                    <button
+                        class="btn btn-danger"
+                        v-if="!employee.isEditing"
+                        @click="deleteEmployee(employee)"
+                    >
+                        Xóa
+                    </button>
                 </td>
             </tr>
         </tbody>
@@ -190,6 +199,23 @@ export default {
         cancelEdit(employee) {
             Object.assign(employee, employee.originalData);
             employee.isEditing = false;
+        },
+
+        // Delete a book from the server
+        deleteEmployee(employee) {
+            if (confirm(`Xác nhận muốn xóa ${employee.msnv}?`)) {
+                employeeService
+                    .delete(employee.msnv)
+                    .then(() => {
+                        alert(
+                            `Nhân viên ${employee.hotennv} được xóa thành công!`
+                        );
+                        this.$emit('reload-employees');
+                    })
+                    .catch((error) => {
+                        console.error('Có lỗi khi xóa nhân viên:', error);
+                    });
+            }
         },
     },
 };

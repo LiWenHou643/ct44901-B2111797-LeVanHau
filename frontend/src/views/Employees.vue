@@ -17,7 +17,10 @@
             </router-link>
         </div>
 
-        <EmployeeTable :employees="employees" />
+        <EmployeeTable
+            :employees="employees"
+            @reload-employees="reloadEmployees"
+        />
     </div>
 </template>
 

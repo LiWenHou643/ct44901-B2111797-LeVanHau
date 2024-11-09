@@ -90,7 +90,6 @@
                     <span v-if="!book.isEditing">{{ book.tacgia }}</span>
                     <input v-else v-model="book.tacgia" class="editable" />
                 </td>
-
                 <td>
                     <span v-if="!book.isEditing">{{
                         formattedPrice(book.dongia)
@@ -138,6 +137,13 @@
                         @click="cancelEdit(book)"
                     >
                         Hủy
+                    </button>
+                    <button
+                        class="btn btn-danger"
+                        v-if="!book.isEditing"
+                        @click="deleteBook(book)"
+                    >
+                        Xóa
                     </button>
                 </td>
             </tr>
@@ -247,6 +253,21 @@ export default {
         cancelEdit(book) {
             Object.assign(book, book.originalData); // Restore original data
             book.isEditing = false; // Exit editing mode
+        },
+
+        // Delete a book from the server
+        deleteBook(book) {
+            if (confirm(`Xác nhận muốn xóa ${book.tensach}?`)) {
+                bookService
+                    .delete(book.masach)
+                    .then(() => {
+                        alert(`Sách ${book.tensach} được xóa thành công!`);
+                        this.$emit('reload-books');
+                    })
+                    .catch((error) => {
+                        console.error('Có lỗi khi xóa sách:', error);
+                    });
+            }
         },
     },
 };

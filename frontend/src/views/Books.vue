@@ -13,7 +13,7 @@
             </router-link>
         </div>
 
-        <BookTable :books="books" />
+        <BookTable :books="books" @reload-books="reloadBooks" />
 
         <button @click="deleteAllBooks" class="delete-all-btn">
             <i class="fa fa-trash"></i>
