@@ -53,7 +53,10 @@ class EmployeeService {
     }
 
     async find(filter) {
-        const employees = await this.Employee.find(filter).toArray();
+        const employees = await this.Employee.find({
+            chucvu: 'Nhân viên',
+            ...filter,
+        }).toArray();
         const result = employees.map((employee) => ({
             msnv: employee._id,
             hotennv: employee.hotennv,
@@ -142,7 +145,9 @@ class EmployeeService {
     }
 
     async deleteAll() {
-        const result = await this.Employee.deleteMany({});
+        const result = await this.Employee.deleteMany({
+            chucvu: 'Nhân viên',
+        });
         return result.deletedCount;
     }
 }

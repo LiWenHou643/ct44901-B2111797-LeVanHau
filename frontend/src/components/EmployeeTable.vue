@@ -64,10 +64,12 @@
                     <span v-if="!employee.isEditing">{{
                         employee.chucvu
                     }}</span>
-                    <select v-else v-model="employee.chucvu" class="editable">
-                        <option value="Nhân viên">Nhân viên</option>
-                        <option value="Quản lý">Quản lý</option>
-                    </select>
+                    <input
+                        v-else
+                        v-model="employee.chucvu"
+                        class="editable"
+                        readonly
+                    />
                 </td>
                 <td>
                     <!-- Editable field for address -->
@@ -171,7 +173,7 @@ export default {
                     await this.saveEmployee(employee);
                 } catch (error) {
                     console.error('Error saving employee', error);
-                    alert('Failed to save employee data.');
+                    alert('Có lỗi khi thêm mới.');
                 }
             } else {
                 employee.originalData = { ...employee };
@@ -186,10 +188,10 @@ export default {
                     employee
                 );
                 alert(
-                    `Employee information updated for: ${updatedEmployee.employee.hotennv}`
+                    `Cập nhật thông tin thành công cho: ${updatedEmployee.employee.hotennv}`
                 );
             } catch (error) {
-                console.error('Error updating employee:', error);
+                console.error('Có lỗi khi cập nhật:', error);
                 alert(
                     'There was an error updating the employee. Please try again.'
                 );
@@ -203,7 +205,7 @@ export default {
 
         // Delete a book from the server
         deleteEmployee(employee) {
-            if (confirm(`Xác nhận muốn xóa ${employee.msnv}?`)) {
+            if (confirm(`Xác nhận muốn xóa ${employee.hotennv}?`)) {
                 employeeService
                     .delete(employee.msnv)
                     .then(() => {

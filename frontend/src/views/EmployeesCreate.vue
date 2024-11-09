@@ -47,18 +47,14 @@
                     <label for="chucvu"> Chức vụ </label>
                     <div class="input-group">
                         <i class="fas fa-briefcase"></i>
-                        <select
+                        <input
+                            type="text"
                             id="chucvu"
-                            class="form-select border-0"
                             v-model="employee.chucvu"
-                            @change="validateField('chucvu')"
-                            :class="{ 'is-invalid': errors.chucvu }"
-                        >
-                            <option value="">Chọn Chức Vụ</option>
-                            <!-- Default empty option -->
-                            <option value="Quản lý">Quản lý</option>
-                            <option value="Nhân viên">Nhân viên</option>
-                        </select>
+                            placeholder="Chọn chức vụ"
+                            required
+                            readonly
+                        />
                     </div>
                     <span v-if="errors.chucvu" class="error-message">{{
                         errors.chucvu
@@ -127,14 +123,13 @@ export default {
             employee: {
                 hotennv: '',
                 matkhau: '',
-                chucvu: '',
+                chucvu: 'Nhân viên',
                 diachi: '',
                 dienthoai: '',
             },
             errors: {},
             isSubmitting: false,
             isValid: false,
-            positions: ['Quản lý', 'Nhân viên'],
         };
     },
     watch: {
@@ -190,13 +185,7 @@ export default {
                     .string()
                     .min(6, 'Mật khẩu phải có ít nhất 6 ký tự')
                     .required('Mật khẩu là bắt buộc'),
-                chucvu: yup
-                    .string()
-                    .oneOf(
-                        this.positions,
-                        'Chức vụ phải là Quản lý hoặc Nhân viên'
-                    )
-                    .required('Chức vụ là bắt buộc'),
+                chucvu: yup.string().required('Chức vụ là bắt buộc'),
                 dienthoai: yup
                     .string()
                     .matches(/^(\+84|0)\d{9}$/, 'Số điện thoại không hợp lệ'),
