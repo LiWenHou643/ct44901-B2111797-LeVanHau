@@ -64,7 +64,10 @@
                     <span v-if="!employee.isEditing">{{
                         employee.chucvu
                     }}</span>
-                    <input v-else v-model="employee.chucvu" class="editable" />
+                    <select v-else v-model="employee.chucvu" class="editable">
+                        <option value="Nhân viên">Nhân viên</option>
+                        <option value="Quản lý">Quản lý</option>
+                    </select>
                 </td>
                 <td>
                     <!-- Editable field for address -->
@@ -156,8 +159,7 @@ export default {
         async toggleEdit(employee) {
             if (employee.isEditing) {
                 try {
-                    const editEmployee = {};
-                    await this.saveEmployee(editEmployee);
+                    await this.saveEmployee(employee);
                 } catch (error) {
                     console.error('Error saving employee', error);
                     alert('Failed to save employee data.');
@@ -175,7 +177,7 @@ export default {
                     employee
                 );
                 alert(
-                    `Employee information updated for: ${updatedEmployee.hotennv}`
+                    `Employee information updated for: ${updatedEmployee.employee.hotennv}`
                 );
             } catch (error) {
                 console.error('Error updating employee:', error);
@@ -185,7 +187,7 @@ export default {
             }
         },
 
-        cancelEdit(book) {
+        cancelEdit(employee) {
             Object.assign(employee, employee.originalData);
             employee.isEditing = false;
         },
