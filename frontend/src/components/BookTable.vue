@@ -72,23 +72,76 @@
                         <i v-else class="fa fa-arrow-down"></i>
                     </span>
                 </th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            <tr v-for="book in sortedBooks" :key="book.masach">
-                <td>{{ book.tensach }}</td>
-                <td>{{ book.tacgia }}</td>
-                <td>{{ book.nxb.tennxb }}</td>
-                <td>{{ formattedPrice(book.dongia) }}</td>
-                <td>{{ book.soquyen }}</td>
-                <td>{{ book.namxuatban }}</td>
-                <td>{{ book.nxb.diachi }}</td>
+            <tr v-for="(book, index) in sortedBooks" :key="book.masach">
+                <td>
+                    <span v-if="!book.isEditing">{{ book.tensach }}</span>
+                    <input v-else v-model="book.tensach" class="editable" />
+                </td>
+                <td>
+                    <span v-if="!book.isEditing">{{ book.tacgia }}</span>
+                    <input v-else v-model="book.tacgia" class="editable" />
+                </td>
+
+                <td>
+                    <span v-if="!book.isEditing">{{
+                        formattedPrice(book.dongia)
+                    }}</span>
+                    <input
+                        v-else
+                        v-model="book.dongia"
+                        type="number"
+                        class="editable"
+                    />
+                </td>
+                <td>
+                    <span v-if="!book.isEditing">{{ book.soquyen }}</span>
+                    <input
+                        v-else
+                        v-model="book.soquyen"
+                        type="number"
+                        class="editable"
+                    />
+                </td>
+                <td>
+                    <span v-if="!book.isEditing">{{ book.namxuatban }}</span>
+                    <input
+                        v-else
+                        v-model="book.namxuatban"
+                        type="number"
+                        class="editable"
+                    />
+                </td>
+                <td>
+                    <span v-if="!book.isEditing">{{ book.nxb.tennxb }}</span>
+                    <input v-else v-model="book.nxb.tennxb" class="editable" />
+                </td>
+                <td>
+                    <span v-if="!book.isEditing">{{ book.nxb.diachi }}</span>
+                    <input v-else v-model="book.nxb.diachi" class="editable" />
+                </td>
+                <td>
+                    <button class="btn btn-success" @click="toggleEdit(book)">
+                        {{ book.isEditing ? 'Save' : 'Edit' }}
+                    </button>
+                    <button
+                        class="btn btn-secondary"
+                        v-if="book.isEditing"
+                        @click="cancelEdit(book)"
+                    >
+                        Cancel
+                    </button>
+                </td>
             </tr>
         </tbody>
     </table>
 </template>
 
 <script>
+import bookService from '../services/book.service';
 export default {
     name: 'BookTable',
     props: {
@@ -98,6 +151,7 @@ export default {
         return {
             sortBy: '',
             sortOrder: 'asc',
+            editBook: null,
         };
     },
     computed: {
@@ -141,6 +195,73 @@ export default {
                 currency: 'VND', // Change this to USD or other currency if needed
             }).format(price);
         },
+
+        async toggleEdit(book) {
+            if (book.isEditing) {
+                // Save the changes to the backend using BookService
+                try {
+                    const editBook = {
+                        masach: book.masach,
+                        tensach: book.tensach,
+                        tacgia: book.tacgia,
+                        dongia: book.dongia,
+                        soquyen: book.soquyen,
+                        namxuatban: book.namxuatban,
+                        tennxb: book.nxb.tennxb,
+                        diachi: book.nxb.diachi,
+                    };
+                    await this.saveBook(editBook);
+                } catch (error) {
+                    console.error('Error saving book', error);
+                    alert('Failed to save book data.');
+                }
+            } else {
+                // Store original data before editing
+                book.originalData = { ...book };
+            }
+            // Toggle the editing state
+            book.isEditing = !book.isEditing;
+        },
+
+        // Save the updated book to the server
+        async saveBook(book) {
+            try {
+                const updatedBook = await bookService.update(book.masach, book);
+                alert(
+                    `Book information updated for: ${updatedBook.book.tensach}`
+                );
+            } catch (error) {
+                console.error('Error updating book:', error);
+                alert(
+                    'There was an error updating the book. Please try again.'
+                );
+            }
+        },
+
+        // Cancel the edit and restore original data
+        cancelEdit(book) {
+            Object.assign(book, book.originalData); // Restore original data
+            book.isEditing = false; // Exit editing mode
+        },
     },
 };
 </script>
+<style scoped>
+input {
+    width: 100%;
+    box-sizing: border-box; /* Include padding and borders in element's width */
+    max-width: 100%; /* Prevent input from expanding beyond the cell */
+}
+
+button {
+    height: 25px;
+    padding: 0 10px;
+    font-size: 14px;
+    margin-right: 5px;
+}
+
+.editable {
+    border: 1px solid #ccc;
+    padding: 4px;
+}
+</style>
