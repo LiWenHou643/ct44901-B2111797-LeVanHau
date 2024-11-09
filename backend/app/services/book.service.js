@@ -262,7 +262,7 @@ class BookService {
             throw new Error('Không tìm thấy sách');
         }
 
-        const result2 = await this.Track.findOneAndDelete({
+        await this.Track.deleteMany({
             masach: id,
         });
 
@@ -271,6 +271,8 @@ class BookService {
 
     async deleteAll() {
         const result = await this.Book.deleteMany({});
+        await this.Track.deleteMany({});
+
         return result.deletedCount;
     }
 }
