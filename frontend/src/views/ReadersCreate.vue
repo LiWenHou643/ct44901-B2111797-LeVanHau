@@ -1,7 +1,7 @@
 <template>
     <div class="form-container">
         <div class="form-card">
-            <h2 class="form-title">Thêm Đ</h2>
+            <h2 class="form-title">Thêm Đọc Giả</h2>
 
             <form @submit.prevent="submitForm" class="form">
                 <div class="form-group">
@@ -27,7 +27,7 @@
                     <div class="input-group">
                         <i class="fas fa-user"></i>
                         <input
-                            type="password"
+                            type="text"
                             id="ten"
                             v-model="reader.ten"
                             placeholder="Nhập tên"
@@ -61,21 +61,25 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="phai"> Giới tính </label>
+                    <label for="phai">Giới tính</label>
                     <div class="input-group">
                         <i class="fas fa-venus"></i>
-                        <input
-                            type="text"
+                        <select
                             id="phai"
                             v-model="reader.phai"
-                            placeholder="Chọn giới tính"
                             required
-                            readonly
-                        />
+                            class="form-select border-0"
+                        >
+                            <option value="" disabled selected>
+                                Chọn giới tính
+                            </option>
+                            <option value="Nam">Nam</option>
+                            <option value="Nữ">Nữ</option>
+                        </select>
                     </div>
-                    <span v-if="errors.phai" class="error-message">{{
-                        errors.phai
-                    }}</span>
+                    <span v-if="errors.phai" class="error-message">
+                        {{ errors.phai }}
+                    </span>
                 </div>
 
                 <div class="form-group">
@@ -128,6 +132,7 @@
 </template>
 
 <script>
+import readerService from '@/services/reader.service';
 import * as Yup from 'yup';
 export default {
     name: 'EmployeeForm',
@@ -209,9 +214,21 @@ export default {
                 await this.validationSchema.validate(this.reader, {
                     abortEarly: false,
                 });
-                alert('Form Submitted!');
-            } catch (err) {
-                console.error(err);
+                await readerService.create(this.reader);
+                alert('Đọc giả đã được thêm thành công');
+                this.$router.push({ name: 'readers' });
+            } catch (error) {
+                if (
+                    error.response &&
+                    error.response.data &&
+                    error.response.data.message
+                ) {
+                    // If the backend sends an error message, display it
+                    alert(error.response.data.message); // Show the error message returned by the backend
+                } else {
+                    // Generic error message if no specific error response is received
+                    alert('Có lỗi xảy ra. Vui lòng thử lại.');
+                }
             }
         },
     },
