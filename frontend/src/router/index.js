@@ -37,6 +37,11 @@ const routes = [
                 component: () => import('@/views/Borrowings.vue'),
             },
             {
+                path: 'borrowings/create',
+                name: 'borrowings-create',
+                component: () => import('@/views/BorrowingsCreate.vue'),
+            },
+            {
                 path: 'employees',
                 name: 'employees',
                 component: () => import('@/views/Employees.vue'),

@@ -1,14 +1,26 @@
 <template>
     <div class="borrow-management">
         <div class="header">
-            <h2>Quản lý mượn trả</h2>
+            <div class="d-flex">
+                <h2>Quản lý mượn trả</h2>
 
-            <button @click="reloadBorrowings" class="reload-btn">
-                <i class="fa fa-sync-alt"></i>
-            </button>
+                <button @click="reloadBorrowings" class="reload-btn">
+                    <i class="fa fa-sync-alt"></i>
+                </button>
+            </div>
+
+            <router-link
+                :to="{ name: 'borrowings-create' }"
+                class="btn btn-dark"
+            >
+                <i class="fa fa-plus"></i> Thêm mới
+            </router-link>
         </div>
 
-        <BorrowingTable :borrowings="borrowings" />
+        <BorrowingTable
+            :borrowings="borrowings"
+            @reload-borrowings="reloadBorrowings"
+        />
     </div>
 </template>
 
@@ -57,7 +69,7 @@ export default {
 .header {
     display: flex;
     align-items: center;
-    justify-content: start;
+    justify-content: space-between;
     margin-bottom: 20px;
 }
 </style>

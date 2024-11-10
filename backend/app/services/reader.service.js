@@ -90,6 +90,28 @@ class ReaderService {
         return result;
     }
 
+    async findByPhone(phone) {
+        const filter = {
+            dienthoai: { $regex: new RegExp(phone, 'i') },
+        };
+
+        console.log(filter);
+
+        const readers = await this.Reader.find(filter).toArray();
+
+        const result = readers.map((reader) => ({
+            madocgia: reader._id,
+            holot: reader.holot,
+            ten: reader.ten,
+            ngaysinh: reader.ngaysinh,
+            phai: reader.phai,
+            diachi: reader.diachi,
+            dienthoai: reader.dienthoai,
+        }));
+
+        return result;
+    }
+
     async findById(id) {
         if (!ObjectId.isValid(id)) {
             throw new Error('Sai định dạng id');
