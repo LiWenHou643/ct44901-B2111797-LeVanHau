@@ -152,6 +152,7 @@
 </template>
 
 <script>
+import * as Yup from 'yup';
 import bookService from '../services/book.service';
 export default {
     name: 'BookTable',
@@ -234,18 +235,59 @@ export default {
             book.isEditing = !book.isEditing;
         },
 
+        getValidationSchema() {
+            return Yup.object({
+                tensach: Yup.string().required('Tên sách không được để trống'),
+                tacgia: Yup.string().required('Tác giả không được để trống'),
+                dongia: Yup.number()
+                    .positive('Đơn giá phải là số dương')
+                    .required('Đơn giá không được để trống'),
+                soquyen: Yup.number()
+                    .integer('Số quyển phải là số nguyên')
+                    .positive('Số quyển phải là số nguyên dương')
+                    .required('Số quyển không được để trống'),
+                namxuatban: Yup.number()
+                    .min(1000, 'Năm xuất bản phải lớn hơn hoặc bằng 1000')
+                    .max(
+                        new Date().getFullYear(),
+                        `Năm xuất bản không thể lớn hơn ${new Date().getFullYear()}`
+                    )
+                    .required('Năm xuất bản không được để trống'),
+                tennxb: Yup.string().required(
+                    'Tên nhà xuất bản không được để trống'
+                ),
+                diachi: Yup.string().required(
+                    'Địa chỉ nhà xuất bản không được để trống'
+                ),
+            });
+        },
+
         // Save the updated book to the server
         async saveBook(book) {
             try {
+                await this.getValidationSchema().validate(book, {
+                    abortEarly: false,
+                });
                 const updatedBook = await bookService.update(book.masach, book);
-                alert(
-                    `Book information updated for: ${updatedBook.book.tensach}`
-                );
+                alert(`Cập nhật thành công cho: ${updatedBook.book.tensach}`);
             } catch (error) {
-                console.error('Error updating book:', error);
-                alert(
-                    'There was an error updating the book. Please try again.'
-                );
+                if (error.name === 'ValidationError') {
+                    const errorMessages = error.errors.join('\n'); // Lấy tất cả các lỗi từ Yup
+                    alert(`Có lỗi xảy ra trong dữ liệu:\n${errorMessages}`);
+                } else {
+                    // Nếu là lỗi từ API hoặc các lỗi khác
+                    this.$emit('reload-books');
+                    if (
+                        error.response &&
+                        error.response.data &&
+                        error.response.data.message
+                    ) {
+                        alert(error.response.data.message); // Hiển thị lỗi từ backend
+                    } else {
+                        alert('Có lỗi xảy ra. Vui lòng thử lại.');
+                    }
+                }
+                this.$emit('reload-books');
             }
         },
 

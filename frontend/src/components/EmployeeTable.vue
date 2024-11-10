@@ -122,6 +122,7 @@
 
 <script>
 import employeeService from '@/services/employee.service';
+import * as Yup from 'yup';
 export default {
     name: 'EmployeeTable',
     props: {
@@ -181,8 +182,22 @@ export default {
             employee.isEditing = !employee.isEditing;
         },
 
+        getValidationSchema() {
+            return Yup.object({
+                hotennv: Yup.string().required('Họ tên không được để trống'),
+                chucvu: Yup.string().required('Chức vụ không được để trống'),
+                diachi: Yup.string().required('Địa chỉ không được để trống'),
+                dienthoai: Yup.string()
+                    .matches(/^\d{10}$/, 'Số điện thoại phải có 10 chữ số')
+                    .required('Số điện thoại không được để trống'),
+            });
+        },
+
         async saveEmployee(employee) {
             try {
+                await this.getValidationSchema().validate(employee, {
+                    abortEarly: false,
+                });
                 const updatedEmployee = await employeeService.update(
                     employee.msnv,
                     employee
@@ -191,10 +206,23 @@ export default {
                     `Cập nhật thông tin thành công cho: ${updatedEmployee.employee.hotennv}`
                 );
             } catch (error) {
-                console.error('Có lỗi khi cập nhật:', error);
-                alert(
-                    'There was an error updating the employee. Please try again.'
-                );
+                if (error.name === 'ValidationError') {
+                    const errorMessages = error.errors.join('\n'); // Lấy tất cả các lỗi từ Yup
+                    alert(`Có lỗi xảy ra trong dữ liệu:\n${errorMessages}`);
+                } else {
+                    // Nếu là lỗi từ API hoặc các lỗi khác
+                    this.$emit('reload-employees');
+                    if (
+                        error.response &&
+                        error.response.data &&
+                        error.response.data.message
+                    ) {
+                        alert(error.response.data.message); // Hiển thị lỗi từ backend
+                    } else {
+                        alert('Có lỗi xảy ra. Vui lòng thử lại.');
+                    }
+                }
+                this.$emit('reload-employees');
             }
         },
 

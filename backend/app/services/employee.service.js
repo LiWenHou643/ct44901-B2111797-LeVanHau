@@ -116,6 +116,18 @@ class EmployeeService {
             _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
         };
 
+        const phoneNumber = payload.dienthoai;
+
+        const existingEmployee = await this.Employee.findOne({
+            dienthoai: phoneNumber,
+        });
+
+        if (existingEmployee && existingEmployee._id.toString() !== id) {
+            throw new Error(
+                `Đã tồn tại nhân viên với số điện thoại ${phoneNumber}`
+            );
+        }
+
         const updateEmployee = this.extractemployeeData(payload);
         const updatedEmployee = await this.Employee.findOneAndUpdate(
             filter,
