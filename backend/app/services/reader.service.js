@@ -3,6 +3,7 @@ const { ObjectId } = require('mongodb');
 class ReaderService {
     constructor(client) {
         this.Reader = client.db().collection('docgia');
+        this.Track = client.db().collection('theodoimuontra');
     }
 
     extractReaderData(payload) {
@@ -118,6 +119,18 @@ class ReaderService {
             _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
         };
 
+        const phoneNumber = payload.dienthoai;
+
+        const existingReader = await this.Reader.findOne({
+            dienthoai: phoneNumber,
+        });
+
+        if (existingReader && existingReader._id.toString() !== id) {
+            throw new Error(
+                `Đã tồn tại đọc giả với số điện thoại ${phoneNumber}`
+            );
+        }
+
         const updateReader = this.extractReaderData(payload);
         const updatedReader = await this.Reader.findOneAndUpdate(
             filter,
@@ -144,11 +157,15 @@ class ReaderService {
         const result = await this.Reader.findOneAndDelete({
             _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
         });
+        await this.Track.deleteMany({
+            madocgia: id,
+        });
         return result;
     }
 
     async deleteAll() {
         const result = await this.Reader.deleteMany({});
+        await this.Track.deleteMany({});
         return result.deletedCount;
     }
 }

@@ -16,7 +16,7 @@
 
         <ReaderTable :readers="readers" @reload-readers="reloadReaders" />
 
-        <button @click="deleteAllEmployees" class="delete-all-btn">
+        <button @click="deleteAllReaders" class="delete-all-btn">
             <i class="fa fa-trash"></i>
         </button>
     </div>
@@ -53,6 +53,16 @@ export default {
         // Reload Readers data when the reload icon is clicked
         reloadReaders() {
             this.fetchReaders(); // Call the fetchReaders method to refetch the data
+        },
+
+        // Delete all Readers
+        async deleteAllReaders() {
+            try {
+                await readerService.deleteAll();
+                this.reloadReaders(); // Reload Readers data after deleting all Readers
+            } catch (error) {
+                console.error('Error deleting all readers:', error);
+            }
         },
     },
 };

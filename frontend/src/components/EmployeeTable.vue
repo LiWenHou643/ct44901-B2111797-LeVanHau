@@ -47,7 +47,7 @@
         </thead>
         <tbody>
             <tr v-if="sortedEmployees.length === 0">
-                <td colspan="4" class="text-center">
+                <td colspan="5" class="text-center">
                     Không có dữ liệu nhân viên nào!
                 </td>
             </tr>
@@ -203,7 +203,6 @@ export default {
             employee.isEditing = false;
         },
 
-        // Delete a book from the server
         deleteEmployee(employee) {
             if (confirm(`Xác nhận muốn xóa ${employee.hotennv}?`)) {
                 employeeService
