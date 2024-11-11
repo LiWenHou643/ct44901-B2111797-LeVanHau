@@ -95,8 +95,6 @@ class ReaderService {
             dienthoai: { $regex: new RegExp(phone, 'i') },
         };
 
-        console.log(filter);
-
         const readers = await this.Reader.find(filter).toArray();
 
         const result = readers.map((reader) => ({

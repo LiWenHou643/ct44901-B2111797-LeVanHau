@@ -3,7 +3,7 @@
         <div class="form-card">
             <h2 class="form-title">Lập phiếu mượn</h2>
 
-            <form @submit.prevent="submitForm" class="form">
+            <form @submit.prevent="openModal" class="form">
                 <div class="form-group">
                     <label for="sdt"> Số điện thoại </label>
                     <div class="input-group">
@@ -21,7 +21,6 @@
                         errors.sdt
                     }}</span>
                 </div>
-
                 <div>
                     <!-- Show the list of readers only if the 'readers' array is not empty -->
                     <ul v-if="readers.length > 0 && selectedReader == null">
@@ -54,84 +53,166 @@
                         </button>
                     </div>
                 </div>
+
                 <div class="form-group">
-                    <label for="bookName"> Tựa sách </label>
+                    <label for="tensach"> Tựa sách </label>
                     <div class="input-group">
                         <i class="fas fa-book"></i>
                         <input
                             type="text"
-                            id="bookName"
-                            v-model="input.bookName"
+                            id="tensach"
+                            v-model="input.tensach"
                             placeholder="Nhập tựa sách mượn"
                             @input="onBookNameInputChange"
                             required
                         />
                     </div>
-                    <span v-if="errors.bookName" class="error-message">{{
-                        errors.bookName
+                    <span v-if="errors.tensach" class="error-message">{{
+                        errors.tensach
                     }}</span>
                 </div>
+                <div>
+                    <!-- Show the list of books only if the 'books' array is not empty -->
+                    <ul v-if="books.length > 0 && selectedBook == null">
+                        <li
+                            v-for="(book, index) in books"
+                            :key="index"
+                            class="book-item"
+                            @click="selectBook(book)"
+                        >
+                            {{ book.tensach }} - {{ book.tacgia }} -
+                            {{ book.namxuatban }}
+                        </li>
+                    </ul>
 
-                <!-- Submit Button -->
-                <button
-                    class="btn btn-primary"
-                    type="submit"
-                    :disabled="!isValid"
-                >
-                    <i class="fas fa-save"></i> Xem trước
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <div>
-        <div class="col-6">
-            <!-- Card hiển thị người mượn và sách đã chọn -->
-            <div v-if="selectedReader || selectedBook" class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Thông tin đã chọn:</h5>
-                    <p v-if="selectedReader" class="m-0">
-                        Người mượn: {{ selectedReader.holot }}
-                        {{ selectedReader.ten }}
-                    </p>
-                    <p v-if="selectedReader" class="m-0">
-                        Điện thoại: {{ selectedReader.dienthoai }}
-                    </p>
-                    <p v-if="selectedBook">Sách: {{ selectedBook.title }}</p>
+                    <!-- Show the selected reader if one is selected -->
+                    <div
+                        v-if="selectedBook"
+                        class="d-flex justify-content-between align-items-center mb-4"
+                    >
+                        <span>
+                            {{ selectedBook.tensach }}
+                            {{ selectedBook.tacgia }} -
+                            {{ selectedBook.namxuatban }}
+                        </span>
+                        <button
+                            @click="cancelBook"
+                            class="btn btn-danger fs-6 py-0 px-2"
+                        >
+                            x
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="row mt-3">
-        <div class="col-6">
-            <!-- Danh sách người mượn -->
-            <h4>Danh sách người mượn</h4>
-            <ul class="list-group">
-                <li
-                    v-for="reader in readers"
-                    :key="reader.id"
-                    class="list-group-item"
-                    @click="selectReader(reader)"
+                <!-- Button trigger modal -->
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
+                    :disabled="
+                        !selectedReader || !selectedBook || !input.ngaymuon
+                    "
                 >
-                    {{ reader.name }}
-                </li>
-            </ul>
-        </div>
+                    Lập phiếu
+                </button>
 
-        <div class="col-6">
-            <!-- Danh sách sách -->
-            <h4>Danh sách sách</h4>
-            <ul class="list-group">
-                <li
-                    v-for="book in books"
-                    :key="book.id"
-                    class="list-group-item"
-                    @click="selectBook(book)"
+                <!-- Modal -->
+                <div
+                    class="modal fade"
+                    id="exampleModal"
+                    tabindex="-1"
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true"
                 >
-                    {{ book.title }}
-                </li>
-            </ul>
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1
+                                    class="modal-title fs-5"
+                                    id="exampleModalLabel"
+                                >
+                                    Xác nhận thông tin mượn sách
+                                </h1>
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                ></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Invoice-like Structure -->
+                                <div class="invoice-header">
+                                    <h4 class="invoice-title">
+                                        Phiếu Mượn Sách
+                                    </h4>
+                                    <p class="invoice-date">
+                                        Ngày mượn: {{ input?.ngaymuon }}
+                                    </p>
+                                    <!-- Issuer Information -->
+                                    <div class="invoice-section">
+                                        <p>
+                                            <strong>Người lập phiếu:</strong>
+                                            Nguyễn Văn A
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="invoice-body">
+                                    <!-- Borrower Information -->
+                                    <div class="invoice-section">
+                                        <h5 class="section-title">
+                                            Thông Tin Người Mượn
+                                        </h5>
+                                        <p>
+                                            <strong>Người mượn:</strong>
+                                            {{ selectedReader?.holot }}
+                                            {{ selectedReader?.ten }}
+                                        </p>
+                                        <p>
+                                            <strong>Điện thoại:</strong>
+                                            {{ selectedReader?.dienthoai }}
+                                        </p>
+                                    </div>
+
+                                    <!-- Book Information -->
+                                    <div class="invoice-section">
+                                        <h5 class="section-title">
+                                            Thông Tin Sách
+                                        </h5>
+                                        <p>
+                                            <strong>Sách:</strong>
+                                            {{ selectedBook?.tensach }}
+                                        </p>
+                                        <p>
+                                            <strong>Tác giả:</strong>
+                                            {{ selectedBook?.tacgia }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    data-bs-dismiss="modal"
+                                >
+                                    Đóng
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    @click="submitForm"
+                                >
+                                    Xác nhận
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </template>
@@ -139,22 +220,17 @@
 <script>
 import bookService from '@/services/book.service';
 import readerService from '@/services/reader.service';
-
+import borrowService from '@/services/borrow.service';
 export default {
     name: 'EmployeeForm',
     data() {
         return {
             input: {
                 sdt: '',
-                bookName: '',
-                date: '',
+                tensach: '',
+                ngaymuon: this.formatDate(new Date()),
             },
-            borrow: {
-                madocgia: '',
-                masach: '',
-                msnv: '',
-                ngaymuon: '',
-            },
+
             errors: {},
             isSubmitting: false,
             isValid: false,
@@ -164,28 +240,17 @@ export default {
             selectedBook: null,
         };
     },
-    computed: {},
     methods: {
-        validateField(field) {
-            if (this.input[field].length === 0) {
-                this.errors[field] = 'Vui lòng nhập trường này';
-            } else {
-                this.errors[field] = '';
-            }
-
-            this.validateForm();
+        formatDate(date) {
+            const day = String(date.getDate()).padStart(2, '0'); // Ensure two digits (e.g., 01, 02)
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() is zero-based, so add 1
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`; // Return in dd/mm/yyyy format
         },
-        validateForm() {
-            this.isValid = Object.values(this.errors).every(
-                (error) => error.length === 0
-            );
-        },
-
         async onPhoneInputChange() {
             // Gọi API để tìm thông tin người mượn theo số điện thoại
             try {
                 const response = await readerService.getByPhone(this.input.sdt);
-                console.log(response);
                 this.readers = response;
                 this.errors.sdt = null; // Xóa lỗi nếu có dữ liệu hợp lệ
             } catch (error) {
@@ -199,29 +264,75 @@ export default {
             // Gọi API để tìm sách theo tên
             try {
                 const response = await bookService.getBookByTitle(
-                    this.input.bookName
+                    this.input.tensach
                 );
+
                 this.books = response;
 
-                this.errors.bookName = null; // Xóa lỗi nếu có dữ liệu hợp lệ
+                this.errors.tensach = null; // Xóa lỗi nếu có dữ liệu hợp lệ
             } catch (error) {
-                this.errors.bookName = 'Không tìm thấy sách với tựa này'; // Hiển thị lỗi nếu không tìm thấy
+                this.errors.tensach = 'Không tìm thấy sách với tựa này'; // Hiển thị lỗi nếu không tìm thấy
             }
         },
 
         async submitForm() {
             this.isSubmitting = true;
+            const borrow = {
+                madocgia: this.selectedReader?.madocgia,
+                masach: this.selectedBook?.masach,
+                msnv: 'dhwadbj3er8dhaw',
+                ngaymuon: this.formatDate(new Date()),
+            };
+
+            try {
+                await borrowService.create(borrow);
+
+                // Wait for the DOM update and then navigate
+                this.$nextTick(() => {
+                    // Remove the backdrop manually
+                    const backdrop = document.querySelector('.modal-backdrop');
+                    if (backdrop) {
+                        backdrop.remove();
+                    }
+                    this.$router.push('/borrowings');
+                });
+            } catch (error) {
+                if (
+                    error.response &&
+                    error.response.data &&
+                    error.response.data.message
+                ) {
+                    alert(error.response.data.message);
+                } else {
+                    alert('Có lỗi xảy ra. Vui lòng thử lại sau');
+                }
+            } finally {
+                this.isSubmitting = false;
+            }
         },
 
         selectReader(reader) {
-            console.log(reader);
             this.selectedReader = reader;
-            this.borrow.madocgia = reader.madocgia;
+        },
+
+        selectBook(book) {
+            this.selectedBook = book;
         },
 
         cancelReader() {
             this.selectedReader = null;
-            this.borrow.madocgia = '';
+        },
+
+        cancelBook() {
+            this.selectedBook = null;
+        },
+
+        openModal() {
+            this.showModal = true;
+        },
+
+        cancelSubmit() {
+            this.showModal = false;
         },
     },
 };
@@ -233,10 +344,69 @@ export default {
     font-size: 12px;
     margin-top: 5px;
 }
-.reader-item {
+.reader-item,
+.book-item {
     cursor: pointer;
 }
-.reader-item:hover {
+.reader-item:hover,
+.book-item:hover {
     background-color: #d2dcff;
+}
+/* General styles for the invoice */
+.invoice-header {
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 10px;
+}
+
+.invoice-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.invoice-date {
+    font-size: 1rem;
+    color: #555;
+    margin-top: 5px;
+}
+
+.invoice-body {
+    font-family: 'Arial', sans-serif;
+    padding: 15px;
+    background-color: #f9f9f9;
+}
+
+.invoice-section {
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.invoice-body p {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 5px 0;
+}
+
+.invoice-body strong {
+    color: #333;
+}
+
+/* Optional: Add a border around the entire modal or modal body */
+.modal-body {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    padding: 20px;
 }
 </style>
