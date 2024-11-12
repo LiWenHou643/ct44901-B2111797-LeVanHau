@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import AppHeader from '@/components/Header.vue';
 import AppFooter from '@/components/Footer.vue';
+import AppHeader from '@/components/Header.vue';
 
 export default {
     components: {
@@ -23,5 +23,9 @@ export default {
 <style scoped>
 .main {
     background-color: rgb(241, 241, 241);
+    min-height: calc(100vh - 224px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 </style>

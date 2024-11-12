@@ -1,138 +1,232 @@
 <template>
-    <div class="d-flex justify-content-center align-items-center vh-100">
-        <div
-            class="login-form card p-4 shadow-sm"
-            style="width: 100%; max-width: 400px"
-        >
-            <h2 class="text-center mb-4">Login</h2>
+    <div class="d-flex justify-content-center align-items-center p-3">
+        <div class="card p-4 shadow-sm">
+            <h2 class="text-center mb-4">Đăng ký tài khoản</h2>
 
             <form @submit.prevent="handleSubmit">
-                <!-- Username Field -->
-                <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input
-                        type="text"
-                        id="username"
-                        class="form-control"
-                        v-model="username"
-                        :class="{ 'is-invalid': errors.username }"
-                        required
-                    />
-                    <div v-if="errors.username" class="invalid-feedback">
-                        {{ errors.username }}
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="holot" class="form-label">Họ lót</label>
+                        <input
+                            type="text"
+                            id="holot"
+                            class="form-control"
+                            v-model="form.holot"
+                        />
+                        <div v-if="errors.holot" class="text-danger">
+                            {{ errors.holot }}
+                        </div>
+                    </div>
+                    <div class="col">
+                        <label for="ten" class="form-label">Tên</label>
+                        <input
+                            type="text"
+                            id="ten"
+                            class="form-control"
+                            v-model="form.ten"
+                        />
+                        <div v-if="errors.ten" class="text-danger">
+                            {{ errors.ten }}
+                        </div>
                     </div>
                 </div>
 
-                <!-- Password Field -->
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        class="form-control"
-                        v-model="password"
-                        :class="{ 'is-invalid': errors.password }"
-                        required
-                    />
-                    <div v-if="errors.password" class="invalid-feedback">
-                        {{ errors.password }}
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="ngaysinh" class="form-label"
+                            >Ngày sinh</label
+                        >
+                        <VueDatePicker
+                            v-model="form.ngaysinh"
+                            :format="format"
+                            placeholder="dd/mm/yyyy"
+                        ></VueDatePicker>
+                        <div v-if="errors.ngaysinh" class="text-danger">
+                            {{ errors.ngaysinh }}
+                        </div>
+                    </div>
+                    <div class="col">
+                        <label for="phai" class="form-label">Giới tính</label>
+                        <select
+                            id="phai"
+                            class="form-select"
+                            v-model="form.phai"
+                        >
+                            <option value="" disabled selected>
+                                Chọn giới tính
+                            </option>
+                            <option value="Nam">Nam</option>
+                            <option value="Nữ">Nữ</option>
+                            <option value="Khác">Khác</option>
+                        </select>
+                        <div v-if="errors.phai" class="text-danger">
+                            {{ errors.phai }}
+                        </div>
                     </div>
                 </div>
 
-                <!-- Submit Button -->
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="dienthoai" class="form-label"
+                            >Số điện thoại</label
+                        >
+                        <input
+                            type="text"
+                            id="dienthoai"
+                            class="form-control"
+                            v-model="form.dienthoai"
+                        />
+                        <div v-if="errors.dienthoai" class="text-danger">
+                            {{ errors.dienthoai }}
+                        </div>
+                    </div>
+                    <div class="col">
+                        <label for="diachi" class="form-label">Địa chỉ</label>
+                        <input
+                            type="text"
+                            id="diachi"
+                            class="form-control"
+                            v-model="form.diachi"
+                        />
+                        <div v-if="errors.diachi" class="text-danger">
+                            {{ errors.diachi }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="matkhau" class="form-label">Mật khẩu</label>
+                        <input
+                            type="password"
+                            id="matkhau"
+                            class="form-control"
+                            v-model="form.matkhau"
+                        />
+                        <div v-if="errors.matkhau" class="text-danger">
+                            {{ errors.matkhau }}
+                        </div>
+                    </div>
+                    <div class="col">
+                        <label for="xacnhanmatkhau" class="form-label"
+                            >Xác nhận mật khẩu</label
+                        >
+                        <input
+                            type="password"
+                            id="xacnhanmatkhau"
+                            class="form-control"
+                            v-model="form.xacnhanmatkhau"
+                        />
+                        <div v-if="errors.xacnhanmatkhau" class="text-danger">
+                            {{ errors.xacnhanmatkhau }}
+                        </div>
+                    </div>
+                </div>
+
                 <button
                     type="submit"
                     class="btn btn-primary w-100"
                     :disabled="isSubmitting"
                 >
-                    Login
+                    Đăng ký
                 </button>
-
-                <!-- Form Status -->
-                <div
-                    v-if="formStatus"
-                    :class="
-                        formStatus.success
-                            ? 'alert alert-success'
-                            : 'alert alert-danger'
-                    "
-                    class="mt-3"
-                >
-                    {{ formStatus.message }}
-                </div>
             </form>
         </div>
     </div>
 </template>
 
 <script>
+import readerService from '@/services/reader.service';
+import { ref } from 'vue';
+import * as Yup from 'yup';
+
 export default {
     data() {
         return {
-            username: '',
-            password: '',
-            errors: {
-                username: '',
-                password: '',
+            form: {
+                holot: '',
+                ten: '',
+                ngaysinh: ref(null),
+                phai: '',
+                dienthoai: '',
+                diachi: '',
+                matkhau: '',
+                xacnhanmatkhau: '',
             },
-            formStatus: null,
+            errors: {},
             isSubmitting: false,
         };
     },
     methods: {
-        handleSubmit() {
-            this.errors.username = '';
-            this.errors.password = '';
-            this.formStatus = null;
+        format(date) {
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
 
-            // Basic validation
-            if (this.username.trim() === '') {
-                this.errors.username = 'Username is required';
-            }
+            return `${day}/${month}/${year}`;
+        },
+        async handleSubmit() {
+            this.errors = {}; // Clear previous errors
+            const schema = Yup.object().shape({
+                holot: Yup.string().required('Họ lót bạn không được để trống'),
+                ten: Yup.string().required('Tên bạn không được để trống'),
+                ngaysinh: Yup.date()
+                    .required('Ngày sinh không được để trống')
+                    .transform((value) => (value === '' ? null : value))
+                    .typeError('Ngày sinh không được để trống'),
+                phai: Yup.string().required('Giới tính không được để trống'),
+                dienthoai: Yup.string()
+                    .matches(/^\d+$/, 'Số điện thoại phải là số  hợp lệ')
+                    .required('Số điện thoại không được để trống'),
+                diachi: Yup.string().required('Địa chỉ không được để trống'),
+                matkhau: Yup.string()
+                    .min(6, 'Mật khẩu tối thiểu 6 kí tự')
+                    .required('Mật khẩu không được để trống'),
+                xacnhanmatkhau: Yup.string()
+                    .oneOf(
+                        [Yup.ref('matkhau'), null],
+                        'Xác nhận mật khẩu không khớp'
+                    )
+                    .required('Xác nhận mật khẩu không được để trống'),
+            });
 
-            if (this.password.trim() === '') {
-                this.errors.password = 'Password is required';
-            }
+            try {
+                await schema.validate(this.form, { abortEarly: false });
+                // If validation passes, proceed with the submission
+                this.isSubmitting = true;
+                // Simulate an API call
+                await readerService.create(this.form);
+                this.$router.push({
+                    path: '/login',
+                    query: { message: 'Đăng ký thành công' },
+                });
+            } catch (error) {
+                console.log(error);
 
-            if (this.errors.username || this.errors.password) {
-                return;
-            }
-
-            this.isSubmitting = true;
-
-            // Simulate a login request (you can replace this with an actual API call)
-            setTimeout(() => {
-                this.isSubmitting = false;
-                if (this.username === 'user' && this.password === 'password') {
-                    this.formStatus = {
-                        success: true,
-                        message: 'Login successful!',
-                    };
-                    // Redirect or handle success (e.g., store authentication token)
-                } else {
-                    this.formStatus = {
-                        success: false,
-                        message: 'Invalid username or password',
-                    };
+                if (
+                    error.response &&
+                    error.response.data &&
+                    error.response.data.message
+                ) {
+                    // If the backend sends an error message, display it
+                    alert(error.response.data.message); // Show the error message returned by the backend
                 }
-            }, 1000);
+
+                // If validation fails, store errors
+                error.inner.forEach((error) => {
+                    this.errors[error.path] = error.message;
+                });
+            } finally {
+                this.isSubmitting = false;
+            }
         },
     },
 };
 </script>
 
 <style scoped>
-/* Optionally customize your styles here if needed */
-.login-form {
-    max-width: 400px;
-    width: 100%;
-}
-
-.invalid-feedback {
-    font-size: 12px;
-}
-
-.alert {
-    font-size: 14px;
+.text-danger {
+    font-size: 0.875rem;
+    color: red;
 }
 </style>

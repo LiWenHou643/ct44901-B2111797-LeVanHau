@@ -7,7 +7,7 @@
         <ul class="nav-list">
             <li class="nav-item">
                 <router-link
-                    to="/"
+                    :to="{ name: 'dashboard' }"
                     class="nav-link"
                     :class="{ active: isActive('dashboard') }"
                 >
