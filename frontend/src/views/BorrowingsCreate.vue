@@ -219,8 +219,8 @@
 
 <script>
 import bookService from '@/services/book.service';
-import readerService from '@/services/reader.service';
 import borrowService from '@/services/borrow.service';
+import readerService from '@/services/reader.service';
 export default {
     name: 'EmployeeForm',
     data() {
@@ -280,7 +280,7 @@ export default {
             const borrow = {
                 madocgia: this.selectedReader?.madocgia,
                 masach: this.selectedBook?.masach,
-                msnv: 'dhwadbj3er8dhaw',
+                msnv: '672c447713130c0774bbdbfe',
                 ngaymuon: this.formatDate(new Date()),
             };
 

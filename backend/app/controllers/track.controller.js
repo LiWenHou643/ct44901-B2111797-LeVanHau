@@ -60,22 +60,11 @@ exports.findOne = async (req, res, next) => {
 };
 
 exports.update = async (req, res, next) => {
-    if (Object.keys(req.body).length === 0) {
-        return next(new ApiError(400, 'Dữ liệu không được để trống'));
-    }
-
     try {
         const trackBorrowService = new TrackBorrowService(MongoDB.client);
-        const document = await trackBorrowService.update(
-            req.params.id,
-            req.body
-        );
-        if (!document) {
-            return next(new ApiError(404, 'Không tìm thấy phiếu mượn'));
-        }
+        await trackBorrowService.update(req.params.id, req.body);
         return res.send({
             message: 'Cập nhật phiếu mượn thành công',
-            borrowCard: document,
         });
     } catch (error) {
         return next(

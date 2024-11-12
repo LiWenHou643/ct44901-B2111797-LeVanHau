@@ -2,9 +2,9 @@
     <table class="table">
         <thead>
             <tr>
-                <th @click="sortTable('madocgia')">
-                    Mã đọc giả
-                    <span v-if="sortBy === 'madocgia'">
+                <th @click="sortTable('hotendocgia')">
+                    Họ tên đọc giả
+                    <span v-if="sortBy === 'hotendocgia'">
                         <i
                             v-if="sortOrder === 'asc'"
                             class="fa fa-arrow-up"
@@ -12,9 +12,9 @@
                         <i v-else class="fa fa-arrow-down"></i>
                     </span>
                 </th>
-                <th @click="sortTable('masach')">
-                    Mã sách
-                    <span v-if="sortBy === 'masach'">
+                <th @click="sortTable('tuasacj')">
+                    Tựa sách
+                    <span v-if="sortBy === 'tuasach'">
                         <i
                             v-if="sortOrder === 'asc'"
                             class="fa fa-arrow-up"
@@ -22,9 +22,9 @@
                         <i v-else class="fa fa-arrow-down"></i>
                     </span>
                 </th>
-                <th @click="sortTable('msnv')">
-                    Mã nhân viên
-                    <span v-if="sortBy === 'msnv'">
+                <th @click="sortTable('hotennv')">
+                    Nhân viên
+                    <span v-if="sortBy === 'hotennv'">
                         <i
                             v-if="sortOrder === 'asc'"
                             class="fa fa-arrow-up"
@@ -52,21 +52,39 @@
                         <i v-else class="fa fa-arrow-down"></i>
                     </span>
                 </th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             <tr v-for="borrowing in sortedBorrowings" :key="borrowing._id">
-                <td>{{ borrowing.madocgia }}</td>
-                <td>{{ borrowing.masach }}</td>
-                <td>{{ borrowing.msnv }}</td>
+                <td>{{ borrowing.hotendocgia }}</td>
+                <td>{{ borrowing.tensach }}</td>
+                <td>{{ borrowing.hotennhanvien }}</td>
                 <td>{{ borrowing.ngaymuon }}</td>
                 <td>{{ borrowing.ngaytra }}</td>
+                <td>
+                    <button
+                        class="btn btn-success"
+                        v-if="!borrowing.ngaytra"
+                        @click="submitReturn(borrowing)"
+                    >
+                        {{ 'Trả' }}
+                    </button>
+                    <button
+                        class="btn btn-danger"
+                        v-else
+                        @click="deleteBorrow(borrowing)"
+                    >
+                        Xóa
+                    </button>
+                </td>
             </tr>
         </tbody>
     </table>
 </template>
 
 <script>
+import borrowService from '@/services/borrow.service';
 export default {
     name: 'BorrowingTable',
     props: {
@@ -108,6 +126,50 @@ export default {
             return path
                 .split('.')
                 .reduce((obj, key) => obj && obj[key], object);
+        },
+
+        // Save the updated borrow to the server
+        async submitReturn(borrow) {
+            try {
+                await borrowService.update(borrow._id, {
+                    ngaytra: this.formatDate(new Date()),
+                });
+                alert(`Trả thành công`);
+            } catch (error) {
+                if (
+                    error.response &&
+                    error.response.data &&
+                    error.response.data.message
+                ) {
+                    alert(error.response.data.message); // Hiển thị lỗi từ backend
+                } else {
+                    alert('Có lỗi xảy ra. Vui lòng thử lại.');
+                }
+            } finally {
+                this.$emit('reload-borrowings');
+            }
+        },
+
+        // Delete a borrow from the server
+        deleteBorrow(borrow) {
+            if (confirm(`Xác nhận xoá phiếu mượn này?`)) {
+                borrowService
+                    .delete(borrow._id)
+                    .then(() => {
+                        alert(`Xoá phiếu mượn thành công!`);
+                        this.$emit('reload-borrowings');
+                    })
+                    .catch((error) => {
+                        console.error('Có lỗi khi xoá:', error);
+                    });
+            }
+        },
+
+        formatDate(date) {
+            const day = String(date.getDate()).padStart(2, '0'); // Ensure two digits (e.g., 01, 02)
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() is zero-based, so add 1
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`; // Return in dd/mm/yyyy format
         },
     },
 };

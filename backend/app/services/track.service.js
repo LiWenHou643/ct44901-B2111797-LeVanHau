@@ -44,9 +44,10 @@ class TrackService {
 
         // Check if book is borrowed
         const borrowed = await this.Borrow.findOne({
-            masach: payload.masach,
-            madocgia: payload.madocgia,
+            masach: new ObjectId(payload.masach),
+            madocgia: new ObjectId(payload.madocgia),
             ngaymuon: payload.ngaymuon,
+            ngaytra: payload.ngaytra,
         });
 
         if (borrowed) {
@@ -57,7 +58,12 @@ class TrackService {
 
         const borrow = this.extractborrowData(payload);
 
-        const result = await this.Borrow.insertOne(borrow);
+        const result = await this.Borrow.insertOne({
+            ...borrow,
+            masach: new ObjectId(borrow.masach),
+            madocgia: new ObjectId(borrow.madocgia),
+            msnv: new ObjectId(borrow.msnv),
+        });
 
         const insertedborrow = await this.Borrow.findOne({
             _id: result.insertedId,
@@ -73,17 +79,56 @@ class TrackService {
     }
 
     async find(filter) {
-        const borrows = await this.Borrow.find(filter).toArray();
-        const result = borrows.map((borrow) => ({
-            _id: borrow._id,
-            madocgia: borrow.madocgia,
-            masach: borrow.masach,
-            msnv: borrow.msnv,
-            ngaymuon: borrow.ngaymuon,
-            ngaytra: borrow.ngaytra,
-        }));
+        const borrows = await this.Borrow.aggregate([
+            { $match: filter },
+            {
+                $lookup: {
+                    from: 'sach',
+                    localField: 'masach',
+                    foreignField: '_id',
+                    as: 'bookDetails',
+                },
+            },
+            {
+                $lookup: {
+                    from: 'docgia',
+                    localField: 'madocgia',
+                    foreignField: '_id',
+                    as: 'readerDetails',
+                },
+            },
+            {
+                $lookup: {
+                    from: 'nhanvien',
+                    localField: 'msnv',
+                    foreignField: '_id',
+                    as: 'staffDetails',
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    madocgia: 1,
+                    hotendocgia: {
+                        $concat: [
+                            { $arrayElemAt: ['$readerDetails.holot', 0] },
+                            ' ',
+                            { $arrayElemAt: ['$readerDetails.ten', 0] },
+                        ],
+                    },
+                    masach: 1,
+                    tensach: { $arrayElemAt: ['$bookDetails.tensach', 0] },
+                    msnv: 1,
+                    hotennhanvien: {
+                        $arrayElemAt: ['$staffDetails.hotennv', 0],
+                    },
+                    ngaymuon: 1,
+                    ngaytra: 1,
+                },
+            },
+        ]).toArray();
 
-        return result;
+        return borrows;
     }
 
     async update(id, payload) {
@@ -102,14 +147,7 @@ class TrackService {
             }
         );
 
-        return {
-            _id: updatedBorrow._id,
-            madocgia: updatedBorrow.madocgia,
-            masach: updatedBorrow.masach,
-            msnv: updatedBorrow.msnv,
-            ngaymuon: updatedBorrow.ngaymuon,
-            ngaytra: updatedBorrow.ngaytra,
-        };
+        return {};
     }
 
     async delete(id) {

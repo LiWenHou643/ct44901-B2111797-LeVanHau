@@ -26,6 +26,7 @@
 
 <script>
 import BorrowingTable from '@/components/BorrowingTable.vue';
+import borrowService from '@/services/borrow.service';
 
 export default {
     name: 'Borrowings',
@@ -42,15 +43,13 @@ export default {
     },
     methods: {
         // Fetch borrowings data from the API
-        fetchBorrowings() {
-            fetch('http://localhost:3000/api/tracks/')
-                .then((response) => response.json())
-                .then((data) => {
-                    this.borrowings = data;
-                })
-                .catch((error) => {
-                    console.error('Error fetching borrowings:', error);
-                });
+        async fetchBorrowings() {
+            try {
+                const response = await borrowService.getAll();
+                this.borrowings = response;
+            } catch (error) {
+                console.error(error);
+            }
         },
 
         // Reload borrowings data when the reload icon is clicked
