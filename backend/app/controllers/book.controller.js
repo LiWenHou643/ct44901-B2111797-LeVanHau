@@ -21,16 +21,38 @@ exports.findAll = async (req, res, next) => {
     let documents = [];
     try {
         const bookService = new BookService(MongoDB.client);
-        const { title } = req.query;
-        if (title) documents = await bookService.findByName(title);
-        else documents = await bookService.find({});
+        const { title, page = 1, limit = 10 } = req.query;
+
+        // Convert page and limit to numbers to avoid any potential issues with strings
+        const pageNumber = parseInt(page, 10);
+        const pageSize = parseInt(limit, 10);
+        const skip = (pageNumber - 1) * pageSize;
+
+        // Fetch books based on whether we have a title query or not
+        if (title) {
+            documents = await bookService.findByName(title);
+        } else {
+            documents = await bookService.find({}, skip, pageSize);
+        }
+        const totalBooks = await bookService.count();
+
+        // Calculate total pages
+        const totalPages = Math.ceil(totalBooks / pageSize);
+
+        // Send the response with paginated books and metadata
+        return res.send({
+            books: documents,
+            pagination: {
+                currentPage: pageNumber,
+                totalPages,
+                totalBooks,
+            },
+        });
     } catch (error) {
         return next(
             new ApiError(500, error.message || 'Có lỗi xảy ra khi lấy sách')
         );
     }
-
-    return res.send(documents);
 };
 
 exports.findAllPublishers = async (req, res, next) => {

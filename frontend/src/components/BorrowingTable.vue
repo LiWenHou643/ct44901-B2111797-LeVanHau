@@ -56,6 +56,9 @@
             </tr>
         </thead>
         <tbody>
+            <tr v-if="!sortedBorrowings.length">
+                <td colspan="6" class="text-center">Không có dữ liệu</td>
+            </tr>
             <tr v-for="borrowing in sortedBorrowings" :key="borrowing._id">
                 <td>{{ borrowing.hotendocgia }}</td>
                 <td>{{ borrowing.tensach }}</td>
@@ -175,4 +178,11 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+button {
+    height: 25px;
+    padding: 0 10px;
+    font-size: 14px;
+    margin-right: 5px;
+}
+</style>

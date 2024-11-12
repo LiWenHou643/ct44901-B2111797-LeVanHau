@@ -91,35 +91,64 @@ class BookService {
         }));
     }
 
-    async find(filter) {
-        // Find books based on the filter
-        const books = await this.Book.find(filter).toArray(); // Convert cursor to an array of books
-        // Map over each book and fetch the publisher (manxb) information
-        const result = [];
+    async find(filter = {}, skip = 0, limit = 10) {
+        try {
+            const pipeline = [
+                // Match the filter (if any)
+                { $match: filter },
 
-        for (const book of books) {
-            // Fetch the publisher from the Publisher collection using the manxb (publisher ID)
-            const publisher = await this.Publisher.findOne({ _id: book.manxb });
+                // Join with the 'nhaxuatban' collection (publisher)
+                {
+                    $lookup: {
+                        from: 'nhaxuatban', // The 'nhaxuatban' collection
+                        localField: 'manxb', // The field in 'sach' that references the publisher ID
+                        foreignField: '_id', // The field in 'nhaxuatban' that contains the publisher ID
+                        as: 'publisher', // The alias for the result of the join
+                    },
+                },
 
-            // Construct the response object with book and publisher data
-            const res = {
-                masach: book._id,
-                tensach: book.tensach,
-                dongia: book.dongia,
-                soquyen: book.soquyen,
-                namxuatban: book.namxuatban,
-                tacgia: book.tacgia,
-                nxb: {
-                    manxb: publisher._id,
-                    tennxb: publisher.tennxb,
-                    diachi: publisher.diachi,
-                }, // Include the publisher document
-            };
+                // Unwind the 'publisher' array to access the publisher data (since $lookup returns an array)
+                {
+                    $unwind: {
+                        path: '$publisher', // Path to the joined 'publisher' field
+                        preserveNullAndEmptyArrays: true, // In case there's no publisher, we keep the book
+                    },
+                },
 
-            result.push(res); // Add to the result array
+                // Project the desired fields
+                {
+                    $project: {
+                        masach: '$_id',
+                        tensach: '$tensach',
+                        dongia: '$dongia',
+                        soquyen: '$soquyen',
+                        namxuatban: '$namxuatban',
+                        tacgia: '$tacgia',
+                        nxb: {
+                            manxb: '$publisher._id',
+                            tennxb: '$publisher.tennxb',
+                            diachi: '$publisher.diachi',
+                        },
+                    },
+                },
+
+                // Pagination - Skip and Limit
+                { $skip: skip },
+                { $limit: limit },
+            ];
+
+            // Execute the aggregation pipeline
+            const books = await this.Book.aggregate(pipeline).toArray();
+
+            return books;
+        } catch (error) {
+            console.error('Error fetching books:', error);
+            throw new Error('Error fetching books from the database');
         }
+    }
 
-        return result; // Return the combined results
+    async count() {
+        return this.Book.countDocuments();
     }
 
     async findByName(name) {

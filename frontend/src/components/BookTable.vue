@@ -83,7 +83,9 @@
             </tr>
             <tr v-for="(book, index) in sortedBooks" :key="book.masach">
                 <td>
-                    <span v-if="!book.isEditing">{{ book.tensach }}</span>
+                    <span v-if="!book.isEditing" :title="book.tensach">{{
+                        book.tensach
+                    }}</span>
                     <input v-else v-model="book.tensach" class="editable" />
                 </td>
                 <td>
@@ -173,7 +175,6 @@ export default {
                 const fieldB = this.getNestedValue(b, this.sortBy);
 
                 if (fieldA === fieldB) return 0;
-                console.log(this.sortOrder);
 
                 if (this.sortOrder === 'asc') {
                     return fieldA < fieldB ? -1 : 1;
@@ -244,7 +245,6 @@ export default {
                     .required('Đơn giá không được để trống'),
                 soquyen: Yup.number()
                     .integer('Số quyển phải là số nguyên')
-                    .positive('Số quyển phải là số nguyên dương')
                     .required('Số quyển không được để trống'),
                 namxuatban: Yup.number()
                     .min(1000, 'Năm xuất bản phải lớn hơn hoặc bằng 1000')

@@ -30,7 +30,6 @@
     }
 }
 
-
 .table {
     border-collapse: separate;
     border-spacing: 0;
@@ -62,11 +61,59 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    max-width: 200px;
+    position: relative;
+    /* Position relative for tooltip positioning */
+}
+
+.table td[title] {
+    cursor: pointer;
+    /* Show pointer cursor to indicate hover */
 }
 
 tr:nth-last-child(1) td {
     border-bottom: none;
     /* Right border for the last column */
+}
+
+/* Add a media query for small screens to make content responsive */
+@media (max-width: 768px) {
+
+    .table td,
+    .table th {
+        padding: 8px 10px;
+        /* Reduce padding for small screens */
+        font-size: 14px;
+        /* Optionally adjust the font size */
+    }
+
+    /* Handle very small screens, hiding non-essential columns */
+    .table td:nth-child(2),
+    /* For example, hide the second column on small screens */
+    .table th:nth-child(2) {
+        display: none;
+        /* Hide the second column */
+    }
+
+    .table td:nth-child(1) {
+        max-width: 120px;
+        /* Ensure the first column doesn't take too much space */
+    }
+}
+
+/* Optional: Add more media queries for ultra-small screens */
+@media (max-width: 480px) {
+    .table td {
+        font-size: 12px;
+        /* Adjust font size even more */
+        max-width: 100px;
+        /* Make columns even narrower */
+    }
+
+    .table td:nth-child(1) {
+        text-overflow: ellipsis;
+        /* Ensure text overflows with '...' */
+    }
 }
 
 .fa-arrow-up,

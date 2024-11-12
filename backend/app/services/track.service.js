@@ -40,6 +40,8 @@ class TrackService {
 
         if (!book) {
             throw new Error('Mã sách không tồn tại');
+        } else if (book.soquyen === 0) {
+            throw new Error('Sách đã hết');
         }
 
         // Check if book is borrowed
@@ -64,6 +66,18 @@ class TrackService {
             madocgia: new ObjectId(borrow.madocgia),
             msnv: new ObjectId(borrow.msnv),
         });
+
+        const updatedBook = await this.Book.findOneAndUpdate(
+            { _id: new ObjectId(borrow.masach) },
+            {
+                $inc: { soquyen: -1 },
+            },
+            {
+                returnDocument: 'after',
+            }
+        );
+
+        console.log(updatedBook);
 
         const insertedborrow = await this.Borrow.findOne({
             _id: result.insertedId,

@@ -91,7 +91,7 @@
                         class="d-flex justify-content-between align-items-center mb-4"
                     >
                         <span>
-                            {{ selectedBook.tensach }}
+                            {{ selectedBook.tensach }} -
                             {{ selectedBook.tacgia }} -
                             {{ selectedBook.namxuatban }}
                         </span>

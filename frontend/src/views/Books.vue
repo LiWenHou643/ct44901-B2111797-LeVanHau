@@ -15,6 +15,14 @@
 
         <BookTable :books="books" @reload-books="reloadBooks" />
 
+        <!-- Reusable Pagination Component -->
+        <Pagination
+            :currentPage="currentPage"
+            :totalPages="totalPages"
+            :pageSize="limit"
+            @page-changed="handlePageChange"
+        />
+
         <button @click="deleteAllBooks" class="delete-all-btn">
             <i class="fa fa-trash"></i>
         </button>
@@ -23,33 +31,79 @@
 
 <script>
 import BookTable from '@/components/BookTable.vue'; // Import the BookTable component
+import Pagination from '@/components/Pagination.vue';
 import bookService from '@/services/book.service';
-
 export default {
     name: 'Books',
+    props: {
+        page: {
+            type: Number,
+            required: true,
+        },
+        limit: {
+            type: Number,
+            required: true,
+        },
+    },
     components: {
-        BookTable, // Register the component
+        BookTable,
+        Pagination,
+    },
+    created() {
+        this.fetchBooks(this.page, this.limit); // Initial fetch on component creation
     },
     data() {
         return {
-            books: [], // Array to store books data
+            books: [],
+            currentPage: this.page, // Use the page prop from the route
+            totalPages: 1,
         };
     },
-    created() {
-        this.fetchBooks(); // Fetch books data when the component is created
+    watch: {
+        // Watch for changes in page or limit and re-fetch books accordingly
+        page(newPage) {
+            this.fetchBooks(newPage, this.limit);
+        },
+        limit(newLimit) {
+            this.fetchBooks(this.page, newLimit);
+        },
     },
     methods: {
-        async fetchBooks() {
+        async fetchBooks(page = 1, limit = 10) {
             try {
-                this.books = await bookService.getAll();
+                // Fetch books from the backend (using bookService)
+                const response = await bookService.getAll({
+                    page: page,
+                    pageSize: limit,
+                });
+
+                this.books = response.books;
+                this.totalPages = response.pagination.totalPages;
+                this.currentPage = page;
             } catch (error) {
-                console.log(error);
+                console.error('Error fetching books:', error);
             }
+        },
+
+        // Handle page change via pagination component
+        handlePageChange(page) {
+            // Update the route query parameter for page and limit
+            this.updateRoute(page);
+        },
+
+        updateRoute(page) {
+            // Update the URL with the new page number, preserving the limit
+            this.$router.push({
+                query: {
+                    ...this.$route.query,
+                    page: page,
+                },
+            });
         },
 
         // Reload books data when the reload icon is clicked
         reloadBooks() {
-            this.fetchBooks(); // Call the fetchBooks method to refetch the data
+            this.fetchBooks(this.currentPage); // Call the fetchBooks method to refetch the data
         },
 
         async deleteAllBooks() {

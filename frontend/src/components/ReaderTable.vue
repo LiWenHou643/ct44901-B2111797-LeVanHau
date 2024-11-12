@@ -199,7 +199,6 @@ export default {
     methods: {
         // Method to sort the table when clicking on header
         sortTable(field) {
-            console.log(field);
             if (this.sortBy === field) {
                 this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
             } else {

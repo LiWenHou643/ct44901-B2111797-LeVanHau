@@ -14,6 +14,10 @@ const routes = [
             {
                 path: 'books',
                 name: 'books',
+                props: (route) => ({
+                    page: parseInt(route.query.page) || 1, // Default to page 1
+                    limit: parseInt(route.query.limit) || 10, // Default to 10 items per page
+                }),
                 component: () => import('@/views/Books.vue'),
             },
             {
