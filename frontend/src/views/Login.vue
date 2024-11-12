@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import authService from '@/services/auth.service';
 import { useRoute } from 'vue-router';
 export default {
     data() {
@@ -58,8 +59,28 @@ export default {
         return { message };
     },
     methods: {
-        handleSubmit() {
+        async handleSubmit() {
             this.isSubmitting = true;
+
+            // Call API to login
+            try {
+                const user = await authService.login({
+                    dienthoai: this.dienthoai,
+                    matkhau: this.matkhau,
+                });
+            } catch (error) {
+                if (
+                    error.response &&
+                    error.response.data &&
+                    error.response.data.message
+                ) {
+                    this.message = error.response.data.message;
+                } else {
+                    this.message = 'Đã có lỗi xảy ra. Vui lòng thử lại sau.';
+                }
+            } finally {
+                this.isSubmitting = false;
+            }
         },
     },
 };
