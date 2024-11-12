@@ -1,30 +1,27 @@
 <template>
-    <div class="layout">
-        <Sidebar />
-        <div class="content">
+    <div>
+        <AppHeader />
+        <div class="main">
             <router-view />
         </div>
+        <AppFooter />
     </div>
 </template>
 
 <script>
-import Sidebar from '@/components/Sidebar.vue';
+import AppHeader from '@/components/Header.vue';
+import AppFooter from '@/components/Footer.vue';
 
 export default {
     components: {
-        Sidebar,
+        AppHeader,
+        AppFooter,
     },
 };
 </script>
 
 <style scoped>
-.layout {
-    display: flex;
-}
-
-.content {
-    margin-left: 250px; /* Same width as the sidebar */
-    padding: 20px;
-    flex-grow: 1;
+.main {
+    background-color: rgb(241, 241, 241);
 }
 </style>

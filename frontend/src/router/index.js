@@ -1,16 +1,17 @@
-import AppLayout from '@/views/AppLayout.vue';
+import AdminLayout from '@/views/AdminLayout.vue';
 
 import { createRouter, createWebHistory } from 'vue-router';
 const routes = [
     {
-        path: '/',
-        component: AppLayout,
+        path: '/admin/',
+        component: AdminLayout,
         children: [
             {
                 path: '',
                 name: 'dashboard',
                 component: () => import('@/views/Dashboard.vue'),
             },
+            { path: 'dashboard', redirect: { name: 'dashboard' } },
             {
                 path: 'books',
                 name: 'books',
@@ -54,6 +55,40 @@ const routes = [
                 path: 'employees/create',
                 name: 'employees-create',
                 component: () => import('@/views/EmployeesCreate.vue'),
+            },
+        ],
+    },
+    {
+        path: '/',
+        component: () => import('@/views/AppLayout.vue'),
+        children: [
+            {
+                path: '',
+                name: 'home',
+                component: () => import('@/views/Home.vue'),
+            },
+            {
+                path: 'home',
+                redirect: { name: 'home' },
+            },
+            {
+                path: 'login',
+                name: 'login',
+                component: () => import('@/views/Login.vue'),
+            },
+            {
+                path: 'register',
+                name: 'register',
+                component: () => import('@/views/Register.vue'),
+            },
+            {
+                path: 'books',
+                name: 'books-public',
+                props: (route) => ({
+                    page: parseInt(route.query.page) || 1, // Default to page 1
+                    limit: parseInt(route.query.limit) || 10, // Default to 10 items per page
+                }),
+                component: () => import('@/views/BooksPublic.vue'),
             },
         ],
     },
