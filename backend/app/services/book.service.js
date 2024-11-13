@@ -15,6 +15,7 @@ class BookService {
             namxuatban: payload.namxuatban,
             manxb: payload.manxb,
             tacgia: payload.tacgia,
+            anhbia: payload.anhbia,
         };
 
         Object.keys(book).forEach(
@@ -124,6 +125,7 @@ class BookService {
                         soquyen: '$soquyen',
                         namxuatban: '$namxuatban',
                         tacgia: '$tacgia',
+                        anhbia: '$anhbia',
                         nxb: {
                             manxb: '$publisher._id',
                             tennxb: '$publisher.tennxb',

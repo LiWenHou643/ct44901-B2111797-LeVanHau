@@ -74,7 +74,7 @@ export default {
                 // Fetch books from the backend (using bookService)
                 const response = await bookService.getAll({
                     page: page,
-                    pageSize: limit,
+                    limit: limit,
                 });
 
                 this.books = response.books;

@@ -18,31 +18,42 @@
             </button>
 
             <!-- Navbar Links -->
-            <div class="collapse navbar-collapse" id="navbarNav">
+            <div
+                class="collapse navbar-collapse align-items-center d-flex"
+                id="navbarNav"
+            >
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <router-link
-                            class="nav-link active"
+                            class="nav-link"
+                            :class="{ active: $route.path === '/' }"
                             to="/"
                             aria-current="page"
                         >
-                            Home
+                            Trang chủ
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link class="nav-link" to="/books">
-                            Books
+                        <router-link
+                            class="nav-link"
+                            :class="{ active: $route.path === '/books' }"
+                            to="/books"
+                        >
+                            Sách
                         </router-link>
                     </li>
                     <!-- Login/Register Links -->
                     <li class="nav-item">
-                        <router-link class="nav-link" to="/login">
-                            Login
+                        <router-link class="nav-link custom-link" to="/login">
+                            Đăng nhập
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link class="nav-link" to="/register">
-                            Register
+                        <router-link
+                            class="nav-link custom-link"
+                            to="/register"
+                        >
+                            Đăng ký
                         </router-link>
                     </li>
                 </ul>
@@ -63,10 +74,23 @@ export default {
     padding: 1rem;
 }
 .navbar-nav .nav-link {
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .navbar-light .navbar-toggler-icon {
     background-color: #000;
+}
+
+.custom-link {
+    border-radius: 5px;
+    padding: 4px 10px;
+    margin: 4px;
+    font-weight: bold;
+    border: 1px solid #007bff;
+    transition: background-color 0.3s ease;
+}
+
+.custom-link:hover {
+    background-color: #85c0ffff; /* Darker blue on hover */
 }
 </style>

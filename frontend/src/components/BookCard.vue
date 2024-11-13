@@ -3,8 +3,8 @@
     <div class="card shadow-sm" :title="book.tensach">
         <!-- Book Cover Image -->
         <img
-            :src="'/Potato-800x800.jpg'"
-            class="card-img-top"
+            :src="book.anhbia"
+            class="card-img-top img-fluid fixed-img"
             alt="Book Cover"
         />
 
@@ -85,5 +85,11 @@ export default {
     line-clamp: 3;
     -webkit-line-clamp: 3; /* Show 3 lines of text */
     overflow: hidden;
+}
+
+.fixed-img {
+    height: 200px; /* Set a fixed height */
+    object-fit: fill; /* Maintain aspect ratio while covering the area */
+    width: 100%; /* Ensure the image stretches to fill the width */
 }
 </style>

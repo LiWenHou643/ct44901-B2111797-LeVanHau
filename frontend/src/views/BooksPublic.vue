@@ -1,5 +1,5 @@
 <template>
-    <div class="p-5">
+    <div class="p-5 container">
         <div class="row">
             <div
                 class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4"
@@ -21,9 +21,9 @@
 </template>
 
 <script>
+import BookCard from '@/components/BookCard.vue';
 import Pagination from '@/components/Pagination.vue';
 import bookService from '@/services/book.service';
-import BookCard from '@/components/BookCard.vue';
 export default {
     name: 'Books',
     props: {
@@ -60,12 +60,11 @@ export default {
         },
     },
     methods: {
-        async fetchBooks(page = 1, limit = 10) {
+        async fetchBooks(page = 1, limit = 12) {
             try {
-                // Fetch books from the backend (using bookService)
                 const response = await bookService.getAll({
                     page: page,
-                    pageSize: limit,
+                    limit: limit,
                 });
 
                 this.books = response.books;

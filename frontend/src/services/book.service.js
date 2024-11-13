@@ -3,7 +3,7 @@ class BookService {
     constructor(baseUrl = '/api/books') {
         this.api = createApiClient(baseUrl);
     }
-    async getAll({ page = 1, limit = 10 }) {
+    async getAll({ page = 1, limit = 12 }) {
         const response = await this.api.get('/', {
             params: { page, limit }, // Passing pagination params to the backend
         });

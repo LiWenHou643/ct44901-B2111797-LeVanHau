@@ -98,6 +98,7 @@ export default {
     color: #111827;
     padding: 20px;
     position: fixed;
+    z-index: 100;
 }
 
 .sidebar-header h3 {

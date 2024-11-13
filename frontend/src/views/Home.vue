@@ -104,6 +104,7 @@
 // Import BookCard component
 import BookCard from '@/components/BookCard.vue';
 import BookSlider from '@/components/BookSlider.vue';
+import bookService from '@/services/book.service';
 export default {
     name: 'Home',
     components: {
@@ -259,10 +260,29 @@ export default {
             ],
         };
     },
+    created() {
+        this.fetchBooks();
+    },
+
     methods: {
         handleAddToCart(book) {
             console.log(`${book.title} has been added to the cart.`);
             // Add your cart logic here (like using Vuex to manage the cart)
+        },
+
+        async fetchBooks(page = 1, limit = 18) {
+            try {
+                // Fetch books from the backend (using bookService)
+                const response = await bookService.getAll({
+                    page: page,
+                    pageSize: limit,
+                });
+
+                this.featuredBooks = response.books;
+                this.bestSellers = response.books;
+            } catch (error) {
+                console.error('Error fetching books:', error);
+            }
         },
     },
 };
