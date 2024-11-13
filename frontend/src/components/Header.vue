@@ -40,18 +40,25 @@
                         </router-link>
                     </li>
                     <!-- Login/Register Links -->
-                    <li class="nav-item">
+                    <li v-if="!user" class="nav-item">
                         <router-link class="nav-link custom-link" to="/login">
                             Đăng nhập
                         </router-link>
                     </li>
-                    <li class="nav-item">
+                    <li v-if="!user" class="nav-item">
                         <router-link
                             class="nav-link custom-link"
                             to="/register"
                         >
                             Đăng ký
                         </router-link>
+                    </li>
+                    <!-- Logout Link -->
+                    <li v-if="user" class="nav-item">
+                        <button class="nav-link custom-link">Đăng xuất</button>
+                    </li>
+                    <li>
+                        <span>{{ user.holot }} {{ user.ten }}</span>
                     </li>
                 </ul>
             </div>
@@ -60,8 +67,15 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 export default {
     name: 'Header',
+    computed: {
+        ...mapGetters(['isAuthenticated', 'user']), // Map user and authentication status
+    },
+    methods: {
+        ...mapActions(['logout']), // Map the logout action from Vuex
+    },
 };
 </script>
 

@@ -14,6 +14,7 @@ class ReaderService {
             phai: payload.phai,
             diachi: payload.diachi,
             dienthoai: payload.dienthoai,
+            matkhau: payload.matkhau,
         };
 
         Object.keys(reader).forEach(

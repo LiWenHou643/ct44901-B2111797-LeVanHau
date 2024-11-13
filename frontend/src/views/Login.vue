@@ -5,8 +5,9 @@
             <div v-if="successMessage" class="alert alert-success">
                 {{ successMessage }}
             </div>
-            <div v-if="message" class="alert alert-danger">
-                {{ message }}
+
+            <div v-if="errorMessage" class="alert alert-danger">
+                {{ errorMessage }}
             </div>
             <form @submit.prevent="handleSubmit">
                 <div class="mb-3">
@@ -48,20 +49,21 @@
 
 <script>
 import authService from '@/services/auth.service';
-import { mapState } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 export default {
     data() {
         return {
             dienthoai: '',
             matkhau: '',
-            message: '',
+            errorMessage: '',
             isSubmitting: false,
         };
     },
     computed: {
-        ...mapState(['successMessage']),
+        ...mapGetters(['successMessage']), // Map success and error messages from Vuex
     },
     methods: {
+        ...mapActions(['login']),
         async handleSubmit() {
             this.isSubmitting = true;
 
@@ -71,15 +73,26 @@ export default {
                     dienthoai: this.dienthoai,
                     matkhau: this.matkhau,
                 });
+
+                this.login(user); // Commit the user data to Vuex
+                this.dienthoai = '';
+                this.matkhau = '';
+                this.errorMessage = '';
+                // if (user._id) {
+                //     this.$store.commit('setUser', user);
+                //     this.$router.push('/');
+                // }
             } catch (error) {
                 if (
                     error.response &&
                     error.response.data &&
                     error.response.data.message
                 ) {
-                    this.message = error.response.data.message;
+                    this.errorMessage = error.response.data.message;
+                    this.$store.commit('setSuccessMessage', null);
                 } else {
-                    this.message = 'Đã có lỗi xảy ra. Vui lòng thử lại sau.';
+                    this.errorMessage =
+                        'Đã có lỗi xảy ra. Vui lòng thử lại sau.';
                 }
             } finally {
                 this.isSubmitting = false;
