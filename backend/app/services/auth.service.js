@@ -22,6 +22,7 @@ class AuthService {
 
         let user;
 
+        console.log(acc);
         const nv = await this.Employee.findOne({
             dienthoai: acc.dienthoai,
             matkhau: acc.matkhau,
@@ -32,12 +33,16 @@ class AuthService {
             matkhau: acc.matkhau,
         });
 
+        console.log(nv, dg);
+
         if (!nv && !dg) {
             throw new Error('Tài khoản hoặc mật khẩu không đúng');
         }
 
-        const user = nv || dg;
+        user = nv || dg;
 
         return user;
     }
 }
+
+module.exports = AuthService;

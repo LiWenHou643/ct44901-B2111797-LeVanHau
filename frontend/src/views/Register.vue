@@ -196,10 +196,12 @@ export default {
                 this.isSubmitting = true;
                 // Simulate an API call
                 await readerService.create(this.form);
-                this.$router.push({
-                    path: '/login',
-                    query: { message: 'Đăng ký thành công' },
-                });
+
+                // Set the success message in Vuex
+                this.$store.dispatch('setSuccessMessage', 'Đăng ký thành công');
+
+                // Route to the login page
+                this.$router.push('/login');
             } catch (error) {
                 console.log(error);
 

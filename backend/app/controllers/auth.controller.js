@@ -1,17 +1,26 @@
-exports.login = async (req, res) => {
+const ApiError = require('../api-error.js');
+const MongoDB = require('../utils/mongodb.util.js');
+const AuthService = require('../services/auth.service.js');
+
+exports.login = async (req, res, next) => {
     try {
-        const user = await AuthService.login(req.body);
+        const authService = new AuthService(MongoDB.client);
+        const user = await authService.login(req.body);
         res.status(200).json(user);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        return next(
+            new ApiError(500, error.message || 'Có lỗi xảy ra khi đăng nhập!')
+        );
     }
 };
 
 exports.logout = async (req, res) => {
     try {
         // Do something
-        res.status(200).json({ message: 'Logout successfully' });
+        res.status(200).json({ message: 'Đăng xuất thành công' });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        return next(
+            new ApiError(500, error.message || 'Có lỗi xảy ra khi đăng xuất!')
+        );
     }
 };

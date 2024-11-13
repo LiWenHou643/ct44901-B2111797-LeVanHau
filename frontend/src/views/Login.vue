@@ -2,7 +2,12 @@
     <div class="d-flex justify-content-center align-items-center">
         <div class="card p-4 shadow-sm" style="width: 100%; max-width: 400px">
             <h2 class="text-center mb-4">Đăng nhập</h2>
-            <div v-if="message" class="alert alert-success">{{ message }}</div>
+            <div v-if="successMessage" class="alert alert-success">
+                {{ successMessage }}
+            </div>
+            <div v-if="message" class="alert alert-danger">
+                {{ message }}
+            </div>
             <form @submit.prevent="handleSubmit">
                 <div class="mb-3">
                     <label for="dienthoai" class="form-label"
@@ -20,7 +25,7 @@
                 <div class="mb-3">
                     <label for="matkhau" class="form-label">Mật khẩu</label>
                     <input
-                        type="matkhau"
+                        type="password"
                         id="matkhau"
                         class="form-control"
                         v-model="matkhau"
@@ -43,7 +48,7 @@
 
 <script>
 import authService from '@/services/auth.service';
-import { useRoute } from 'vue-router';
+import { mapState } from 'vuex';
 export default {
     data() {
         return {
@@ -53,10 +58,8 @@ export default {
             isSubmitting: false,
         };
     },
-    setup() {
-        const route = useRoute();
-        const message = route.query.message || '';
-        return { message };
+    computed: {
+        ...mapState(['successMessage']),
     },
     methods: {
         async handleSubmit() {

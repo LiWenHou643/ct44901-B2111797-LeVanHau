@@ -7,7 +7,7 @@ class AuthService {
         return (await this.api.post('/login', data)).data;
     }
 
-    async login(data) {
+    async logout(data) {
         return (await this.api.post('/logout', data)).data;
     }
 }

@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <nav class="navbar navbar-expand-lg shadow-sm">
         <div class="container-fluid">
             <!-- Logo/Brand -->
             <a class="navbar-brand" href="#">MyApp</a>
@@ -18,10 +18,7 @@
             </button>
 
             <!-- Navbar Links -->
-            <div
-                class="collapse navbar-collapse align-items-center d-flex"
-                id="navbarNav"
-            >
+            <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <router-link
@@ -72,18 +69,19 @@ export default {
 /* Optional: Custom Styling for the header if needed */
 .navbar {
     padding: 1rem;
+    background-color: #ffffff;
 }
 .navbar-nav .nav-link {
     font-size: 18px;
 }
 
-.navbar-light .navbar-toggler-icon {
-    background-color: #000;
+.nav-item {
+    display: flex;
+    align-items: center;
 }
 
 .custom-link {
     border-radius: 5px;
-    padding: 4px 10px;
     margin: 4px;
     font-weight: bold;
     border: 1px solid #007bff;
