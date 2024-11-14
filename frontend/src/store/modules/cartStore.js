@@ -5,17 +5,16 @@ const cartStore = {
         cart: JSON.parse(sessionStorage.getItem('cart')) || [],
     },
     mutations: {
-        ADD_TO_CART(state, product) {
+        ADD_TO_CART(state, product, quantity) {
             const existingProduct = state.cart.find(
                 (item) => item._id === product._id
             );
 
             if (existingProduct) {
-                // If the product exists, increment the quantity
-                existingProduct.quantity += 1;
+                return;
             } else {
                 // If the product doesn't exist, add a new product to the cart with quantity 1
-                state.cart.push({ ...product, quantity: 1 });
+                state.cart.push({ ...product, soluongmuon: quantity });
             }
 
             // Persist the updated cart in sessionStorage
@@ -42,11 +41,15 @@ const cartStore = {
         },
     },
     getters: {
-        cart: (state) => state.cart,
+        cart: (state) => {
+            return state.cart;
+        },
         cartTotal: (state) =>
             state.cart
                 .reduce((total, item) => total + item.price, 0)
                 .toFixed(2),
+        cartQuantity: (state) =>
+            state.cart.reduce((total, item) => total + item.soluongmuon, 0),
     },
 };
 

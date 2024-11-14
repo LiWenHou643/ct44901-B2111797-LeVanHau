@@ -200,8 +200,8 @@ export default {
                 // Simulate an API call
                 await readerService.create(this.form);
                 // Set the success message in Vuex
-                this.$authStore.dispatch(
-                    'setSuccessMessage',
+                this.$store.dispatch(
+                    'auth/setSuccessMessage',
                     'Đăng ký thành công'
                 );
                 // Route to the login page
@@ -219,7 +219,7 @@ export default {
                 }
 
                 // If validation fails, store errors
-                error.inner.forEach((error) => {
+                error?.inner?.forEach((error) => {
                     this.errors[error.path] = error.message;
                 });
             } finally {

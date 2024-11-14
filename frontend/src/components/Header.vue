@@ -43,13 +43,18 @@
                     </li>
                     <li class="nav-item">
                         <router-link
-                            class="nav-link"
+                            class="nav-link me-4 position-relative"
                             :class="{ active: $route.path === '/cart' }"
                             :to="{ name: 'cart' }"
                         >
-                            Giỏ mượn {{}}
+                            Giỏ mượn
+                            <span
+                                class="badge border border-1 text-bg-light bg-success-subtle position-absolute top-0"
+                                >{{ cartQuantity }}</span
+                            >
                         </router-link>
                     </li>
+
                     <li v-if="!user" class="nav-item">
                         <router-link class="nav-link custom-link" to="/login">
                             Đăng nhập
@@ -110,6 +115,7 @@ export default {
     },
     computed: {
         ...mapGetters('auth', ['isAuthenticated', 'user']), // Map user and authentication status
+        ...mapGetters('cart', ['cartQuantity']), // Map the cart item count
     },
     watch: {
         // Watch for changes in the 'user' state from Vuex
@@ -125,7 +131,6 @@ export default {
 
         toggleMenu() {
             this.isMenuVisible = !this.isMenuVisible;
-            console.log(this.isMenuVisible);
         },
         // Handle logout action
         logout() {

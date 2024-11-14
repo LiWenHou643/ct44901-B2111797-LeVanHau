@@ -127,9 +127,16 @@ class BookService {
                         tacgia: '$tacgia',
                         anhbia: '$anhbia',
                         nxb: {
-                            manxb: '$publisher._id',
-                            tennxb: '$publisher.tennxb',
-                            diachi: '$publisher.diachi',
+                            manxb: { $ifNull: ['$publisher._id', null] },
+                            tennxb: {
+                                $ifNull: [
+                                    '$publisher.tennxb',
+                                    'Unknown Publisher',
+                                ],
+                            },
+                            diachi: {
+                                $ifNull: ['$publisher.diachi', 'No Address'],
+                            },
                         },
                     },
                 },

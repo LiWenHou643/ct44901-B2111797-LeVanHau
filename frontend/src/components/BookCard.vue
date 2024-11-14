@@ -26,6 +26,9 @@
 </template>
 
 <script>
+import cartService from '@/services/cart.service';
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
     name: 'BookCard',
     props: {
@@ -34,10 +37,21 @@ export default {
             required: true,
         },
     },
+    computed: {
+        ...mapGetters('auth', ['user', 'isAuthenticated']),
+    },
     methods: {
-        addToCart() {
-            // Handle adding book to cart
-            this.$store.dispatch('cart/addToCart', this.book);
+        ...mapActions('cart', ['addToCart']),
+        async addToCart() {
+            if (this.isAuthenticated) {
+                console.log('Adding to cart:', this.book);
+                await cartService.addToCart(this.user._id, {
+                    ...this.book,
+                    soluong: 1,
+                });
+            } else {
+                return this.addToCart(this.book);
+            }
         },
     },
 };
