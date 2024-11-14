@@ -97,6 +97,11 @@ const routes = [
                 component: () => import('@/views/Order.vue'), // Your order page component
                 meta: { requiresAuth: true }, // Mark this route as requiring authentication
             },
+            {
+                path: '/edit-profile',
+                name: 'edit-profile',
+                component: () => import('@/views/EditProfile.vue'), // Your profile page component
+            },
         ],
     },
 ];
