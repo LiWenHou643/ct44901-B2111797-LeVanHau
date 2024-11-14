@@ -1,10 +1,11 @@
+import store from '@/store';
 import AdminLayout from '@/views/AdminLayout.vue';
-
 import { createRouter, createWebHistory } from 'vue-router';
 const routes = [
     {
         path: '/admin/',
         component: AdminLayout,
+        meta: { requiresAdmin: true },
         children: [
             {
                 path: '',
@@ -90,6 +91,12 @@ const routes = [
                 }),
                 component: () => import('@/views/BooksPublic.vue'),
             },
+            {
+                path: '/order',
+                name: 'order',
+                component: () => import('@/views/Order.vue'), // Your order page component
+                meta: { requiresAuth: true }, // Mark this route as requiring authentication
+            },
         ],
     },
 ];
@@ -97,4 +104,22 @@ const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes,
 });
+
+router.beforeEach((to, from, next) => {
+    const isAuthenticated = store.getters.isAuthenticated; // Adjust based on your store setup
+    const userRole = store.getters.user?.loai; // Adjust to get the user role from the store
+
+    // Check if the route requires authentication
+    if (to.meta.requiresAuth || (to.meta.requiresAdmin && !isAuthenticated)) {
+        return next({ name: 'login' }); // Redirect to login if not authenticated
+    }
+
+    // Check if the route requires admin access
+    if (to.meta.requiresAdmin && userRole !== 'nhanvien') {
+        return next({ name: 'home' }); // Redirect to home if not an admin
+    }
+
+    next(); // Allow navigation if all checks pass
+});
+
 export default router;

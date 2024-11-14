@@ -78,10 +78,13 @@ export default {
                 this.dienthoai = '';
                 this.matkhau = '';
                 this.errorMessage = '';
-                // if (user._id) {
-                //     this.$store.commit('setUser', user);
-                //     this.$router.push('/');
-                // }
+                if (user._id) {
+                    if (user.loai === 'nhanvien') {
+                        this.$router.push('/admin');
+                    } else {
+                        this.$router.push('/');
+                    }
+                }
             } catch (error) {
                 if (
                     error.response &&

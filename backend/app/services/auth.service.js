@@ -37,6 +37,19 @@ class AuthService {
         }
 
         user = nv || dg;
+        user = {
+            ...user,
+            hoten: user?.hotennv || user?.holot + ' ' + user?.ten,
+            loai: nv ? 'nhanvien' : 'docgia',
+            holot: undefined,
+            ten: undefined,
+            hotennv: undefined,
+            matkhau: undefined,
+        };
+
+        Object.keys(user).forEach(
+            (key) => user[key] === undefined && delete user[key]
+        );
 
         return {
             ...user,

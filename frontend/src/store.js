@@ -3,8 +3,8 @@ import { createStore } from 'vuex';
 
 const store = createStore({
     state: {
-        isAuthenticated: false, // Initialize as false
-        user: null, // Initialize user data
+        isAuthenticated: false,
+        user: null,
         successMessage: '',
     },
     mutations: {
@@ -12,28 +12,46 @@ const store = createStore({
             state.successMessage = message;
         },
         setAuthentication(state, user) {
-            state.isAuthenticated = !!user; // Update authenticated state based on user existence
-            state.user = user; // Set user data
+            state.isAuthenticated = !!user;
+            state.user = user;
+
+            // Persist to localStorage
+            if (state.isAuthenticated && user) {
+                localStorage.setItem('user', JSON.stringify(user)); // Save user info
+                localStorage.setItem('isAuthenticated', true); // Mark user as authenticated
+            } else {
+                localStorage.removeItem('user'); // Remove user info when logging out
+                localStorage.removeItem('isAuthenticated'); // Mark user as not authenticated
+            }
         },
     },
     actions: {
         login({ commit }, userData) {
-            // Assuming userData is the object received from the login API
-            if (userData) {
-                commit('setAuthentication', userData); // Commit user data on successful login
-                commit('setSuccessMessage', 'Đăng nhập thành công!'); // Set success message
-            }
+            commit('setAuthentication', userData);
         },
         logout({ commit }) {
-            commit('setAuthentication', null); // Clear user data on logout
-            commit('setSuccessMessage', 'Đăng xuất thành công!'); // Optional: Set logout success message
+            commit('setAuthentication', null);
+        },
+        setSuccessMessage({ commit }, message) {
+            commit('setSuccessMessage', message);
         },
     },
     getters: {
-        isAuthenticated: (state) => state.isAuthenticated, // Getter for authentication state
-        user: (state) => state.user, // Getter for user information
-        successMessage: (state) => state.successMessage, // Getter for success messages
+        isAuthenticated: (state) => state.isAuthenticated,
+        user: (state) => state.user,
+        successMessage: (state) => state.successMessage,
     },
+    // Initialize the state from localStorage
+    plugins: [
+        (store) => {
+            const savedUser = localStorage.getItem('user');
+            const savedAuth = localStorage.getItem('isAuthenticated');
+
+            if (savedUser && savedAuth) {
+                store.commit('setAuthentication', JSON.parse(savedUser));
+            }
+        },
+    ],
 });
 
 export default store;

@@ -83,8 +83,9 @@ export default {
             );
         },
         logout() {
-            // Handle the logout logic (e.g., clear session, redirect, etc.)
-            console.log('Logging out...');
+            // Perform logout logic, such as clearing user data and redirecting
+            this.$store.dispatch('logout');
+            this.$router.push('/login');
         },
     },
 };

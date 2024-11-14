@@ -13,14 +13,3 @@ exports.login = async (req, res, next) => {
         );
     }
 };
-
-exports.logout = async (req, res) => {
-    try {
-        // Do something
-        res.status(200).json({ message: 'Đăng xuất thành công' });
-    } catch (error) {
-        return next(
-            new ApiError(500, error.message || 'Có lỗi xảy ra khi đăng xuất!')
-        );
-    }
-};

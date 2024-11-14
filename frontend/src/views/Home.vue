@@ -13,9 +13,9 @@
                     hàng. Hãy đến với chúng tôi để trải nghiệm những cuốn sách
                     tuyệt vời nhất. Chúng tôi luôn sẵn lòng phục vụ bạn.
                 </p>
-                <button class="btn btn-primary btn-lg mt-4">
+                <router-link class="btn btn-primary btn-lg mt-4" to="/books">
                     Khám phá ngay
-                </button>
+                </router-link>
             </div>
         </section>
 

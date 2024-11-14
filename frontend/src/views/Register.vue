@@ -2,7 +2,9 @@
     <div class="d-flex justify-content-center align-items-center p-3">
         <div class="card p-4 shadow-sm">
             <h2 class="text-center mb-4">Đăng ký tài khoản</h2>
-
+            <div v-if="errorMessage" class="alert alert-danger">
+                {{ errorMessage }}
+            </div>
             <form @submit.prevent="handleSubmit">
                 <div class="row mb-3">
                     <div class="col">
@@ -155,6 +157,7 @@ export default {
             },
             errors: {},
             isSubmitting: false,
+            errorMessage: '',
         };
     },
     methods: {
@@ -196,10 +199,8 @@ export default {
                 this.isSubmitting = true;
                 // Simulate an API call
                 await readerService.create(this.form);
-
                 // Set the success message in Vuex
                 this.$store.dispatch('setSuccessMessage', 'Đăng ký thành công');
-
                 // Route to the login page
                 this.$router.push('/login');
             } catch (error) {
@@ -211,7 +212,7 @@ export default {
                     error.response.data.message
                 ) {
                     // If the backend sends an error message, display it
-                    alert(error.response.data.message); // Show the error message returned by the backend
+                    this.errorMessage = error.response.data.message; // Show the error message returned by the backend
                 }
 
                 // If validation fails, store errors
