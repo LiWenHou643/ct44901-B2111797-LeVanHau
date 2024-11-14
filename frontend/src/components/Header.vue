@@ -41,7 +41,15 @@
                             Sách
                         </router-link>
                     </li>
-                    <!-- Login/Register Links -->
+                    <li class="nav-item">
+                        <router-link
+                            class="nav-link"
+                            :class="{ active: $route.path === '/cart' }"
+                            :to="{ name: 'cart' }"
+                        >
+                            Giỏ mượn {{}}
+                        </router-link>
+                    </li>
                     <li v-if="!user" class="nav-item">
                         <router-link class="nav-link custom-link" to="/login">
                             Đăng nhập
@@ -55,6 +63,7 @@
                             Đăng ký
                         </router-link>
                     </li>
+
                     <li v-if="user" class="nav-item">
                         <!-- Clickable username to show/hide the menu -->
                         <span @click="toggleMenu" class="user-name">
@@ -65,12 +74,13 @@
                         <div v-if="isMenuVisible" class="user-menu">
                             <ul>
                                 <li>
-                                    <button
-                                        @click="editProfile"
+                                    <router-link
                                         class="nav-link custom-link"
+                                        to="/edit-profile"
+                                        @click="toggleMenu"
                                     >
                                         Chỉnh sửa hồ sơ
-                                    </button>
+                                    </router-link>
                                 </li>
                                 <li>
                                     <button
@@ -106,15 +116,11 @@ export default {
         toggleMenu() {
             this.isMenuVisible = !this.isMenuVisible;
         },
-        // Handle edit profile action
-        editProfile() {
-            // Redirect to profile edit page or show a modal
-            this.$router.push('/profile/edit');
-        },
         // Handle logout action
         logout() {
             // Perform logout logic, such as clearing user data and redirecting
             this.$store.dispatch('logout');
+            localStorage.removeItem('cart');
             this.$router.push('/login');
         },
     },

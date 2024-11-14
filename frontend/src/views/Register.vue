@@ -200,7 +200,10 @@ export default {
                 // Simulate an API call
                 await readerService.create(this.form);
                 // Set the success message in Vuex
-                this.$store.dispatch('setSuccessMessage', 'Đăng ký thành công');
+                this.$authStore.dispatch(
+                    'setSuccessMessage',
+                    'Đăng ký thành công'
+                );
                 // Route to the login page
                 this.$router.push('/login');
             } catch (error) {

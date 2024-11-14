@@ -4,6 +4,7 @@ class ReaderService {
     constructor(client) {
         this.Reader = client.db().collection('docgia');
         this.Track = client.db().collection('theodoimuontra');
+        this.Cart = client.db().collection('giohang');
     }
 
     extractReaderData(payload) {
@@ -44,6 +45,13 @@ class ReaderService {
         const insertedReader = await this.Reader.findOne({
             _id: result.insertedId,
         });
+
+        if (insertedReader) {
+            await this.Cart.insertOne({
+                madocgia: insertedReader._id,
+                sach: [],
+            });
+        }
 
         return {
             madocgia: insertedReader._id,

@@ -1,7 +1,7 @@
 // store.js
 import { createStore } from 'vuex';
 
-const store = createStore({
+const authStore = createStore({
     state: {
         isAuthenticated: false,
         user: null,
@@ -54,4 +54,4 @@ const store = createStore({
     ],
 });
 
-export default store;
+export default authStore;

@@ -1,4 +1,4 @@
-import store from '@/store';
+import store from '@/store/modules/authStore';
 import AdminLayout from '@/views/AdminLayout.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 const routes = [
@@ -92,6 +92,11 @@ const routes = [
                 component: () => import('@/views/BooksPublic.vue'),
             },
             {
+                path: '/cart',
+                name: 'cart',
+                component: () => import('@/views/Cart.vue'),
+            },
+            {
                 path: '/order',
                 name: 'order',
                 component: () => import('@/views/Order.vue'), // Your order page component
@@ -102,7 +107,18 @@ const routes = [
                 name: 'edit-profile',
                 component: () => import('@/views/EditProfile.vue'), // Your profile page component
             },
+            {
+                path: '/checkout',
+                name: 'checkout',
+                component: () => import('@/views/Checkout.vue'),
+                meta: { requiresAuth: true }, // Requires the user to be authenticated
+            },
         ],
+    },
+    {
+        path: '/:pathMatch(.*)*', // This matches any route not defined above
+        name: 'PageNotFound',
+        component: () => import('@/views/PageNotFound.vue'), // Path to your 404 component
     },
 ];
 const router = createRouter({

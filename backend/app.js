@@ -7,6 +7,7 @@ const employeeRouter = require('./app/routes/employee.route.js');
 const trackRouter = require('./app/routes/track.route.js');
 const publisherRouter = require('./app/routes/publisher.route.js');
 const authRouter = require('./app/routes/auth.route.js');
+const cartRouter = require('./app/routes/cart.route.js');
 
 const MongoDB = require('./app/utils/mongodb.util.js');
 const ApiError = require('./app/api-error.js');
@@ -24,6 +25,7 @@ app.use('/api/employees', employeeRouter);
 app.use('/api/tracks', trackRouter);
 app.use('/api/publishers', publisherRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/cart', cartRouter);
 
 app.use((req, res, next) => {
     return next(new ApiError(404, 'Not Found'));

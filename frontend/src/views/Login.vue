@@ -60,10 +60,10 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(['successMessage']), // Map success and error messages from Vuex
+        ...mapGetters('auth', ['successMessage']), // Map success and error messages from Vuex
     },
     methods: {
-        ...mapActions(['login']),
+        ...mapActions('auth', ['login']),
         async handleSubmit() {
             this.isSubmitting = true;
 
