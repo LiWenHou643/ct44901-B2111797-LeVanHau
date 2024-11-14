@@ -6,8 +6,20 @@ const cartStore = {
     },
     mutations: {
         ADD_TO_CART(state, product) {
-            state.cart.push(product);
-            sessionStorage.setItem('cart', JSON.stringify(state.cart)); // Persist cart in sessionStorage
+            const existingProduct = state.cart.find(
+                (item) => item._id === product._id
+            );
+
+            if (existingProduct) {
+                // If the product exists, increment the quantity
+                existingProduct.quantity += 1;
+            } else {
+                // If the product doesn't exist, add a new product to the cart with quantity 1
+                state.cart.push({ ...product, quantity: 1 });
+            }
+
+            // Persist the updated cart in sessionStorage
+            sessionStorage.setItem('cart', JSON.stringify(state.cart));
         },
         REMOVE_FROM_CART(state, productId) {
             state.cart = state.cart.filter((item) => item.id !== productId);

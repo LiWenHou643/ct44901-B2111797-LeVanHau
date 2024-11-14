@@ -37,7 +37,7 @@ export default {
     methods: {
         addToCart() {
             // Handle adding book to cart
-            this.$cartStore.dispatch('addToCart', this.book);
+            this.$store.dispatch('cart/addToCart', this.book);
         },
     },
 };
