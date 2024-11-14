@@ -5,8 +5,8 @@ import cart from './modules/cartStore';
 
 const store = createStore({
     modules: {
-        cart, // Cart module
-        auth, // Auth module
+        cart: cart, // Cart module
+        auth: auth, // Auth module
     },
 });
 

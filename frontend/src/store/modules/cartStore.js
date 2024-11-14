@@ -1,7 +1,5 @@
-// store/cartStore.js
-import { createStore } from 'vuex';
-
-const cartStore = createStore({
+const cartStore = {
+    namespaced: true,
     state: {
         // Initialize cart state from sessionStorage or an empty array
         cart: JSON.parse(sessionStorage.getItem('cart')) || [],
@@ -38,6 +36,6 @@ const cartStore = createStore({
                 .reduce((total, item) => total + item.price, 0)
                 .toFixed(2),
     },
-});
+};
 
 export default cartStore;

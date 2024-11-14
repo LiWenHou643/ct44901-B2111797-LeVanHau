@@ -129,14 +129,13 @@ export default {
                 matkhau: '',
                 xacnhanmatkhau: '',
             },
-            user: this.$store.state.user,
             errors: {},
             isSubmitting: false,
             errorMessage: '',
         };
     },
     computed: {
-        ...mapGetters(['successMessage']), // Map success and error messages from Vuex
+        ...mapGetters('auth', ['user', 'successMessage']), // Map success and error messages from Vuex
     },
     created() {
         this.fetchUser();
@@ -173,7 +172,7 @@ export default {
                 await readerService.update(this.user._id, this.form);
                 // Set the success message in Vuex
                 this.$store.dispatch(
-                    'setSuccessMessage',
+                    'auth/setSuccessMessage',
                     'Cập nhật thông tin thành công'
                 );
                 // Route to the login page

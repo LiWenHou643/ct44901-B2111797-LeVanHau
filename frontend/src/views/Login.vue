@@ -92,7 +92,7 @@ export default {
                     error.response.data.message
                 ) {
                     this.errorMessage = error.response.data.message;
-                    this.$store.commit('setSuccessMessage', null);
+                    this.$store.commit('auth/setSuccessMessage', null);
                 } else {
                     this.errorMessage =
                         'Đã có lỗi xảy ra. Vui lòng thử lại sau.';

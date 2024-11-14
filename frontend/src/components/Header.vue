@@ -109,17 +109,28 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(['isAuthenticated', 'user']), // Map user and authentication status
+        ...mapGetters('auth', ['isAuthenticated', 'user']), // Map user and authentication status
+    },
+    watch: {
+        // Watch for changes in the 'user' state from Vuex
+        user(newUser) {
+            // If the user has logged in (i.e., user is not null), reset the menu visibility
+            if (newUser) {
+                this.isMenuVisible = false; // Hide the menu on login
+            }
+        },
     },
     methods: {
-        ...mapActions(['logout']), // Map the logout action from Vuex
+        ...mapActions('auth', ['logout']), // Map the logout action from Vuex
+
         toggleMenu() {
             this.isMenuVisible = !this.isMenuVisible;
+            console.log(this.isMenuVisible);
         },
         // Handle logout action
         logout() {
             // Perform logout logic, such as clearing user data and redirecting
-            this.$store.dispatch('logout');
+            this.$store.dispatch('auth/logout');
             localStorage.removeItem('cart');
             this.$router.push('/login');
         },
