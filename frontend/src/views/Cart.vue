@@ -15,7 +15,10 @@
                                     item.soluong
                                 }})</span
                             >
-                            <button class="btn btn-danger btn-sm" @click="">
+                            <button
+                                class="btn btn-danger btn-sm"
+                                @click="removeFromCart(item)"
+                            >
                                 Xoá
                             </button>
                         </li>
@@ -28,14 +31,17 @@
                     <div
                         class="d-flex justify-content-between align-items-center"
                     >
-                        <p class="fw-bold mb-0">Tổng phí mượn:</p>
+                        <p class="fw-bold mb-0">
+                            Tổng phí mượn: {{ formatPrice }}
+                        </p>
                         <div>
-                            <router-link
-                                to="/checkout"
+                            <button
                                 v-if="isAuthenticated"
                                 class="btn btn-primary"
-                                >Gửi yêu cầu</router-link
+                                @click="order"
                             >
+                                Gửi yêu cầu
+                            </button>
                             <router-link
                                 v-else
                                 to="/login"
@@ -61,19 +67,48 @@
 </template>
 
 <script>
-import cartService from '@/services/cart.service';
+import orderService from '@/services/order.service';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
     computed: {
-        ...mapGetters('cart', ['cartItems', 'cartQuantity']),
-        ...mapGetters('auth', ['isAuthenticated']),
+        ...mapGetters('cart', ['cartItems', 'cartQuantity', 'cartTotal']),
+        ...mapGetters('auth', ['user', 'isAuthenticated']),
+        formatPrice() {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+            }).format(this.cartTotal); // Use cartTotal directly from Vuex state
+        },
     },
     methods: {
-        ...mapActions('cart', ['removeFromCart']),
+        ...mapActions('cart', ['clearCart']),
 
         redirectToLogin() {
             this.$router.push({ name: 'login' });
+        },
+
+        removeFromCart(item) {
+            console.log('Removing from cart:', item);
+            this.$store.dispatch('cart/removeFromCart', {
+                product: item,
+                quantity: -1,
+            });
+        },
+
+        async order() {
+            try {
+                const order = await orderService.createOrder(
+                    this.user._id,
+                    this.cartItems
+                );
+                if (order) {
+                    this.clearCart();
+                }
+                this.$router.push({ name: 'order' });
+            } catch (error) {
+                console.error(error);
+            }
         },
     },
 };

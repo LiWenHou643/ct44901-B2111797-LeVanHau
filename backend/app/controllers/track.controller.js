@@ -22,10 +22,10 @@ exports.findAll = async (req, res, next) => {
     let documents = [];
     try {
         const trackBorrowService = new TrackBorrowService(MongoDB.client);
-        const { readerId } = req.query;
-        if (readerId)
+        const { userId } = req.query;
+        if (userId)
             documents = await trackBorrowService.find({
-                madocgia: readerId,
+                madocgia: userId,
             });
         else documents = await trackBorrowService.find({});
     } catch (error) {
@@ -38,25 +38,6 @@ exports.findAll = async (req, res, next) => {
     }
 
     return res.send(documents);
-};
-
-exports.findOne = async (req, res, next) => {
-    try {
-        const trackBorrowService = new TrackBorrowService(MongoDB.client);
-        const document = await trackBorrowService.findById(req.params.id);
-        if (!document) {
-            return next(new ApiError(404, 'Không tìm thấy phiếu mượn'));
-        }
-        return res.send(document);
-    } catch (error) {
-        return next(
-            new ApiError(
-                500,
-                error.message ||
-                    `Có lỗi xảy ra khi lấy phiếu mượn bằng id: ${req.params.id}`
-            )
-        );
-    }
 };
 
 exports.update = async (req, res, next) => {

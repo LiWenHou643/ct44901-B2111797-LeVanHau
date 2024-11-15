@@ -24,7 +24,9 @@ const cartStore = {
             sessionStorage.setItem('cart', JSON.stringify(state.cart)); // persist to sessionStorage
         },
         REMOVE_FROM_CART(state, productId) {
-            state.cart = state.cart.filter((item) => item._id !== productId);
+            state.cart.sach = state.cart.sach.filter(
+                (item) => item.masach !== productId
+            );
             sessionStorage.setItem('cart', JSON.stringify(state.cart)); // persist to sessionStorage
         },
         CLEAR_CART(state) {
@@ -57,9 +59,24 @@ const cartStore = {
             }
         },
 
-        removeFromCart({ commit }, productId) {
-            commit('REMOVE_FROM_CART', productId);
+        async removeFromCart({ commit, rootState }, { product, quantity }) {
+            commit('REMOVE_FROM_CART', product.masach);
+
+            if (rootState.auth.isAuthenticated) {
+                try {
+                    console.log('Removing item from the backend cart');
+                    const userId = rootState.auth.user._id; // Get the user ID from the auth store
+                    await cartService.removeFromCart(userId, {
+                        ...product,
+                        soluong: quantity,
+                    }); // Call the API to add the product to the backend cart
+                    console.log('Cart synced with the backend');
+                } catch (error) {
+                    console.error('Failed to sync cart with backend:', error);
+                }
+            }
         },
+
         clearCart({ commit }) {
             commit('CLEAR_CART');
         },
@@ -118,12 +135,10 @@ const cartStore = {
         cart: (state) => state.cart,
         cartItems: (state) => state.cart.sach || [],
         cartTotal: (state) =>
-            state.cart
-                .reduce(
-                    (total, item) => total + item.price * item.soluongmuon,
-                    0
-                )
-                .toFixed(2),
+            state.cart.sach.reduce(
+                (total, item) => total + item.dongia * item.soluong,
+                0
+            ),
         cartQuantity: (state) =>
             state.cart?.sach.reduce((total, item) => total + item.soluong, 0) ||
             0,

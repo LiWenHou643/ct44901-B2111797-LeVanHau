@@ -5,6 +5,7 @@ class TrackService {
         this.Borrow = client.db().collection('theodoimuonsach');
         this.Reader = client.db().collection('docgia');
         this.Book = client.db().collection('sach');
+        this.Cart = client.db().collection('giohang');
     }
 
     extractborrowData(payload) {
@@ -26,70 +27,39 @@ class TrackService {
     async create(payload) {
         // Check if reader exists
         const reader = await this.Reader.findOne({
-            _id: new ObjectId(payload.madocgia),
+            _id: new ObjectId(payload.userId),
         });
 
         if (!reader) {
             throw new Error('Mã độc giả không tồn tại');
         }
 
-        // Check if book exists
-        const book = await this.Book.findOne({
-            _id: new ObjectId(payload.masach),
-        });
-
-        if (!book) {
-            throw new Error('Mã sách không tồn tại');
-        } else if (book.soquyen === 0) {
-            throw new Error('Sách đã hết');
-        }
-
-        // Check if book is borrowed
-        const borrowed = await this.Borrow.findOne({
-            masach: new ObjectId(payload.masach),
-            madocgia: new ObjectId(payload.madocgia),
-            ngaymuon: payload.ngaymuon,
-            ngaytra: payload.ngaytra,
-        });
-
-        if (borrowed) {
-            throw new Error(
-                `Đọc giả ${reader.ten} đã mượn sách ${book.tensach} vào ngày ${payload.ngaymuon}`
-            );
-        }
-
-        const borrow = this.extractborrowData(payload);
-
         const result = await this.Borrow.insertOne({
-            ...borrow,
-            masach: new ObjectId(borrow.masach),
-            madocgia: new ObjectId(borrow.madocgia),
-            msnv: new ObjectId(borrow.msnv),
+            madocgia: new ObjectId(payload.userId),
+            sach: payload.order,
+            ngayyeucau: new Date(),
         });
-
-        const updatedBook = await this.Book.findOneAndUpdate(
-            { _id: new ObjectId(borrow.masach) },
-            {
-                $inc: { soquyen: -1 },
-            },
-            {
-                returnDocument: 'after',
-            }
-        );
-
-        console.log(updatedBook);
-
-        const insertedborrow = await this.Borrow.findOne({
+        const insertedBorrow = await this.Borrow.findOne({
             _id: result.insertedId,
         });
 
-        return {
-            madocgia: insertedborrow.madocgia,
-            masach: insertedborrow.masach,
-            msnv: insertedborrow.msnv,
-            ngaymuon: insertedborrow.ngaymuon,
-            ngaytra: insertedborrow.ngaytra,
-        };
+        if (insertedBorrow) {
+            await this.Cart.findOneAndUpdate(
+                {
+                    madocgia: new ObjectId(payload.userId),
+                },
+                {
+                    $set: {
+                        sach: [],
+                    },
+                },
+                {
+                    returnDocument: 'after',
+                }
+            );
+        }
+
+        return insertedBorrow;
     }
 
     async find(filter) {

@@ -107,12 +107,6 @@ const routes = [
                 name: 'edit-profile',
                 component: () => import('@/views/EditProfile.vue'), // Your profile page component
             },
-            {
-                path: '/checkout',
-                name: 'checkout',
-                component: () => import('@/views/Checkout.vue'),
-                meta: { requiresAuth: true }, // Requires the user to be authenticated
-            },
         ],
     },
     {
@@ -131,7 +125,10 @@ router.beforeEach((to, from, next) => {
     const userRole = store.getters.user?.loai; // Adjust to get the user role from the store
 
     // Check if the route requires authentication
-    if (to.meta.requiresAuth || (to.meta.requiresAdmin && !isAuthenticated)) {
+    if (
+        (to.meta.requiresAuth && !isAuthenticated) ||
+        (to.meta.requiresAdmin && !isAuthenticated)
+    ) {
         return next({ name: 'login' }); // Redirect to login if not authenticated
     }
 

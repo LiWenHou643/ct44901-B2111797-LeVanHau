@@ -9,10 +9,6 @@ router
     .post(tracks.create)
     .delete(tracks.deleteAll);
 
-router
-    .route('/:id')
-    .get(tracks.findOne)
-    .put(tracks.update)
-    .delete(tracks.delete);
+router.route('/:id').put(tracks.update).delete(tracks.delete);
 
 module.exports = router;

@@ -47,18 +47,31 @@ exports.addToCart = async (req, res, next) => {
         const cart = await cartService.addToCart(id, book);
         return res.send(cart);
     } catch (error) {
-        next(error);
+        next(
+            new ApiError(
+                500,
+                error.message || 'Có lỗi xảy ra khi thêm vào giỏ hàng!'
+            )
+        );
     }
 };
 
 exports.removeFromCart = async (req, res, next) => {
     try {
-        const userId = req.user.id;
-        const productId = req.body.productId;
-        const cart = await CartService.removeFromCart(userId, productId);
-        res.json(cart);
+        const userId = req.body.id;
+        const book = req.body.book;
+
+        console.log(userId, book);
+        const cartService = new CartService(MongoDB.client);
+        const cart = await cartService.removeFromCart(userId, book);
+        return res.send(cart);
     } catch (error) {
-        next(error);
+        next(
+            new ApiError(
+                500,
+                error.message || 'Có lỗi xảy ra khi xoá sản phẩm khỏi giỏ hàng!'
+            )
+        );
     }
 };
 
@@ -66,8 +79,13 @@ exports.clearCart = async (req, res, next) => {
     try {
         const userId = req.user.id;
         const cart = await CartService.clearCart(userId);
-        res.json(cart);
+        return res.send(cart);
     } catch (error) {
-        next(error);
+        next(
+            new ApiError(
+                500,
+                error.message || 'Có lỗi xảy ra khi làm trống giỏ hàng!'
+            )
+        );
     }
 };

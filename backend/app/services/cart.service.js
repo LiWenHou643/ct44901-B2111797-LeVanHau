@@ -17,7 +17,7 @@ class CartService {
     async addToCart(id, book) {
         const saveBook = {
             ...book,
-            masach: new ObjectId(book.masach),
+            masach: book.masach,
             soquyen: undefined,
         };
 
@@ -34,9 +34,9 @@ class CartService {
         const cart = await this.Cart.findOne(query);
 
         if (cart) {
-            const existingBook = cart.sach.find(
-                (item) => item.masach.equals(saveBook.masach) // Use .equals() for ObjectId comparison
-            );
+            const existingBook = cart.sach.find((item) => {
+                return item.masach === saveBook.masach; // Use strict equality for string comparison
+            });
 
             if (existingBook) {
                 existingBook.soluong += saveBook.soluong;
@@ -81,6 +81,30 @@ class CartService {
 
     async deleteAll() {
         return this.Cart.deleteMany();
+    }
+
+    async removeFromCart(userId, book) {
+        const query = {
+            madocgia: new ObjectId(userId),
+        };
+
+        const cart = await this.Cart.findOne(query);
+
+        console.log(cart);
+
+        if (cart) {
+            cart.sach = cart.sach.filter((item) => item.masach !== book.masach);
+
+            console.log(cart.sach.length);
+
+            return await this.Cart.findOneAndUpdate(
+                query,
+                { $set: { sach: cart.sach } },
+                {
+                    returnDocument: ReturnDocument.AFTER,
+                }
+            );
+        }
     }
 }
 

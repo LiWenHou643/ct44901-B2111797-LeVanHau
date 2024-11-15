@@ -8,11 +8,11 @@ class CartService {
     }
 
     async addToCart(id, book) {
-        return (await this.api.put('/', { id, book })).data;
+        return (await this.api.put('/add', { id, book })).data;
     }
 
-    async updateCart(id, books) {
-        return (await this.api.put('/', { id, books })).data;
+    async removeFromCart(id, book) {
+        return (await this.api.put('/remove', { id, book })).data;
     }
 }
 
