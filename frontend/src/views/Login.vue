@@ -79,6 +79,7 @@ export default {
                 this.matkhau = '';
                 this.errorMessage = '';
                 if (user._id) {
+                    console.log(user);
                     if (user.loai === 'nhanvien') {
                         this.$router.push('/admin');
                     } else {

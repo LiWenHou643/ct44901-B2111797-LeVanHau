@@ -1,89 +1,201 @@
 <template>
-    <table class="table">
-        <thead>
-            <tr>
-                <th @click="sortTable('hotendocgia')">
-                    Họ tên đọc giả
-                    <span v-if="sortBy === 'hotendocgia'">
-                        <i
-                            v-if="sortOrder === 'asc'"
-                            class="fa fa-arrow-up"
-                        ></i>
-                        <i v-else class="fa fa-arrow-down"></i>
-                    </span>
-                </th>
-                <th @click="sortTable('tuasacj')">
-                    Tựa sách
-                    <span v-if="sortBy === 'tuasach'">
-                        <i
-                            v-if="sortOrder === 'asc'"
-                            class="fa fa-arrow-up"
-                        ></i>
-                        <i v-else class="fa fa-arrow-down"></i>
-                    </span>
-                </th>
-                <th @click="sortTable('hotennv')">
-                    Nhân viên
-                    <span v-if="sortBy === 'hotennv'">
-                        <i
-                            v-if="sortOrder === 'asc'"
-                            class="fa fa-arrow-up"
-                        ></i>
-                        <i v-else class="fa fa-arrow-down"></i>
-                    </span>
-                </th>
-                <th @click="sortTable('ngaymuon')">
-                    Ngày mượn
-                    <span v-if="sortBy === 'ngaymuon'">
-                        <i
-                            v-if="sortOrder === 'asc'"
-                            class="fa fa-arrow-up"
-                        ></i>
-                        <i v-else class="fa fa-arrow-down"></i>
-                    </span>
-                </th>
-                <th @click="sortTable('ngaytra')">
-                    Ngày trả
-                    <span v-if="sortBy === 'ngaytra'">
-                        <i
-                            v-if="sortOrder === 'asc'"
-                            class="fa fa-arrow-up"
-                        ></i>
-                        <i v-else class="fa fa-arrow-down"></i>
-                    </span>
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-if="!sortedBorrowings.length">
-                <td colspan="6" class="text-center">Không có dữ liệu</td>
-            </tr>
-            <tr v-for="borrowing in sortedBorrowings" :key="borrowing._id">
-                <td>{{ borrowing.hotendocgia }}</td>
-                <td>{{ borrowing.tensach }}</td>
-                <td>{{ borrowing.hotennhanvien }}</td>
-                <td>{{ borrowing.ngaymuon }}</td>
-                <td>{{ borrowing.ngaytra }}</td>
-                <td>
-                    <button
-                        class="btn btn-success"
-                        v-if="!borrowing.ngaytra"
-                        @click="submitReturn(borrowing)"
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th @click="sortTable('madocgia')">
+                        Mã đọc giả
+                        <span v-if="sortBy === 'madocgia'">
+                            <i
+                                v-if="sortOrder === 'asc'"
+                                class="fa fa-arrow-up"
+                            ></i>
+                            <i v-else class="fa fa-arrow-down"></i>
+                        </span>
+                    </th>
+                    <th @click="sortTable('tuasacj')">
+                        Ngày yêu cầu
+                        <span v-if="sortBy === 'tuasach'">
+                            <i
+                                v-if="sortOrder === 'asc'"
+                                class="fa fa-arrow-up"
+                            ></i>
+                            <i v-else class="fa fa-arrow-down"></i>
+                        </span>
+                    </th>
+
+                    <th @click="sortTable('ngaymuon')">
+                        Ngày mượn
+                        <span v-if="sortBy === 'ngaymuon'">
+                            <i
+                                v-if="sortOrder === 'asc'"
+                                class="fa fa-arrow-up"
+                            ></i>
+                            <i v-else class="fa fa-arrow-down"></i>
+                        </span>
+                    </th>
+                    <th @click="sortTable('ngaytra')">
+                        Ngày trả
+                        <span v-if="sortBy === 'ngaytra'">
+                            <i
+                                v-if="sortOrder === 'asc'"
+                                class="fa fa-arrow-up"
+                            ></i>
+                            <i v-else class="fa fa-arrow-down"></i>
+                        </span>
+                    </th>
+                    <th @click="sortTable('nhanvien')">
+                        Nhân viên
+                        <span v-if="sortBy === 'nhanvien'">
+                            <i
+                                v-if="sortOrder === 'asc'"
+                                class="fa fa-arrow-up"
+                            ></i>
+                            <i v-else class="fa fa-arrow-down"></i>
+                        </span>
+                    </th>
+                    <th @click="sortTable('tinhtrang')">
+                        Tình trạng
+                        <span v-if="sortBy === 'tinhtrang'">
+                            <i
+                                v-if="sortOrder === 'asc'"
+                                class="fa fa-arrow-up"
+                            ></i>
+                            <i v-else class="fa fa-arrow-down"></i>
+                        </span>
+                    </th>
+                    <th @click="sortTable('phimuon')">
+                        Phí mượn
+                        <span v-if="sortBy === 'phimuon'">
+                            <i
+                                v-if="sortOrder === 'asc'"
+                                class="fa fa-arrow-up"
+                            ></i>
+                            <i v-else class="fa fa-arrow-down"></i>
+                        </span>
+                    </th>
+
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-if="!sortedBorrowings.length">
+                    <td colspan="6" class="text-center">Không có dữ liệu</td>
+                </tr>
+                <tr v-for="borrowing in sortedBorrowings" :key="borrowing._id">
+                    <td>{{ borrowing.madocgia }}</td>
+                    <td>{{ convertToLocalTime(borrowing.ngayyeucau) }}</td>
+                    <td>{{ borrowing.ngaymuon }}</td>
+                    <td>{{ borrowing.ngaytra }}</td>
+                    <td>{{ borrowing.nhanvien }}</td>
+                    <td
+                        class="d-flex justify-content-center align-items-center"
                     >
-                        {{ 'Trả' }}
-                    </button>
-                    <button
-                        class="btn btn-danger"
-                        v-else
-                        @click="deleteBorrow(borrowing)"
-                    >
-                        Xóa
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                        <strong
+                            :class="[
+                                'badge text-black p-2',
+                                borrowing.trangthai === 'Chờ xác nhận'
+                                    ? 'bg-warning'
+                                    : 'bg-success',
+                            ]"
+                        >
+                            {{ borrowing.trangthai }}
+                        </strong>
+                    </td>
+                    <td>{{ borrowing.phimuon }}</td>
+
+                    <td>
+                        <button
+                            class="btn btn-success"
+                            @click="openModal(borrowing)"
+                        >
+                            Chi tiết
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Modal -->
+        <div
+            class="modal fade"
+            id="detailsModal"
+            tabindex="-1"
+            aria-labelledby="detailsModalLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="detailsModalLabel">
+                            Chi tiết mượn sách
+                        </h5>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div v-if="selectedBorrowing" class="modal-body">
+                        <p>
+                            <strong>Mã đọc giả:</strong>
+                            {{ selectedBorrowing.madocgia }}
+                        </p>
+                        <p>
+                            <strong>Ngày yêu cầu:</strong>
+                            {{
+                                convertToLocalTime(selectedBorrowing.ngayyeucau)
+                            }}
+                        </p>
+                        <p>
+                            <strong>Ngày mượn:</strong>
+                            {{ selectedBorrowing.ngaymuon }}
+                            <input
+                                type="date"
+                                v-model="selectedBorrowing.ngaymuon"
+                                name="ngaymuon"
+                                id="ngaymuon"
+                            />
+                        </p>
+                        <p>
+                            <strong>Ngày trả:</strong>
+                            {{ selectedBorrowing.ngaytra }}
+                            <input type="date" name="ngaytra" id="ngaytra" />
+                        </p>
+                        <p>
+                            <strong>Nhân viên:</strong>
+                            {{ selectedBorrowing.nhanvien }}
+                        </p>
+                        <p>
+                            <strong>Tình trạng:</strong>
+                            {{ selectedBorrowing.trangthai }}
+                        </p>
+                        <p>
+                            <strong>Phí mượn:</strong>
+                            {{ selectedBorrowing.phimuon }}
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                        >
+                            Đóng
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-danger"
+                            @click="deleteBorrow(selectedBorrowing)"
+                        >
+                            Xoá
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -97,6 +209,15 @@ export default {
         return {
             sortBy: '', // Field to sort by
             sortOrder: 'asc', // Sort order: 'asc' or 'desc'
+            selectedBorrowing: {
+                madocgia: '',
+                ngayyeucau: '',
+                ngaymuon: '',
+                ngaytra: '',
+                nhanvien: '',
+                trangthai: '',
+                phimuon: '',
+            },
         };
     },
     computed: {
@@ -168,11 +289,40 @@ export default {
             }
         },
 
-        formatDate(date) {
-            const day = String(date.getDate()).padStart(2, '0'); // Ensure two digits (e.g., 01, 02)
-            const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() is zero-based, so add 1
+        openModal(borrowing) {
+            this.selectedBorrowing = { ...borrowing };
+            const modalElement = new bootstrap.Modal(
+                document.getElementById('detailsModal')
+            );
+            modalElement.show(); // Show the modal
+        },
+
+        format(date) {
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
             const year = date.getFullYear();
-            return `${day}/${month}/${year}`; // Return in dd/mm/yyyy format
+
+            return `${day}/${month}/${year}`;
+        },
+
+        convertToLocalTime(utcDateString) {
+            const utcDate = new Date(utcDateString); // Create a date object from the UTC string
+            const options = {
+                timeZone: 'Asia/Ho_Chi_Minh', // Time zone for Vietnam
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false, // Use 24-hour format
+            };
+            const localDateString = utcDate.toLocaleDateString(
+                'en-GB',
+                options
+            ); // Convert to local date string in dd/mm/yyyy format
+
+            return `${localDateString}`; // Combine date and time
         },
     },
 };

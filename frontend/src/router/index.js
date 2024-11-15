@@ -1,4 +1,5 @@
-import store from '@/store/modules/authStore';
+import store from '@/store'; // Import your store
+
 import AdminLayout from '@/views/AdminLayout.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 const routes = [
@@ -18,7 +19,7 @@ const routes = [
                 name: 'books',
                 props: (route) => ({
                     page: parseInt(route.query.page) || 1, // Default to page 1
-                    limit: parseInt(route.query.limit) || 10, // Default to 10 items per page
+                    limit: parseInt(route.query.limit) || 8, // Default to 10 items per page
                 }),
                 component: () => import('@/views/Books.vue'),
             },
@@ -28,24 +29,9 @@ const routes = [
                 component: () => import('@/views/BooksCreate.vue'),
             },
             {
-                path: 'readers',
-                name: 'readers',
-                component: () => import('@/views/Readers.vue'),
-            },
-            {
-                path: 'readers/create',
-                name: 'readers-create',
-                component: () => import('@/views/ReadersCreate.vue'),
-            },
-            {
                 path: 'borrowings',
                 name: 'borrowings',
                 component: () => import('@/views/Borrowings.vue'),
-            },
-            {
-                path: 'borrowings/create',
-                name: 'borrowings-create',
-                component: () => import('@/views/BorrowingsCreate.vue'),
             },
             {
                 path: 'employees',
@@ -121,9 +107,8 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    const isAuthenticated = store.getters.isAuthenticated; // Adjust based on your store setup
-    const userRole = store.getters.user?.loai; // Adjust to get the user role from the store
-
+    const isAuthenticated = store.getters['auth/isAuthenticated'];
+    const userRole = store.getters['auth/user']?.loai;
     // Check if the route requires authentication
     if (
         (to.meta.requiresAuth && !isAuthenticated) ||

@@ -8,13 +8,6 @@
                     <i class="fa fa-sync-alt"></i>
                 </button>
             </div>
-
-            <router-link
-                :to="{ name: 'borrowings-create' }"
-                class="btn btn-dark"
-            >
-                <i class="fa fa-plus"></i> Thêm mới
-            </router-link>
         </div>
 
         <BorrowingTable

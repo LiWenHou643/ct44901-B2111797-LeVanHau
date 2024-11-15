@@ -9,17 +9,18 @@
                     <!-- Order information -->
                     <div class="d-flex justify-content-between">
                         <strong>{{ formatDateVN(order.ngayyeucau) }}</strong>
-                        <span
+                        <strong
                             :class="[
-                                'badge',
+                                'badge text-black p-2',
                                 order.trangthai === 'Chờ xác nhận'
                                     ? 'bg-warning'
                                     : 'bg-success',
                             ]"
                         >
                             {{ order.trangthai }}
-                        </span>
+                        </strong>
                     </div>
+                    <hr />
 
                     <!-- Displaying the list of books in this order -->
                     <div v-if="order.sach && order.sach.length > 0">
@@ -27,18 +28,31 @@
                             <li
                                 v-for="(book, bookIndex) in order.sach"
                                 :key="bookIndex"
-                                class="list-group-item"
+                                class="row"
                             >
-                                <strong>{{ book.tensach }}</strong> -
-                                {{ book.dongia }} đ Tác giả:
-                                {{ book.tacgia }} Năm xuất bản:
-                                {{ book.namxuatban }}
+                                <p class="col-4">Sách: {{ book.tensach }}</p>
+                                <p class="col-2">Tác giả: {{ book.tacgia }}</p>
+                                <p class="col-2">
+                                    Năm xuất bản: {{ book.namxuatban }}
+                                </p>
+                                <p class="col-2">
+                                    Số lượng {{ book.soluong }} quyển
+                                </p>
+                                <p class="col-2">
+                                    Đơn giá mượn:
+                                    {{ formatPrice(book.dongia) }}
+                                </p>
                             </li>
                         </ul>
                     </div>
-                    <!-- If no books in this order -->
-                    <div v-else class="alert alert-warning mt-3" role="alert">
-                        Không có sách nào trong yêu cầu.
+
+                    <hr />
+
+                    <!-- Displaying the total price of this Order -->
+                    <div class="mt-3">
+                        <strong>
+                            Tổng tiền: {{ formatPrice(order.phimuon) }}
+                        </strong>
                     </div>
                 </div>
             </div>
@@ -100,6 +114,12 @@ export default {
 
             // Định dạng "Thứ X, ngày Y tháng Z năm N, HH:mm"
             return `${weekday}, ngày ${day} ${month} năm ${year}, ${hour}:${minute}`;
+        },
+        formatPrice(total) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+            }).format(total); // Use cartTotal directly from Vuex state
         },
     },
     created() {

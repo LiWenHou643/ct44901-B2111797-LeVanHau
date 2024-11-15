@@ -15,7 +15,6 @@ const orderStore = {
                 try {
                     const userId = rootState.auth.user._id;
                     const response = await orderService.getOrders(userId);
-                    console.log('Orders:', response);
                     commit('setOrders', response);
                 } catch (error) {
                     console.error(error);

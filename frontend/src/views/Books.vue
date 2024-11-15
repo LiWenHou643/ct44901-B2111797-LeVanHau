@@ -69,7 +69,7 @@ export default {
         },
     },
     methods: {
-        async fetchBooks(page = 1, limit = 10) {
+        async fetchBooks(page = 1, limit = 8) {
             try {
                 // Fetch books from the backend (using bookService)
                 const response = await bookService.getAll({

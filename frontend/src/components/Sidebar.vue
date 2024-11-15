@@ -27,16 +27,6 @@
 
             <li class="nav-item">
                 <router-link
-                    :to="{ name: 'readers' }"
-                    class="nav-link"
-                    :class="{ active: isActive('readers') }"
-                >
-                    <i class="fa fa-users"></i> Đọc giả
-                </router-link>
-            </li>
-
-            <li class="nav-item">
-                <router-link
                     :to="{ name: 'borrowings' }"
                     class="sub-nav-link"
                     :class="{ active: isActive('borrowings') }"
@@ -45,7 +35,7 @@
                 </router-link>
             </li>
 
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <router-link
                     :to="{ name: 'employees' }"
                     class="sub-nav-link"
@@ -53,7 +43,7 @@
                 >
                     <i class="fa fa-id-badge"></i> Nhân viên
                 </router-link>
-            </li>
+            </li> -->
 
             <li class="nav-item logout">
                 <a href="#" @click="logout" class="nav-link">
@@ -122,6 +112,7 @@ export default {
 .nav-item a {
     color: #374151;
     text-decoration: none;
+    font-weight: bold;
     display: block;
     padding: 10px;
     border-radius: 10px;

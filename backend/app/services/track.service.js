@@ -41,8 +41,6 @@ class TrackService {
             },
         }).toArray();
 
-        console.log(books);
-
         if (books.length < payload.order.length) {
             throw new Error('Số lượng sách không đủ');
         }
