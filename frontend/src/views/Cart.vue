@@ -2,7 +2,15 @@
     <div class="container">
         <div class="cart">
             <h3 class="text-center mb-4">Giỏ mượn</h3>
-            <div v-if="cartItems.length > 0" class="card">
+            <!-- Clear Cart Button Positioned Top Left -->
+            <button
+                v-if="cartItems.length > 0"
+                class="btn btn-danger mb-2"
+                @click="clearCart"
+            >
+                Xoá tất cả
+            </button>
+            <div v-if="cartItems.length > 0" class="card position-relative">
                 <div class="card-body">
                     <ul class="list-group">
                         <li
@@ -10,11 +18,11 @@
                             :key="item._id"
                             class="list-group-item d-flex justify-content-between align-items-center"
                         >
-                            <span
-                                >{{ item.tensach }} - đ{{ item.dongia }} (x{{
+                            <span>
+                                {{ item.tensach }} - đ{{ item.dongia }} (x{{
                                     item.soluong
-                                }})</span
-                            >
+                                }})
+                            </span>
                             <button
                                 class="btn btn-danger btn-sm"
                                 @click="removeFromCart(item)"
@@ -58,9 +66,12 @@
                     >Bạn chưa thêm bất kì sách nào trong giỏ.</span
                 >
                 <br />
-                <router-link :to="{ name: 'books-public' }" class="btn btn-link"
-                    >Xem ngay</router-link
+                <router-link
+                    :to="{ name: 'books-public' }"
+                    class="btn btn-link"
                 >
+                    Xem ngay
+                </router-link>
             </div>
         </div>
     </div>
@@ -114,6 +125,4 @@ export default {
 };
 </script>
 
-<style scoped>
-/* Add your styles for the cart here */
-</style>
+<style scoped></style>

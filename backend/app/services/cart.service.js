@@ -75,14 +75,6 @@ class CartService {
         return cart;
     }
 
-    async delete(id) {
-        return this.Cart.deleteOne({ _id: new ObjectId(id) });
-    }
-
-    async deleteAll() {
-        return this.Cart.deleteMany();
-    }
-
     async removeFromCart(userId, book) {
         const query = {
             madocgia: new ObjectId(userId),
@@ -105,6 +97,13 @@ class CartService {
                 }
             );
         }
+    }
+
+    async clearCart(id) {
+        return await this.Cart.findOneAndUpdate(
+            { madocgia: new ObjectId(id) },
+            { $set: { sach: [] } }
+        );
     }
 }
 

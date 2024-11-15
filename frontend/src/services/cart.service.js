@@ -14,6 +14,10 @@ class CartService {
     async removeFromCart(id, book) {
         return (await this.api.put('/remove', { id, book })).data;
     }
+
+    async clearCart(id) {
+        return (await this.api.put(`/clear?userId=${id}`)).data;
+    }
 }
 
 export default new CartService();

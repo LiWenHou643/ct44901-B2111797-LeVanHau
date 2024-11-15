@@ -64,7 +64,6 @@ const cartStore = {
 
             if (rootState.auth.isAuthenticated) {
                 try {
-                    console.log('Removing item from the backend cart');
                     const userId = rootState.auth.user._id; // Get the user ID from the auth store
                     await cartService.removeFromCart(userId, {
                         ...product,
@@ -77,8 +76,18 @@ const cartStore = {
             }
         },
 
-        clearCart({ commit }) {
+        async clearCart({ commit, rootState }) {
             commit('CLEAR_CART');
+
+            if (rootState.auth.isAuthenticated) {
+                try {
+                    const userId = rootState.auth.user._id; // Get the user ID from the auth store
+                    await cartService.clearCart(userId);
+                    console.log('Cart synced with the backend');
+                } catch (error) {
+                    console.error('Failed to sync cart with backend:', error);
+                }
+            }
         },
 
         async fetchCart({ commit, rootState }) {

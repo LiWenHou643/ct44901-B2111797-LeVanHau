@@ -77,8 +77,9 @@ exports.removeFromCart = async (req, res, next) => {
 
 exports.clearCart = async (req, res, next) => {
     try {
-        const userId = req.user.id;
-        const cart = await CartService.clearCart(userId);
+        const userId = req.query.userId;
+        const cartService = new CartService(MongoDB.client);
+        const cart = await cartService.clearCart(userId);
         return res.send(cart);
     } catch (error) {
         next(
