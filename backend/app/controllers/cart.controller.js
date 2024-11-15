@@ -34,9 +34,16 @@ exports.getCart = async (req, res, next) => {
 
 exports.addToCart = async (req, res, next) => {
     try {
+        const cartService = new CartService(MongoDB.client);
         const id = req.body.id;
         const book = req.body.book;
-        const cartService = new CartService(MongoDB.client);
+        const books = req.body.books;
+
+        if (books) {
+            console.log('Adding multiple books to cart');
+            const cart = await cartService.updateCart(id, books);
+            return res.send(cart);
+        }
         const cart = await cartService.addToCart(id, book);
         return res.send(cart);
     } catch (error) {

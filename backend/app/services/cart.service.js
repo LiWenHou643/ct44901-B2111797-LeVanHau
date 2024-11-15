@@ -20,7 +20,6 @@ class CartService {
             masach: new ObjectId(book.masach),
             soquyen: undefined,
         };
-        console.log(saveBook);
 
         Object.keys(saveBook).forEach(
             (key) => saveBook[key] === undefined && delete saveBook[key]
@@ -39,8 +38,6 @@ class CartService {
                 (item) => item.masach.equals(saveBook.masach) // Use .equals() for ObjectId comparison
             );
 
-            console.log(existingBook); // Log to see if the book is found in the cart
-
             if (existingBook) {
                 existingBook.soluong += saveBook.soluong;
             } else {
@@ -51,9 +48,31 @@ class CartService {
             await this.Cart.findOneAndUpdate(
                 query,
                 { $set: { sach: cart.sach } },
-                { returnDocument: ReturnDocument.AFTER }
+                {
+                    returnDocument: ReturnDocument.AFTER,
+                }
             );
+        } else {
+            // Create a new cart if it doesn't exist
+            await this.Cart.insertOne({
+                madocgia: new ObjectId(id),
+                sach: [saveBook],
+            });
         }
+    }
+
+    async updateCart(id, books) {
+        const query = {
+            madocgia: new ObjectId(id),
+        };
+
+        const cart = await this.Cart.findOneAndUpdate(
+            query,
+            { $set: { sach: books } },
+            { returnDocument: 'after' }
+        );
+
+        return cart;
     }
 
     async delete(id) {

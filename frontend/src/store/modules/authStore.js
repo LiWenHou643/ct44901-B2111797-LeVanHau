@@ -25,14 +25,51 @@ const authStore = {
         },
     },
     actions: {
-        login({ commit }, userData) {
+        async login({ commit, dispatch }, userData) {
             commit('setAuthentication', userData); // Commit user data after login
+            await dispatch('syncCart');
         },
         logout({ commit }) {
             commit('setAuthentication', null); // Clear user data on logout
         },
         setSuccessMessage({ commit }, message) {
             commit('setSuccessMessage', message);
+        },
+        async syncCart({ state, dispatch }) {
+            if (state.isAuthenticated && state.user) {
+                try {
+                    // If there's cart data in sessionStorage, merge it with the backend cart data
+                    const sessionBooks =
+                        JSON.parse(sessionStorage.getItem('cart'))?.sach || [];
+
+                    // Fetch cart data from the server
+                    const cartData = await dispatch('cart/fetchCart', null, {
+                        root: true,
+                    });
+
+                    // Merge the sessionCart and cartData.sach but remove duplicates
+                    const mergedCart = [
+                        ...sessionBooks,
+                        ...cartData.sach.filter(
+                            (item) =>
+                                !sessionBooks.some(
+                                    (sessionItem) =>
+                                        sessionItem.masach === item.masach
+                                )
+                        ),
+                    ];
+                    console.log('Merged cart:', mergedCart);
+                    // Sync cart data with Vuex store
+                    dispatch('cart/setCart', mergedCart, { root: true });
+
+                    // Sync cart data with the backend
+                    await dispatch('cart/updateCartInDb', mergedCart, {
+                        root: true,
+                    });
+                } catch (error) {
+                    console.error('Failed to sync cart:', error);
+                }
+            }
         },
     },
     getters: {
@@ -42,29 +79,29 @@ const authStore = {
         },
         successMessage: (state) => state.successMessage,
     },
-    plugins: [
-        (store) => {
-            // Check if there is user data and authentication flag in localStorage
-            const savedUser = localStorage.getItem('user');
-            const savedAuth = localStorage.getItem('isAuthenticated');
+    // plugins: [
+    //     (store) => {
+    //         // Check if there is user data and authentication flag in localStorage
+    //         const savedUser = localStorage.getItem('user');
+    //         const savedAuth = localStorage.getItem('isAuthenticated');
 
-            if (savedUser && savedAuth) {
-                console.log('Rehydrating user data from localStorage...'); // Log rehydration to help debug
-                try {
-                    const parsedUser = JSON.parse(savedUser);
-                    store.commit('setAuthentication', parsedUser); // Rehydrate the user state
-                } catch (e) {
-                    console.error(
-                        'Failed to parse user data from localStorage:',
-                        e
-                    );
-                    store.commit('setAuthentication', null); // Handle invalid data (fallback to null)
-                }
-            } else {
-                store.commit('setAuthentication', null); // Ensure state is reset if no user found
-            }
-        },
-    ],
+    //         if (savedUser && savedAuth) {
+    //             console.log('Rehydrating user data from localStorage...'); // Log rehydration to help debug
+    //             try {
+    //                 const parsedUser = JSON.parse(savedUser);
+    //                 store.commit('setAuthentication', parsedUser); // Rehydrate the user state
+    //             } catch (e) {
+    //                 console.error(
+    //                     'Failed to parse user data from localStorage:',
+    //                     e
+    //                 );
+    //                 store.commit('setAuthentication', null); // Handle invalid data (fallback to null)
+    //             }
+    //         } else {
+    //             store.commit('setAuthentication', null); // Ensure state is reset if no user found
+    //         }
+    //     },
+    // ],
 };
 
 export default authStore;

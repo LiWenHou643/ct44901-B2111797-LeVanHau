@@ -140,7 +140,7 @@ export default {
         logout() {
             // Perform logout logic, such as clearing user data and redirecting
             this.$store.dispatch('auth/logout');
-            localStorage.removeItem('cart');
+            this.$store.dispatch('cart/clearCart');
             this.$router.push('/login');
         },
     },

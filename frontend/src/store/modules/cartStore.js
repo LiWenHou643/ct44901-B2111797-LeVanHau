@@ -7,7 +7,7 @@ const cartStore = {
     },
     mutations: {
         ADD_TO_CART(state, { product, quantity }) {
-            if (!state.cart) {
+            if (!state.cart || !state.cart.sach) {
                 console.log(
                     'Cart not found in sessionStorage. Creating a new cart'
                 );
@@ -63,6 +63,7 @@ const cartStore = {
         clearCart({ commit }) {
             commit('CLEAR_CART');
         },
+
         async fetchCart({ commit, rootState }) {
             if (rootState.auth.isAuthenticated) {
                 // If logged in, fetch cart from the backend
@@ -71,34 +72,51 @@ const cartStore = {
                         rootState.auth.user._id
                     ); // Assuming user.id is stored in auth module
                     commit('SET_CART', cart);
+
+                    return cart;
                 } catch (error) {
                     console.error('Failed to fetch cart from server', error);
+                    return null;
                 }
             } else {
                 // If guest, load cart from sessionStorage
                 const storedCart =
                     JSON.parse(sessionStorage.getItem('cart')) || [];
                 commit('SET_CART', storedCart);
+                return storedCart;
             }
         },
-        async syncCart({ commit, state, rootState }) {
-            // Sync cart with the backend after login or cart updates
-            if (rootState.auth.isAuthenticated && state.cart.length > 0) {
+
+        setCart({ commit }, cart) {
+            commit('SET_CART', cart);
+        },
+
+        async updateCartInDb({ commit, state, rootState }) {
+            if (rootState.auth.isAuthenticated && rootState.auth.user) {
+                const userId = rootState.auth.user._id;
+                const cartData = state.cart;
+
                 try {
-                    const cart = await CartService.addToCart(
-                        rootState.auth.user.id,
-                        state.cart
-                    );
-                    commit('SET_CART', cart);
+                    // Send the updated cart to the backend
+                    const carts = await cartService.updateCart(
+                        userId,
+                        cartData
+                    ); // Assuming your cartService has an updateCart method
+                    console.log(carts);
+                    commit('SET_CART', carts); // Update the cart in the store
+                    console.log('Cart successfully updated in the database');
                 } catch (error) {
-                    console.error('Failed to sync cart with server', error);
+                    console.error(
+                        'Failed to update cart in the database:',
+                        error
+                    );
                 }
             }
         },
     },
     getters: {
         cart: (state) => state.cart,
-        cartItems: (state) => state.cart.sach,
+        cartItems: (state) => state.cart.sach || [],
         cartTotal: (state) =>
             state.cart
                 .reduce(
