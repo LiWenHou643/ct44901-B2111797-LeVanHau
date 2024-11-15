@@ -18,6 +18,10 @@ class CartService {
     async clearCart(id) {
         return (await this.api.put(`/clear?userId=${id}`)).data;
     }
+
+    async updateCart(id, book) {
+        return (await this.api.put('/update', { id, book })).data;
+    }
 }
 
 export default new CartService();

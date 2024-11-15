@@ -1,6 +1,6 @@
 <template>
-    <div class="container mt-5">
-        <h1 class="mb-4">Yêu cầu mượn sách</h1>
+    <div class="container">
+        <h1 class="mb-4 text-center">Yêu cầu mượn sách</h1>
 
         <!-- Displaying the list of book requests -->
         <div v-if="bookRequests.length > 0">
@@ -32,8 +32,11 @@
         </div>
 
         <!-- If no book requests have been sent yet -->
-        <div v-else class="alert alert-info mt-4" role="alert">
+        <div v-else class="alert alert-info text-center mt-4" role="alert">
             Bạn chưa mượn quyển sách nào.
+            <router-link to="/books" class="alert-link"
+                >Bắt đầu mượn ngay</router-link
+            >
         </div>
     </div>
 </template>

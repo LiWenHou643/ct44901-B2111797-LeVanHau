@@ -1,7 +1,8 @@
 <template>
     <div class="container">
         <div class="cart">
-            <h3 class="text-center mb-4">Giỏ mượn</h3>
+            <h1 class="text-center mb-4">Giỏ mượn</h1>
+
             <!-- Clear Cart Button Positioned Top Left -->
             <button
                 v-if="cartItems.length > 0"
@@ -10,6 +11,7 @@
             >
                 Xoá tất cả
             </button>
+
             <div v-if="cartItems.length > 0" class="card position-relative">
                 <div class="card-body">
                     <ul class="list-group">
@@ -23,12 +25,45 @@
                                     item.soluong
                                 }})
                             </span>
-                            <button
-                                class="btn btn-danger btn-sm"
-                                @click="removeFromCart(item)"
+
+                            <div
+                                class="d-flex justify-content-between align-items-center gap-5"
                             >
-                                Xoá
-                            </button>
+                                <!-- Quantity Buttons -->
+                                <div class="quantity-controls">
+                                    <button
+                                        class="btn btn-sm btn-secondary"
+                                        @click="decreaseQuantity(item)"
+                                        :disabled="item.soluong <= 1"
+                                    >
+                                        -
+                                    </button>
+
+                                    <!-- Input Field for Quantity -->
+                                    <input
+                                        type="number"
+                                        v-model="item.soluong"
+                                        min="1"
+                                        @change="updateQuantity(item)"
+                                        class="form-control form-control-sm mx-2"
+                                        style="width: 60px"
+                                    />
+
+                                    <button
+                                        class="btn btn-sm btn-secondary"
+                                        @click="increaseQuantity(item)"
+                                    >
+                                        +
+                                    </button>
+                                </div>
+
+                                <button
+                                    class="btn btn-danger btn-sm"
+                                    @click="removeFromCart(item)"
+                                >
+                                    Xoá
+                                </button>
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -61,15 +96,12 @@
                     </div>
                 </div>
             </div>
-            <div v-else class="text-center mt-4">
+
+            <div v-else class="alert alert-info text-center mt-4">
                 <span class="text-muted"
                     >Bạn chưa thêm bất kì sách nào trong giỏ.</span
                 >
-                <br />
-                <router-link
-                    :to="{ name: 'books-public' }"
-                    class="btn btn-link"
-                >
+                <router-link :to="{ name: 'books-public' }" class="alert-link">
                     Xem ngay
                 </router-link>
             </div>
@@ -94,6 +126,25 @@ export default {
     },
     methods: {
         ...mapActions('cart', ['clearCart']),
+
+        async updateQuantity(item) {
+            this.$store.dispatch('cart/updateQuantity', {
+                product: item,
+                quantity: item.soluong,
+            });
+        },
+
+        increaseQuantity(item) {
+            item.soluong++;
+            this.updateQuantity(item);
+        },
+
+        decreaseQuantity(item) {
+            if (item.soluong > 1) {
+                item.soluong--;
+                this.updateQuantity(item);
+            }
+        },
 
         redirectToLogin() {
             this.$router.push({ name: 'login' });
@@ -124,5 +175,13 @@ export default {
     },
 };
 </script>
+<style scoped>
+.quantity-controls {
+    display: flex;
+    gap: 5px;
+}
 
-<style scoped></style>
+.quantity-controls button {
+    padding: 5px 10px;
+}
+</style>

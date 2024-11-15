@@ -37,6 +37,15 @@ const cartStore = {
             state.cart = cart;
             sessionStorage.setItem('cart', JSON.stringify(cart)); // update sessionStorage after fetching from backend
         },
+        UPDATE_QUANTITY(state, { product, quantity }) {
+            const existingProduct = state.cart.sach.find(
+                (item) => item.masach === product.masach
+            );
+            if (existingProduct) {
+                existingProduct.soluong = quantity;
+            }
+            sessionStorage.setItem('cart', JSON.stringify(state.cart)); // persist to sessionStorage
+        },
     },
     actions: {
         // Action to add a book to the cart and sync with the backend if the user is logged in
@@ -66,6 +75,23 @@ const cartStore = {
                 try {
                     const userId = rootState.auth.user._id; // Get the user ID from the auth store
                     await cartService.removeFromCart(userId, {
+                        ...product,
+                        soluong: quantity,
+                    }); // Call the API to add the product to the backend cart
+                    console.log('Cart synced with the backend');
+                } catch (error) {
+                    console.error('Failed to sync cart with backend:', error);
+                }
+            }
+        },
+
+        async updateQuantity({ commit, rootState }, { product, quantity }) {
+            commit('UPDATE_QUANTITY', { product, quantity });
+
+            if (rootState.auth.isAuthenticated) {
+                try {
+                    const userId = rootState.auth.user._id; // Get the user ID from the auth store
+                    await cartService.updateCart(userId, {
                         ...product,
                         soluong: quantity,
                     }); // Call the API to add the product to the backend cart

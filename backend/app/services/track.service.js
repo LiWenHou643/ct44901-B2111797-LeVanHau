@@ -34,9 +34,27 @@ class TrackService {
             throw new Error('Mã độc giả không tồn tại');
         }
 
+        // Check if book quantity is enough
+        const books = await this.Book.find({
+            _id: {
+                $in: payload.order.map((book) => new ObjectId(book.masach)),
+            },
+        }).toArray();
+
+        console.log(books);
+
+        if (books.length < payload.order.length) {
+            throw new Error('Số lượng sách không đủ');
+        }
+
+        const fees = payload.order.reduce((acc, cur) => {
+            return acc + cur.dongia * cur.soluong;
+        }, 0);
+
         const result = await this.Borrow.insertOne({
             madocgia: new ObjectId(payload.userId),
             sach: payload.order,
+            phimuon: fees,
             ngayyeucau: new Date(),
         });
         const insertedBorrow = await this.Borrow.findOne({

@@ -54,6 +54,15 @@
                             >
                         </router-link>
                     </li>
+                    <li class="nav-item">
+                        <router-link
+                            class="nav-link me-4 position-relative"
+                            :class="{ active: $route.path === '/order' }"
+                            :to="{ name: 'order' }"
+                        >
+                            Yêu cầu
+                        </router-link>
+                    </li>
 
                     <li v-if="!user" class="nav-item">
                         <router-link class="nav-link custom-link" to="/login">

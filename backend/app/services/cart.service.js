@@ -61,7 +61,7 @@ class CartService {
         }
     }
 
-    async updateCart(id, books) {
+    async addManyToCart(id, books) {
         const query = {
             madocgia: new ObjectId(id),
         };
@@ -75,6 +75,32 @@ class CartService {
         return cart;
     }
 
+    async updateCart(id, book) {
+        const query = {
+            madocgia: new ObjectId(id),
+        };
+
+        const cart = await this.Cart.findOne(query);
+
+        if (cart) {
+            const existingBook = cart.sach.find((item) => {
+                return item.masach === book.masach; // Use strict equality for string comparison
+            });
+
+            if (existingBook) {
+                existingBook.soluong = book.soluong;
+            }
+
+            return await this.Cart.findOneAndUpdate(
+                query,
+                { $set: { sach: cart.sach } },
+                {
+                    returnDocument: ReturnDocument.AFTER,
+                }
+            );
+        }
+    }
+
     async removeFromCart(userId, book) {
         const query = {
             madocgia: new ObjectId(userId),
@@ -82,12 +108,8 @@ class CartService {
 
         const cart = await this.Cart.findOne(query);
 
-        console.log(cart);
-
         if (cart) {
             cart.sach = cart.sach.filter((item) => item.masach !== book.masach);
-
-            console.log(cart.sach.length);
 
             return await this.Cart.findOneAndUpdate(
                 query,

@@ -41,7 +41,7 @@ exports.addToCart = async (req, res, next) => {
 
         if (books) {
             console.log('Adding multiple books to cart');
-            const cart = await cartService.updateCart(id, books);
+            const cart = await cartService.addManyToCart(id, books);
             return res.send(cart);
         }
         const cart = await cartService.addToCart(id, book);
@@ -51,6 +51,23 @@ exports.addToCart = async (req, res, next) => {
             new ApiError(
                 500,
                 error.message || 'Có lỗi xảy ra khi thêm vào giỏ hàng!'
+            )
+        );
+    }
+};
+
+exports.updateCart = async (req, res, next) => {
+    try {
+        const userId = req.body.id;
+        const book = req.body.book;
+        const cartService = new CartService(MongoDB.client);
+        const cart = await cartService.updateCart(userId, book);
+        return res.send(cart);
+    } catch (error) {
+        next(
+            new ApiError(
+                500,
+                error.message || 'Có lỗi xảy ra khi cập nhật giỏ hàng!'
             )
         );
     }
