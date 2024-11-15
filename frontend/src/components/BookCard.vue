@@ -17,7 +17,10 @@
                 <h5 class="card-text text-primary">đ{{ book.dongia }}</h5>
 
                 <!-- Add to Cart Button -->
-                <button class="btn btn-primary w-100" @click="addToCart">
+                <button
+                    class="btn btn-primary w-100"
+                    @click="addBookToCart(book)"
+                >
                     Thêm
                 </button>
             </div>
@@ -41,17 +44,11 @@ export default {
         ...mapGetters('auth', ['user', 'isAuthenticated']),
     },
     methods: {
-        ...mapActions('cart', ['addToCart']),
-        async addToCart() {
-            if (this.isAuthenticated) {
-                console.log('Adding to cart:', this.book);
-                await cartService.addToCart(this.user._id, {
-                    ...this.book,
-                    soluong: 1,
-                });
-            } else {
-                return this.addToCart(this.book);
-            }
+        addBookToCart(book) {
+            this.$store.dispatch('cart/addToCart', {
+                product: book,
+                quantity: 1,
+            });
         },
     },
 };

@@ -50,7 +50,7 @@
                             Giỏ mượn
                             <span
                                 class="badge border border-1 text-bg-light bg-success-subtle position-absolute top-0"
-                                >{{ cartQuantity }}</span
+                                >{{ cartTypeQuantity }}</span
                             >
                         </router-link>
                     </li>
@@ -115,7 +115,11 @@ export default {
     },
     computed: {
         ...mapGetters('auth', ['isAuthenticated', 'user']), // Map user and authentication status
-        ...mapGetters('cart', ['cartQuantity']), // Map the cart item count
+        ...mapGetters('cart', ['cartTypeQuantity']), // Map the cart item count
+    },
+    created() {
+        // Fetch the cart data when the component is created
+        this.$store.dispatch('cart/fetchCart');
     },
     watch: {
         // Watch for changes in the 'user' state from Vuex

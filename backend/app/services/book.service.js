@@ -119,6 +119,7 @@ class BookService {
                 // Project the desired fields
                 {
                     $project: {
+                        _id: 0, // Exclude the _id field
                         masach: '$_id',
                         tensach: '$tensach',
                         dongia: '$dongia',
