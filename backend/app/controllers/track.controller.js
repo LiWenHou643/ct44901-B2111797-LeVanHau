@@ -25,7 +25,7 @@ exports.findAll = async (req, res, next) => {
         const { userId } = req.query;
         if (userId)
             documents = await trackBorrowService.find({
-                madocgia: userId,
+                madocgia: new ObjectId(userId),
             });
         else documents = await trackBorrowService.find({});
     } catch (error) {
@@ -36,7 +36,6 @@ exports.findAll = async (req, res, next) => {
             )
         );
     }
-
     return res.send(documents);
 };
 

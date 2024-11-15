@@ -55,6 +55,7 @@ class TrackService {
             madocgia: new ObjectId(payload.userId),
             sach: payload.order,
             phimuon: fees,
+            trangthai: 'Chờ xác nhận',
             ngayyeucau: new Date(),
         });
         const insertedBorrow = await this.Borrow.findOne({
@@ -81,55 +82,7 @@ class TrackService {
     }
 
     async find(filter) {
-        const borrows = await this.Borrow.aggregate([
-            { $match: filter },
-            {
-                $lookup: {
-                    from: 'sach',
-                    localField: 'masach',
-                    foreignField: '_id',
-                    as: 'bookDetails',
-                },
-            },
-            {
-                $lookup: {
-                    from: 'docgia',
-                    localField: 'madocgia',
-                    foreignField: '_id',
-                    as: 'readerDetails',
-                },
-            },
-            {
-                $lookup: {
-                    from: 'nhanvien',
-                    localField: 'msnv',
-                    foreignField: '_id',
-                    as: 'staffDetails',
-                },
-            },
-            {
-                $project: {
-                    _id: 1,
-                    madocgia: 1,
-                    hotendocgia: {
-                        $concat: [
-                            { $arrayElemAt: ['$readerDetails.holot', 0] },
-                            ' ',
-                            { $arrayElemAt: ['$readerDetails.ten', 0] },
-                        ],
-                    },
-                    masach: 1,
-                    tensach: { $arrayElemAt: ['$bookDetails.tensach', 0] },
-                    msnv: 1,
-                    hotennhanvien: {
-                        $arrayElemAt: ['$staffDetails.hotennv', 0],
-                    },
-                    ngaymuon: 1,
-                    ngaytra: 1,
-                },
-            },
-        ]).toArray();
-
+        const borrows = await this.Borrow.find(filter).toArray();
         return borrows;
     }
 
