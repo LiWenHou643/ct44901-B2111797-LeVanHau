@@ -42,10 +42,11 @@ exports.findAll = async (req, res, next) => {
 exports.update = async (req, res, next) => {
     try {
         const trackBorrowService = new TrackBorrowService(MongoDB.client);
-        await trackBorrowService.update(req.params.id, req.body);
-        return res.send({
-            message: 'Cập nhật phiếu mượn thành công',
-        });
+        const document = await trackBorrowService.update(
+            req.params.id,
+            req.body
+        );
+        return res.send(document);
     } catch (error) {
         return next(
             new ApiError(

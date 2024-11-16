@@ -80,13 +80,13 @@
             </thead>
             <tbody>
                 <tr v-if="!sortedBorrowings.length">
-                    <td colspan="6" class="text-center">Không có dữ liệu</td>
+                    <td colspan="8" class="text-center">Không có dữ liệu</td>
                 </tr>
                 <tr v-for="borrowing in sortedBorrowings" :key="borrowing._id">
                     <td>{{ borrowing.madocgia }}</td>
                     <td>{{ convertToLocalTime(borrowing.ngayyeucau) }}</td>
-                    <td>{{ borrowing.ngaymuon }}</td>
-                    <td>{{ borrowing.ngaytra }}</td>
+                    <td>{{ convertToLocalTime(borrowing.ngaymuon) }}</td>
+                    <td>{{ convertToLocalTime(borrowing.ngaytra) }}</td>
                     <td>{{ borrowing.nhanvien }}</td>
                     <td
                         class="d-flex justify-content-center align-items-center"
@@ -138,46 +138,77 @@
                         ></button>
                     </div>
                     <div v-if="selectedBorrowing" class="modal-body">
-                        <p>
+                        <div>
                             <strong>Mã đọc giả:</strong>
                             {{ selectedBorrowing.madocgia }}
-                        </p>
-                        <p>
+                        </div>
+                        <div>
                             <strong>Ngày yêu cầu:</strong>
-                            {{
-                                convertToLocalTime(selectedBorrowing.ngayyeucau)
-                            }}
-                        </p>
-                        <p>
-                            <strong>Ngày mượn:</strong>
-                            {{ selectedBorrowing.ngaymuon }}
-                            <input
-                                type="date"
-                                v-model="selectedBorrowing.ngaymuon"
-                                name="ngaymuon"
-                                id="ngaymuon"
-                            />
-                        </p>
-                        <p>
-                            <strong>Ngày trả:</strong>
-                            {{ selectedBorrowing.ngaytra }}
-                            <input type="date" name="ngaytra" id="ngaytra" />
-                        </p>
-                        <p>
+                            {{ format(selectedBorrowing?.ngayyeucau) }}
+                        </div>
+                        <div
+                            class="d-flex justify-content-between align-items-center"
+                        >
+                            <div>
+                                <strong>Ngày mượn:</strong>
+                                <input
+                                    class="p-0"
+                                    type="date"
+                                    v-model="selectedBorrowing.ngaymuon"
+                                    name="ngaymuon"
+                                    id="ngaymuon"
+                                />
+                            </div>
+                            <span v-if="selectedBorrowing.ngaymuon">
+                                Nhận sách từ:
+                                {{ format(selectedBorrowing?.ngaymuon) }}
+                                00:00
+                            </span>
+                        </div>
+                        <div
+                            class="d-flex justify-content-between align-items-center"
+                        >
+                            <div>
+                                <strong>Ngày trả:</strong>
+                                <input
+                                    type="date"
+                                    class="p-0"
+                                    v-model="selectedBorrowing.ngaytra"
+                                    name="ngaytra"
+                                    id="ngaytra"
+                                    disabled
+                                />
+                            </div>
+                            <span v-if="selectedBorrowing.ngaytra">
+                                Trả sách trước:
+                                {{ format(selectedBorrowing?.ngaytra) }}
+                                23:59
+                            </span>
+                        </div>
+                        <div>
                             <strong>Nhân viên:</strong>
-                            {{ selectedBorrowing.nhanvien }}
-                        </p>
-                        <p>
+                            {{ user?.hoten }}
+                        </div>
+                        <div>
                             <strong>Tình trạng:</strong>
                             {{ selectedBorrowing.trangthai }}
-                        </p>
-                        <p>
+                        </div>
+                        <div>
                             <strong>Phí mượn:</strong>
                             {{ selectedBorrowing.phimuon }}
-                        </p>
+                        </div>
+
+                        <strong>Sách mượn:</strong>
+                        <ul>
+                            <li v-for="book in selectedBorrowing.sach">
+                                {{ book.tensach }} x({{ book.soluong }}) -
+                                {{ book.dongia }}đ / quyển
+                            </li>
+                        </ul>
                     </div>
                     <div class="modal-footer">
                         <button
+                            id="closeModal"
                             type="button"
                             class="btn btn-secondary"
                             data-bs-dismiss="modal"
@@ -185,11 +216,30 @@
                             Đóng
                         </button>
                         <button
+                            v-if="selectedBorrowing.trangthai === 'Đã trả'"
                             type="button"
                             class="btn btn-danger"
                             @click="deleteBorrow(selectedBorrowing)"
                         >
                             Xoá
+                        </button>
+                        <button
+                            v-if="
+                                selectedBorrowing.trangthai === 'Chờ xác nhận'
+                            "
+                            type="button"
+                            class="btn btn-primary"
+                            @click="confirmOrder(selectedBorrowing)"
+                        >
+                            Xác nhận
+                        </button>
+                        <button
+                            v-if="selectedBorrowing.trangthai === 'Đã xác nhận'"
+                            type="button"
+                            class="btn btn-success"
+                            @click="submitReturn(selectedBorrowing)"
+                        >
+                            Trả sách
                         </button>
                     </div>
                 </div>
@@ -199,7 +249,10 @@
 </template>
 
 <script>
-import borrowService from '@/services/borrow.service';
+import orderService from '@/services/order.service';
+import moment from 'moment';
+import { mapGetters } from 'vuex';
+
 export default {
     name: 'BorrowingTable',
     props: {
@@ -214,13 +267,13 @@ export default {
                 ngayyeucau: '',
                 ngaymuon: '',
                 ngaytra: '',
-                nhanvien: '',
                 trangthai: '',
                 phimuon: '',
             },
         };
     },
     computed: {
+        ...mapGetters('auth', ['user', 'isAuthenticated']),
         sortedBorrowings() {
             return this.borrowings.slice().sort((a, b) => {
                 const fieldA = this.getNestedValue(a, this.sortBy);
@@ -251,34 +304,11 @@ export default {
                 .split('.')
                 .reduce((obj, key) => obj && obj[key], object);
         },
-
-        // Save the updated borrow to the server
-        async submitReturn(borrow) {
-            try {
-                await borrowService.update(borrow._id, {
-                    ngaytra: this.formatDate(new Date()),
-                });
-                alert(`Trả thành công`);
-            } catch (error) {
-                if (
-                    error.response &&
-                    error.response.data &&
-                    error.response.data.message
-                ) {
-                    alert(error.response.data.message); // Hiển thị lỗi từ backend
-                } else {
-                    alert('Có lỗi xảy ra. Vui lòng thử lại.');
-                }
-            } finally {
-                this.$emit('reload-borrowings');
-            }
-        },
-
         // Delete a borrow from the server
         deleteBorrow(borrow) {
             if (confirm(`Xác nhận xoá phiếu mượn này?`)) {
-                borrowService
-                    .delete(borrow._id)
+                orderService
+                    .deleteOrder(borrow._id)
                     .then(() => {
                         alert(`Xoá phiếu mượn thành công!`);
                         this.$emit('reload-borrowings');
@@ -289,6 +319,70 @@ export default {
             }
         },
 
+        submitReturn(borrow) {
+            if (confirm(`Xác nhận trả sách?`)) {
+                orderService
+                    .updateOrder(borrow._id, {
+                        trangthai: 'Đã trả',
+                        ngaymuon: new Date(
+                            this.selectedBorrowing.ngaymuon
+                        ).toISOString(),
+                        ngaytra: new Date(
+                            this.selectedBorrowing.ngaytra
+                        ).toISOString(),
+                        nhanvien: this.user.hoten,
+                    })
+                    .then(() => {
+                        alert(`Trả sách thành công!`);
+                        this.$emit('reload-borrowings');
+                    })
+                    .catch((error) => {
+                        console.error('Có lỗi khi trả sách:', error);
+                    });
+            }
+        },
+
+        confirmOrder(borrow) {
+            if (!borrow.ngaymuon || !borrow.ngaytra) {
+                alert(`Vui lòng chọn ngày mượn và ngày trả!`);
+                return;
+            }
+
+            console.log('selectedBorrowing:', this.selectedBorrowing);
+            if (confirm(`Xác nhận mượn sách?`)) {
+                orderService
+                    .updateOrder(borrow._id, {
+                        trangthai: 'Đã xác nhận',
+                        ngaymuon: this.createDateWithTime(
+                            this.selectedBorrowing.ngaymuon,
+                            0,
+                            0,
+                            0
+                        ), // Set to 00:00
+                        ngaytra: this.createDateWithTime(
+                            this.selectedBorrowing.ngaytra,
+                            23,
+                            59,
+                            59
+                        ), // Set to 23:59
+                        nhanvien: this.user.hoten,
+                    })
+                    .then(() => {
+                        alert(`Xác nhận mượn sách thành công!`);
+                        this.$emit('reload-borrowings');
+                    })
+                    .catch((error) => {
+                        console.error('Có lỗi khi xác nhận:', error);
+                    });
+            }
+        },
+
+        createDateWithTime(dateString, hours, minutes, seconds) {
+            const date = new Date(dateString); // Create a date object from the date string
+            date.setHours(hours, minutes, seconds, 0); // Set the time
+            return date.toISOString(); // Return the ISO string
+        },
+
         openModal(borrowing) {
             this.selectedBorrowing = { ...borrowing };
             const modalElement = new bootstrap.Modal(
@@ -297,15 +391,16 @@ export default {
             modalElement.show(); // Show the modal
         },
 
-        format(date) {
-            const day = date.getDate();
-            const month = date.getMonth() + 1;
-            const year = date.getFullYear();
+        closeModal() {
+            document.getElementById('close').click();
+        },
 
-            return `${day}/${month}/${year}`;
+        format(value, event) {
+            return moment(value).format('DD-MM-YYYY');
         },
 
         convertToLocalTime(utcDateString) {
+            if (!utcDateString) return ''; // Return empty string if input is empty
             const utcDate = new Date(utcDateString); // Create a date object from the UTC string
             const options = {
                 timeZone: 'Asia/Ho_Chi_Minh', // Time zone for Vietnam
@@ -325,14 +420,24 @@ export default {
             return `${localDateString}`; // Combine date and time
         },
     },
+    watch: {
+        'selectedBorrowing.ngaymuon'(newVal) {
+            if (newVal) {
+                // Set ngaytra to 7 days after ngaymuon
+                this.selectedBorrowing.ngaytra = moment(newVal)
+                    .add(7, 'days')
+                    .format('YYYY-MM-DD');
+            } else {
+                // Clear ngaytra if ngaymuon is cleared
+                this.selectedBorrowing.ngaytra = '';
+            }
+        },
+    },
 };
 </script>
 
 <style scoped>
 button {
-    height: 25px;
     padding: 0 10px;
-    font-size: 14px;
-    margin-right: 5px;
 }
 </style>

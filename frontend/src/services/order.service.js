@@ -4,6 +4,10 @@ class OrderService {
         this.api = createApiClient(baseUrl);
     }
 
+    async getAll() {
+        return (await this.api.get()).data;
+    }
+
     async getOrders(id) {
         return (await this.api.get(`?userId=${id}`)).data;
     }
@@ -14,6 +18,10 @@ class OrderService {
 
     async updateOrder(id, order) {
         return (await this.api.put(`/${id}`, order)).data;
+    }
+
+    async deleteOrder(id) {
+        return (await this.api.delete(`/${id}`)).data;
     }
 }
 

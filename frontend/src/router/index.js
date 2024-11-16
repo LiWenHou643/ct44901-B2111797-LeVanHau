@@ -16,12 +16,12 @@ const routes = [
             { path: 'dashboard', redirect: { name: 'dashboard' } },
             {
                 path: 'books',
-                name: 'books',
+                name: 'admin-books',
                 props: (route) => ({
                     page: parseInt(route.query.page) || 1, // Default to page 1
                     limit: parseInt(route.query.limit) || 8, // Default to 10 items per page
                 }),
-                component: () => import('@/views/Books.vue'),
+                component: () => import('@/views/AdminBook.vue'),
             },
             {
                 path: 'books/create',
@@ -29,9 +29,9 @@ const routes = [
                 component: () => import('@/views/BooksCreate.vue'),
             },
             {
-                path: 'borrowings',
-                name: 'borrowings',
-                component: () => import('@/views/Borrowings.vue'),
+                path: 'orders',
+                name: 'admin-orders',
+                component: () => import('@/views/AdminOrder.vue'),
             },
             {
                 path: 'employees',
@@ -75,7 +75,7 @@ const routes = [
                     page: parseInt(route.query.page) || 1, // Default to page 1
                     limit: parseInt(route.query.limit) || 12, // Default to 10 items per page
                 }),
-                component: () => import('@/views/BooksPublic.vue'),
+                component: () => import('@/views/Book.vue'),
             },
             {
                 path: '/cart',

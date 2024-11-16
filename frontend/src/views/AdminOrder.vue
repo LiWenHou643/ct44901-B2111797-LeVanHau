@@ -10,7 +10,7 @@
             </div>
         </div>
 
-        <BorrowingTable
+        <OrderTable
             :borrowings="borrowings"
             @reload-borrowings="reloadBorrowings"
         />
@@ -18,13 +18,13 @@
 </template>
 
 <script>
-import BorrowingTable from '@/components/BorrowingTable.vue';
-import borrowService from '@/services/borrow.service';
+import OrderTable from '@/components/OrderTable.vue';
+import orderService from '@/services/order.service';
 
 export default {
     name: 'Borrowings',
     components: {
-        BorrowingTable, // Register the component
+        OrderTable, // Register the component
     },
     data() {
         return {
@@ -38,7 +38,7 @@ export default {
         // Fetch borrowings data from the API
         async fetchBorrowings() {
             try {
-                const response = await borrowService.getAll();
+                const response = await orderService.getAll();
                 this.borrowings = response;
             } catch (error) {
                 console.error(error);

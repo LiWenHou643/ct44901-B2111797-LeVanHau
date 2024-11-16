@@ -17,9 +17,9 @@
 
             <li class="nav-item">
                 <router-link
-                    :to="{ name: 'books' }"
+                    :to="{ name: 'admin-books' }"
                     class="nav-link"
-                    :class="{ active: isActive('books') }"
+                    :class="{ active: isActive('admin-books') }"
                 >
                     <i class="fa fa-book"></i> Sách
                 </router-link>
@@ -27,9 +27,9 @@
 
             <li class="nav-item">
                 <router-link
-                    :to="{ name: 'borrowings' }"
+                    :to="{ name: 'admin-orders' }"
                     class="sub-nav-link"
-                    :class="{ active: isActive('borrowings') }"
+                    :class="{ active: isActive('admin-orders') }"
                 >
                     <i class="fa fa-exchange-alt"></i> Mượn sách
                 </router-link>
@@ -74,7 +74,7 @@ export default {
         },
         logout() {
             // Perform logout logic, such as clearing user data and redirecting
-            this.$store.dispatch('logout');
+            this.$store.dispatch('auth/logout');
             this.$router.push('/login');
         },
     },
