@@ -1,17 +1,21 @@
 <template>
     <div class="container">
-        <h1 class="mb-4 text-center">Yêu cầu mượn sách</h1>
+        <h1 class="m-4 text-center">Yêu cầu mượn sách</h1>
 
         <!-- Displaying the list of book requests -->
         <div v-if="orders.length > 0">
-            <div class="card" v-for="(order, index) in orders" :key="index">
+            <div
+                class="card mb-3"
+                v-for="(order, index) in orders"
+                :key="index"
+            >
                 <div class="card-body">
                     <!-- Order information -->
                     <div class="d-flex justify-content-between">
                         <strong>{{ formatDateVN(order.ngayyeucau) }}</strong>
                         <strong
                             :class="[
-                                'badge text-black p-2',
+                                'badge p-2',
                                 order.trangthai === 'Chờ xác nhận'
                                     ? 'bg-warning'
                                     : 'bg-success',
@@ -49,10 +53,42 @@
                     <hr />
 
                     <!-- Displaying the total price of this Order -->
-                    <div class="mt-3">
+                    <div
+                        class="mt-3 d-flex justify-content-between align-items-start"
+                    >
                         <strong>
                             Tổng tiền: {{ formatPrice(order.phimuon) }}
                         </strong>
+                        <div
+                            v-if="order.trangthai === 'Đã xác nhận'"
+                            class="d-flex flex-column justify-content-end align-items-end"
+                        >
+                            <p>
+                                Bạn có thể nhận sách tại thư viện vào ngày
+                                {{ formatDateVN(order.henmuon) }}
+                            </p>
+                            <p>
+                                Hạn trả sách: {{ formatDateVN(order.hentra) }}
+                            </p>
+                        </div>
+                        <div
+                            v-if="order.trangthai === 'Đã nhận sách'"
+                            class="d-flex flex-column justify-content-end align-items-end"
+                        >
+                            <p>
+                                Bạn đã nhận sách vào ngày
+                                {{ formatDateVN(order.ngaymuon) }}
+                            </p>
+                            <p>
+                                Hạn trả sách: {{ formatDateVN(order.hentra) }}
+                            </p>
+                        </div>
+                        <div v-if="order.trangthai === 'Đã trả'">
+                            <p>
+                                Bạn đã hoàn thành việc trả sách vào ngày
+                                {{ formatDateVN(order.ngaytra) }}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

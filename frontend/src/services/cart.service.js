@@ -22,6 +22,10 @@ class CartService {
     async updateCart(id, book) {
         return (await this.api.put('/update', { id, book })).data;
     }
+
+    async syncCart(id, books) {
+        return (await this.api.put('/sync', { id, books })).data;
+    }
 }
 
 export default new CartService();

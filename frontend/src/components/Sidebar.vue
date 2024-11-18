@@ -7,16 +7,6 @@
         <ul class="nav-list">
             <li class="nav-item">
                 <router-link
-                    :to="{ name: 'dashboard' }"
-                    class="nav-link"
-                    :class="{ active: isActive('dashboard') }"
-                >
-                    <i class="fa fa-tachometer-alt"></i> Thống kê
-                </router-link>
-            </li>
-
-            <li class="nav-item">
-                <router-link
                     :to="{ name: 'admin-books' }"
                     class="nav-link"
                     :class="{ active: isActive('admin-books') }"

@@ -148,12 +148,11 @@ const cartStore = {
                 const userId = rootState.auth.user._id;
                 const cartData = state.cart;
 
+                console.log('Updating cart in the database:', cartData);
+
                 try {
                     // Send the updated cart to the backend
-                    const carts = await cartService.updateCart(
-                        userId,
-                        cartData
-                    ); // Assuming your cartService has an updateCart method
+                    const carts = await cartService.syncCart(userId, cartData); // Assuming your cartService has an updateCart method
                     console.log(carts);
                     commit('SET_CART', carts); // Update the cart in the store
                     console.log('Cart successfully updated in the database');

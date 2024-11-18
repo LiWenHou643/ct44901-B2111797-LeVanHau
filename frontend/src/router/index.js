@@ -10,12 +10,6 @@ const routes = [
         children: [
             {
                 path: '',
-                name: 'dashboard',
-                component: () => import('@/views/Dashboard.vue'),
-            },
-            { path: 'dashboard', redirect: { name: 'dashboard' } },
-            {
-                path: 'books',
                 name: 'admin-books',
                 props: (route) => ({
                     page: parseInt(route.query.page) || 1, // Default to page 1
@@ -23,6 +17,7 @@ const routes = [
                 }),
                 component: () => import('@/views/AdminBook.vue'),
             },
+            { path: 'books', redirect: { name: 'admin-books' } },
             {
                 path: 'books/create',
                 name: 'books-create',

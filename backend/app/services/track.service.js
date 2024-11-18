@@ -12,8 +12,12 @@ class TrackService {
         const borrow = {
             madocgia: payload.madocgia,
             masach: payload.masach,
-            msnv: payload.msnv,
             trangthai: payload.trangthai,
+            nvduyet: payload.nvduyet,
+            nvnhan: payload.nvnhan,
+            nvtra: payload.nvtra,
+            henmuon: payload.henmuon,
+            hentra: payload.hentra,
             ngaymuon: payload.ngaymuon,
             ngaytra: payload.ngaytra,
         };
@@ -89,7 +93,6 @@ class TrackService {
         const filter = {
             _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
         };
-        console.log(payload);
 
         const updateBorrow = this.extractborrowData(payload);
         const updatedBorrow = await this.Borrow.findOneAndUpdate(

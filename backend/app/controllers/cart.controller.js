@@ -40,7 +40,6 @@ exports.addToCart = async (req, res, next) => {
         const books = req.body.books;
 
         if (books) {
-            console.log('Adding multiple books to cart');
             const cart = await cartService.addManyToCart(id, books);
             return res.send(cart);
         }
