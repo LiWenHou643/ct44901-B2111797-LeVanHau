@@ -5,7 +5,7 @@
         </div>
 
         <ul class="nav-list">
-            <li class="nav-item">
+            <li v-if="role === 'quanly'" class="nav-item">
                 <router-link
                     :to="{ name: 'admin-books' }"
                     class="nav-link"
@@ -15,7 +15,7 @@
                 </router-link>
             </li>
 
-            <li class="nav-item">
+            <li v-if="role === 'nhanvien'" class="nav-item">
                 <router-link
                     :to="{ name: 'admin-orders' }"
                     class="sub-nav-link"
@@ -25,7 +25,7 @@
                 </router-link>
             </li>
 
-            <!-- <li class="nav-item">
+            <li v-if="role === 'quanly'" class="nav-item">
                 <router-link
                     :to="{ name: 'employees' }"
                     class="sub-nav-link"
@@ -33,7 +33,7 @@
                 >
                     <i class="fa fa-id-badge"></i> Nhân viên
                 </router-link>
-            </li> -->
+            </li>
 
             <li class="nav-item logout">
                 <a href="#" @click="logout" class="nav-link">
@@ -49,6 +49,14 @@ export default {
         return {
             activeMenu: 'dashboard', // Tracks which menu is active
         };
+    },
+    computed: {
+        user() {
+            return this.$store.getters['auth/user'];
+        },
+        role() {
+            return this.user?.quyen;
+        },
     },
     methods: {
         toggleMenu(menu) {

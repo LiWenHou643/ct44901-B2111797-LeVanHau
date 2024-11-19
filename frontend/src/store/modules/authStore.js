@@ -79,29 +79,6 @@ const authStore = {
         },
         successMessage: (state) => state.successMessage,
     },
-    // plugins: [
-    //     (store) => {
-    //         // Check if there is user data and authentication flag in localStorage
-    //         const savedUser = localStorage.getItem('user');
-    //         const savedAuth = localStorage.getItem('isAuthenticated');
-
-    //         if (savedUser && savedAuth) {
-    //             console.log('Rehydrating user data from localStorage...'); // Log rehydration to help debug
-    //             try {
-    //                 const parsedUser = JSON.parse(savedUser);
-    //                 store.commit('setAuthentication', parsedUser); // Rehydrate the user state
-    //             } catch (e) {
-    //                 console.error(
-    //                     'Failed to parse user data from localStorage:',
-    //                     e
-    //                 );
-    //                 store.commit('setAuthentication', null); // Handle invalid data (fallback to null)
-    //             }
-    //         } else {
-    //             store.commit('setAuthentication', null); // Ensure state is reset if no user found
-    //         }
-    //     },
-    // ],
 };
 
 export default authStore;

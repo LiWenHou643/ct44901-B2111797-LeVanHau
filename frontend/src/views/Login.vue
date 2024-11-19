@@ -79,11 +79,12 @@ export default {
                 this.matkhau = '';
                 this.errorMessage = '';
                 if (user._id) {
-                    console.log(user);
-                    if (user.loai === 'nhanvien') {
+                    if (user.quyen == 'quanly') {
                         this.$router.push('/admin');
+                    } else if (user.quyen == 'nhanvien') {
+                        this.$router.push('/staff');
                     } else {
-                        this.$router.push('/');
+                        this.$router.push('/home');
                     }
                 }
             } catch (error) {

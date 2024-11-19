@@ -40,7 +40,12 @@ class AuthService {
         user = {
             ...user,
             hoten: user?.hotennv || user?.holot + ' ' + user?.ten,
-            loai: nv ? 'nhanvien' : 'docgia',
+            quyen:
+                nv?.chucvu === 'Quản lý'
+                    ? 'quanly'
+                    : nv?.chucvu === 'Nhân viên'
+                      ? 'nhanvien'
+                      : 'docgia',
             holot: undefined,
             ten: undefined,
             hotennv: undefined,

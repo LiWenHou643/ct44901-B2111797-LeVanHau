@@ -49,7 +49,7 @@
                     <div class="d-flex justify-content-start">
                         <button
                             class="btn btn-primary"
-                            @click="addToCart(book)"
+                            @click="addBookToCart(book)"
                         >
                             Thêm vào giỏ mượn
                         </button>
@@ -199,6 +199,13 @@ export default {
             });
             this.newComment.comment = '';
             this.getBook();
+        },
+
+        addBookToCart(book) {
+            this.$store.dispatch('cart/addToCart', {
+                product: book,
+                quantity: 1,
+            });
         },
     },
 };

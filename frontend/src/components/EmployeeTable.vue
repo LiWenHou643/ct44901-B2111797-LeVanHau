@@ -42,6 +42,7 @@
                         <i v-else class="fa fa-arrow-down"></i>
                     </span>
                 </th>
+                <th>Mật khẩu</th>
                 <th></th>
             </tr>
         </thead>
@@ -88,6 +89,13 @@
                         v-model="employee.dienthoai"
                         class="editable"
                     />
+                </td>
+                <td>
+                    <!-- Editable field for passwork -->
+                    <span v-if="!employee.isEditing">{{
+                        employee.matkhau
+                    }}</span>
+                    <input v-else v-model="employee.matkhau" class="editable" />
                 </td>
                 <td>
                     <!-- Edit/Save button -->

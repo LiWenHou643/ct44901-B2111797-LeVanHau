@@ -30,11 +30,7 @@ const routes = [
                 component: () => import('@/views/BooksEdit.vue'), // Reuse the same BookForm component for editing
                 props: true, // Pass the `id` as a prop to the component
             },
-            {
-                path: 'orders',
-                name: 'admin-orders',
-                component: () => import('@/views/AdminOrder.vue'),
-            },
+
             {
                 path: 'employees',
                 name: 'employees',
@@ -44,6 +40,22 @@ const routes = [
                 path: 'employees/create',
                 name: 'employees-create',
                 component: () => import('@/views/EmployeesCreate.vue'),
+            },
+        ],
+    },
+    {
+        path: '/staff/',
+        component: AdminLayout,
+        meta: { requiresStaff: true },
+        children: [
+            {
+                path: 'orders',
+                name: 'admin-orders',
+                component: () => import('@/views/AdminOrder.vue'),
+            },
+            {
+                path: '',
+                redirect: { name: 'admin-orders' },
             },
         ],
     },
@@ -107,6 +119,11 @@ const routes = [
         name: 'PageNotFound',
         component: () => import('@/views/PageNotFound.vue'), // Path to your 404 component
     },
+    {
+        path: '/forbidden',
+        name: 'forbidden',
+        component: () => import('@/views/Forbidden.vue'), // Path to your 403 component
+    },
 ];
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -115,7 +132,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     const isAuthenticated = store.getters['auth/isAuthenticated'];
-    const userRole = store.getters['auth/user']?.loai;
+    const userRole = store.getters['auth/user']?.quyen;
     // Check if the route requires authentication
     if (
         (to.meta.requiresAuth && !isAuthenticated) ||
@@ -125,8 +142,13 @@ router.beforeEach((to, from, next) => {
     }
 
     // Check if the route requires admin access
-    if (to.meta.requiresAdmin && userRole !== 'nhanvien') {
-        return next({ name: 'home' }); // Redirect to home if not an admin
+    if (to.meta.requiresAdmin && userRole !== 'quanly') {
+        next({ name: 'forbidden' });
+    }
+
+    // Check if the route requires staff access
+    if (to.meta.requiresStaff && userRole !== 'nhanvien') {
+        next({ name: 'forbidden' });
     }
 
     next(); // Allow navigation if all checks pass
