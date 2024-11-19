@@ -8,7 +8,7 @@
                     <i class="fa fa-sync-alt"></i>
                 </button>
             </div>
-            <router-link :to="{ name: 'books-create' }" class="btn btn-dark">
+            <router-link :to="{ name: 'create-book' }" class="btn btn-dark">
                 <i class="fa fa-plus"></i> Thêm mới
             </router-link>
         </div>

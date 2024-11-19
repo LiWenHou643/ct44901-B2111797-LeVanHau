@@ -1,7 +1,9 @@
 <template>
     <div class="form-container">
         <div class="form-card">
-            <h2 class="form-title">Thêm sách mới</h2>
+            <h2 class="form-title">
+                {{ isEditMode ? 'Chỉnh sửa sách' : 'Thêm sách mới' }}
+            </h2>
 
             <form @submit.prevent="submitForm" class="form">
                 <div class="form-group">
@@ -146,27 +148,50 @@ export default {
             selectedPublisher: '', // For selecting an existing publisher
             newPublisher: { tennxb: '', diachi: '' }, // For creating a new publisher
             publishers: [],
+            isEditMode: false,
         };
     },
+    computed: {
+        bookId() {
+            return this.$route.params.id;
+        },
+    },
     created() {
+        if (this.bookId) {
+            this.isEditMode = true;
+            this.loadBookData(this.bookId);
+        } else {
+            this.isEditMode = false;
+        }
         this.fetchPublishers(); // Fetch books data when the component is created
     },
     methods: {
         async submitForm() {
-            // If no existing publisher is selected, create a new publisher
-            if (!this.selectedPublisher) {
-                this.book.tennxb = this.newPublisher.tennxb;
-                this.book.diachi = this.newPublisher.diachi;
+            if (this.isEditMode) {
+                try {
+                    this.book.manxb = this.selectedPublisher;
+                    await bookService.update(this.bookId, this.book);
+                    alert('Sách được cập nhật thành công.');
+                    this.$router.push({ name: 'admin-books' });
+                } catch (error) {
+                    console.log(error);
+                }
             } else {
-                this.book.manxb = this.selectedPublisher; // Use existing publisherId
-            }
+                // If no existing publisher is selected, create a new publisher
+                if (!this.selectedPublisher) {
+                    this.book.tennxb = this.newPublisher.tennxb;
+                    this.book.diachi = this.newPublisher.diachi;
+                } else {
+                    this.book.manxb = this.selectedPublisher; // Use existing publisherId
+                }
 
-            try {
-                await bookService.create(this.book);
-                alert('Sách được thêm thành công.');
-                this.$router.push({ name: 'books' });
-            } catch (error) {
-                console.log(error);
+                try {
+                    await bookService.create(this.book);
+                    alert('Sách được thêm thành công.');
+                    this.$router.push({ name: 'admin-books' });
+                } catch (error) {
+                    console.log(error);
+                }
             }
         },
 
@@ -174,6 +199,16 @@ export default {
             try {
                 const response = await publisherService.getAll();
                 this.publishers = response;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
+        async loadBookData(bookId) {
+            try {
+                const response = await bookService.get(bookId);
+                this.selectedPublisher = response.nxb.manxb;
+                this.book = response;
             } catch (error) {
                 console.log(error);
             }

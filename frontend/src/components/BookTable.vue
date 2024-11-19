@@ -73,6 +73,7 @@
                     </span>
                 </th>
                 <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -131,7 +132,7 @@
                 </td>
                 <td>
                     <button class="btn btn-success" @click="toggleEdit(book)">
-                        {{ book.isEditing ? 'Lưu' : 'Sửa' }}
+                        {{ book.isEditing ? 'Lưu' : 'Sửa nhanh' }}
                     </button>
                     <button
                         class="btn btn-secondary"
@@ -147,6 +148,17 @@
                     >
                         Xóa
                     </button>
+                </td>
+                <td>
+                    <router-link
+                        :to="{
+                            name: 'edit-book',
+                            params: { id: book.masach },
+                        }"
+                        class="btn btn-info"
+                    >
+                        Sửa
+                    </router-link>
                 </td>
             </tr>
         </tbody>
@@ -321,7 +333,8 @@ input {
     max-width: 100%; /* Prevent input from expanding beyond the cell */
 }
 
-button {
+button,
+router-link {
     height: 25px;
     padding: 0 10px;
     font-size: 14px;

@@ -1,6 +1,10 @@
 <template>
-    <!-- Book Card -->
-    <div class="card shadow-sm" :title="book.tensach">
+    <!-- Book Card (wrapped with a clickable link to the detail page) -->
+    <router-link
+        :to="'/books/' + book.masach"
+        class="card shadow-sm"
+        :title="book.tensach"
+    >
         <!-- Book Cover Image -->
         <img
             :src="book.anhbia"
@@ -25,7 +29,7 @@
                 </button>
             </div>
         </div>
-    </div>
+    </router-link>
 </template>
 
 <script>
@@ -59,6 +63,7 @@ export default {
     border: none;
     border-radius: 10px;
     transition: transform 0.2s ease-in-out;
+    text-decoration: none;
 }
 
 .card:hover {

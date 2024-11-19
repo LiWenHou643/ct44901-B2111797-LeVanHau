@@ -23,7 +23,7 @@ export default {
 }
 
 .content {
-    margin-left: 250px; /* Same width as the sidebar */
+    margin-left: 190px; /* Same width as the sidebar */
     padding: 20px;
     flex-grow: 1;
 }

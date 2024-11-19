@@ -16,6 +16,8 @@ class BookService {
             manxb: payload.manxb,
             tacgia: payload.tacgia,
             anhbia: payload.anhbia,
+            mota: payload.mota,
+            binhluan: payload.binhluan,
         };
 
         Object.keys(book).forEach(
@@ -127,6 +129,8 @@ class BookService {
                         namxuatban: '$namxuatban',
                         tacgia: '$tacgia',
                         anhbia: '$anhbia',
+                        mota: '$mota',
+                        binhluan: '$binhluan',
                         nxb: {
                             manxb: { $ifNull: ['$publisher._id', null] },
                             tennxb: {
@@ -185,6 +189,9 @@ class BookService {
                 soquyen: book.soquyen,
                 namxuatban: book.namxuatban,
                 tacgia: book.tacgia,
+                anhbia: book.anhbia,
+                mota: book.mota,
+                binhluan: book.binhluan,
                 nxb: {
                     manxb: publisher._id,
                     tennxb: publisher.tennxb,
@@ -215,6 +222,8 @@ class BookService {
         // Fetch the publisher (nxb) based on the manxb field in the book
         const publisher = await this.Publisher.findOne({ _id: book.manxb });
 
+        console.log(book, publisher);
+
         // Return the book along with the publisher data
         return {
             masach: book._id,
@@ -223,11 +232,14 @@ class BookService {
             soquyen: book.soquyen,
             namxuatban: book.namxuatban,
             tacgia: book.tacgia,
+            anhbia: book.anhbia,
+            mota: book.mota,
+            binhluan: book.binhluan,
             nxb: {
                 manxb: publisher._id,
                 tennxb: publisher.tennxb,
                 diachi: publisher.diachi,
-            }, // Include the publisher document
+            },
         };
     }
 
@@ -240,7 +252,11 @@ class BookService {
             _id: new ObjectId(id),
         };
 
-        const updateBook = this.extractBookData(payload);
+        const updateBook = this.extractBookData({
+            ...payload,
+            manxb: payload.manxb ? new ObjectId(payload.manxb) : null,
+        });
+
         const updatedBook = await this.Book.findOneAndUpdate(
             filter,
             {
@@ -255,24 +271,32 @@ class BookService {
             throw new Error('Không tìm thấy sách');
         }
 
-        const updatePublisher = {
-            tennxb: payload.tennxb,
-            diachi: payload.diachi,
-        };
+        let updatedPublisher;
 
-        const publisherId = updatedBook.manxb;
-        const updatedPublisher = await this.Publisher.findOneAndUpdate(
-            { _id: new ObjectId(publisherId) },
-            {
-                $set: updatePublisher,
-            },
-            {
-                returnDocument: 'after',
+        if (payload.tennxb || payload.diachi) {
+            const updatePublisher = {
+                tennxb: payload.tennxb,
+                diachi: payload.diachi,
+            };
+
+            const publisherId = updatedBook.manxb;
+            updatedPublisher = await this.Publisher.findOneAndUpdate(
+                { _id: new ObjectId(publisherId) },
+                {
+                    $set: updatePublisher,
+                },
+                {
+                    returnDocument: 'after',
+                }
+            );
+
+            if (updatedBook === null || updatedPublisher === null) {
+                throw new Error('Không tìm thấy nhà xuất bản');
             }
-        );
-
-        if (updatedBook === null || updatedPublisher === null) {
-            throw new Error('Không tìm thấy nhà xuất bản');
+        } else {
+            updatedPublisher = await this.Publisher.findOne({
+                _id: updatedBook.manxb,
+            });
         }
 
         return {
@@ -282,6 +306,9 @@ class BookService {
             soquyen: updatedBook.soquyen,
             namxuatban: updatedBook.namxuatban,
             tacgia: updatedBook.tacgia,
+            anhbia: updatedBook.anhbia,
+            mota: updatedBook.mota,
+            binhluan: updatedBook.binhluan,
             nxb: {
                 manxb: updatedPublisher._id,
                 tennxb: updatedPublisher.tennxb,

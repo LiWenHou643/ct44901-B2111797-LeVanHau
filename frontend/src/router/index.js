@@ -19,9 +19,16 @@ const routes = [
             },
             { path: 'books', redirect: { name: 'admin-books' } },
             {
-                path: 'books/create',
-                name: 'books-create',
-                component: () => import('@/views/BooksCreate.vue'),
+                path: '/books/create', // Route to create a new book
+                name: 'create-book',
+                component: () => import('@/views/BooksEdit.vue'), // Use the same BookForm component for creating
+                props: false, // Pass no params, since this is for creating
+            },
+            {
+                path: '/books/:id/edit', // Route to edit an existing book
+                name: 'edit-book',
+                component: () => import('@/views/BooksEdit.vue'), // Reuse the same BookForm component for editing
+                props: true, // Pass the `id` as a prop to the component
             },
             {
                 path: 'orders',
@@ -71,6 +78,11 @@ const routes = [
                     limit: parseInt(route.query.limit) || 12, // Default to 10 items per page
                 }),
                 component: () => import('@/views/Book.vue'),
+            },
+            {
+                path: 'books/:id',
+                name: 'book-detail',
+                component: () => import('@/views/BookDetail.vue'),
             },
             {
                 path: '/cart',
