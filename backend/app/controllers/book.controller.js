@@ -21,7 +21,7 @@ exports.findAll = async (req, res, next) => {
     let documents = [];
     try {
         const bookService = new BookService(MongoDB.client);
-        const { title, page = 1, limit = 10 } = req.query;
+        const { search: title, page = 1, limit = 10 } = req.query;
 
         // Convert page and limit to numbers to avoid any potential issues with strings
         const pageNumber = parseInt(page, 10);

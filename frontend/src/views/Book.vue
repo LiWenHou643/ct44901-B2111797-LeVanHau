@@ -1,5 +1,19 @@
 <template>
     <div class="p-5 container">
+        <!-- Search Input -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Nhập tên sách muốn tìm kiếm..."
+                    v-model="searchQuery"
+                    @input="onSearchInput"
+                />
+            </div>
+        </div>
+
+        <!-- Books List -->
         <div class="row">
             <div
                 class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4"
@@ -48,6 +62,7 @@ export default {
             books: [],
             currentPage: this.page, // Use the page prop from the route
             totalPages: 1,
+            searchQuery: '',
         };
     },
     watch: {
@@ -58,14 +73,20 @@ export default {
         limit(newLimit) {
             this.fetchBooks(this.page, newLimit);
         },
+        searchQuery(newQuery) {
+            this.fetchBooks(this.page, this.limit, newQuery); // Fetch books based on search query
+        },
     },
     methods: {
-        async fetchBooks(page = 1, limit = 12) {
+        async fetchBooks(page = 1, limit = 12, search = '') {
             try {
                 const response = await bookService.getAll({
                     page: page,
                     limit: limit,
+                    search: search, // Pass search query to the API
                 });
+
+                console.log('Books:', response);
 
                 this.books = response.books;
                 this.totalPages = response.pagination.totalPages;
@@ -82,13 +103,21 @@ export default {
         },
 
         updateRoute(page) {
-            // Update the URL with the new page number, preserving the limit
+            // Update the URL with the new page number, preserving the limit and search query
             this.$router.push({
                 query: {
                     ...this.$route.query,
                     page: page,
+                    search: this.searchQuery, // Preserve search query in the URL
                 },
             });
+        },
+
+        // Trigger search when the input changes
+        onSearchInput() {
+            // Reset to the first page when searching
+            this.currentPage = 1;
+            this.fetchBooks(this.currentPage, this.limit, this.searchQuery);
         },
     },
 };
