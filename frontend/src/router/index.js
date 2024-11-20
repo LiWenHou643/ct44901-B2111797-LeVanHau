@@ -133,6 +133,9 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     const isAuthenticated = store.getters['auth/isAuthenticated'];
     const userRole = store.getters['auth/user']?.quyen;
+
+    console.log('role', userRole);
+
     // Check if the route requires authentication
     if (
         (to.meta.requiresAuth && !isAuthenticated) ||
@@ -143,15 +146,16 @@ router.beforeEach((to, from, next) => {
 
     // Check if the route requires admin access
     if (to.meta.requiresAdmin && userRole !== 'quanly') {
-        next({ name: 'forbidden' });
+        return next({ name: 'forbidden' }); // Redirect to forbidden if not an admin
     }
 
     // Check if the route requires staff access
     if (to.meta.requiresStaff && userRole !== 'nhanvien') {
-        next({ name: 'forbidden' });
+        return next({ name: 'login' }); // Redirect to forbidden if not a staff member
     }
 
-    next(); // Allow navigation if all checks pass
+    // If all checks pass, proceed with navigation
+    next();
 });
 
 export default router;

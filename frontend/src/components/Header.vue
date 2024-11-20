@@ -140,8 +140,6 @@ export default {
         },
     },
     methods: {
-        ...mapActions('auth', ['logout']), // Map the logout action from Vuex
-
         toggleMenu() {
             this.isMenuVisible = !this.isMenuVisible;
         },

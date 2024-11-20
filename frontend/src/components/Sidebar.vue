@@ -44,6 +44,7 @@
     </div>
 </template>
 <script>
+import { mapActions } from 'vuex'; // Import mapActions from Vuex
 export default {
     data() {
         return {
@@ -71,7 +72,6 @@ export default {
             );
         },
         logout() {
-            // Perform logout logic, such as clearing user data and redirecting
             this.$store.dispatch('auth/logout');
             this.$router.push('/login');
         },
