@@ -1,13 +1,20 @@
 import createApiClient from './api.service';
 class BookService {
-    constructor(baseUrl = '/api/books') {
+    constructor(
+        baseUrl = 'https://d113-2402-800-6343-da28-8d1c-ed72-8492-7fa3.ngrok-free.app'
+    ) {
         this.api = createApiClient(baseUrl);
     }
     async getAll({ page = 1, limit = 12, search = '' }) {
-        const response = await this.api.get('/', {
-            params: { page, limit, search }, // Passing pagination params to the backend
-        });
-        return response.data; // Return the response data containing books and pagination info
+        try {
+            const response = await this.api.get('/api/books', {
+                params: { page, limit, search },
+            });
+            console.log('Fetched books:', response);
+        } catch (error) {
+            console.error('Error fetching books:', error);
+            throw error; // Optionally handle or re-throw the error
+        }
     }
     async create(data) {
         return (await this.api.post('/', data)).data;

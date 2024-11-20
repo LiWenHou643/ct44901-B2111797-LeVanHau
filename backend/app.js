@@ -12,12 +12,14 @@ const cartRouter = require('./app/routes/cart.route.js');
 const MongoDB = require('./app/utils/mongodb.util.js');
 const ApiError = require('./app/api-error.js');
 
-app.use(cors());
 app.use(
     cors({
-        origin: 'http://localhost:3001',
+        origin: ['http://localhost:3001', 'https://liwenhou643.github.io'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify allowed HTTP methods
+        credentials: true, // Allow credentials (cookies, etc.)
     })
 );
+
 app.use(express.json());
 app.use('/api/books', bookRouter);
 app.use('/api/readers', readerRouter);

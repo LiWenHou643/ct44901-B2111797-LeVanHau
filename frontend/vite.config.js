@@ -1,6 +1,5 @@
-import { fileURLToPath, URL } from 'node:url';
-
 import vue from '@vitejs/plugin-vue';
+import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
@@ -14,9 +13,13 @@ export default defineConfig({
         port: 3001,
         proxy: {
             '/api': {
-                target: 'http://localhost:3000/',
+                target: 'https://d113-2402-800-6343-da28-8d1c-ed72-8492-7fa3.ngrok-free.app/',
                 changeOrigin: true,
             },
         },
     },
+    base:
+        process.env.NODE_ENV === 'production'
+            ? '/ct44901-B2111797-LeVanHau/' // Replace with your GitHub repository name
+            : '/',
 });
