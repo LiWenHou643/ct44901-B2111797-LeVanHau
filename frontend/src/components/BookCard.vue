@@ -23,7 +23,7 @@
                 <!-- Add to Cart Button -->
                 <button
                     class="btn btn-primary w-100"
-                    @click="addBookToCart(book)"
+                    @click.prevent="addBookToCart(book)"
                 >
                     Thêm
                 </button>

@@ -2,6 +2,7 @@
     <div class="container">
         <div class="cart">
             <h1 class="text-center mb-4">Giỏ mượn</h1>
+            <div v-if="error" class="alert alert-danger">{{ error }}</div>
 
             <!-- Clear Cart Button Positioned Top Left -->
             <button
@@ -114,6 +115,11 @@ import orderService from '@/services/order.service';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
+    data() {
+        return {
+            error: '',
+        };
+    },
     computed: {
         ...mapGetters('cart', ['cartItems', 'cartQuantity', 'cartTotal']),
         ...mapGetters('auth', ['user', 'isAuthenticated']),
@@ -169,6 +175,29 @@ export default {
                 }
                 this.$router.push({ name: 'order' });
             } catch (error) {
+                if (error.response && error.response.data) {
+                    console.error(error.response.data.message);
+                    let errorMessage = error.response.data.message;
+                    try {
+                        // Kiểm tra nếu thông báo là chuỗi JSON và chuyển nó thành chuỗi dễ đọc
+                        const parsedMessage = JSON.parse(errorMessage);
+                        if (Array.isArray(parsedMessage)) {
+                            this.error =
+                                'Sách không đủ số lượng để mượn: ' +
+                                parsedMessage
+                                    .map(
+                                        (book) =>
+                                            `"${book.tensach}" - Còn lại ${book.soluong} quyển`
+                                    )
+                                    .join(', ');
+                        } else {
+                            this.error = errorMessage; // Nếu không phải JSON, hiển thị nguyên bản
+                        }
+                    } catch (e) {
+                        this.error =
+                            'Lỗi không xác định. Vui lòng thử lại sau!';
+                    }
+                }
                 console.error(error);
             }
         },

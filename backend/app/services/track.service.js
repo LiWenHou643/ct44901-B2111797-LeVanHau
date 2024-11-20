@@ -11,7 +11,6 @@ class TrackService {
     extractborrowData(payload) {
         const borrow = {
             madocgia: payload.madocgia,
-            masach: payload.masach,
             trangthai: payload.trangthai,
             nvduyet: payload.nvduyet,
             nvnhan: payload.nvnhan,
@@ -39,15 +38,33 @@ class TrackService {
             throw new Error('Mã độc giả không tồn tại');
         }
 
-        // Check if book quantity is enough
+        const insufficientBooks = []; // Mảng lưu trữ các quyển sách không đủ số lượng
+
+        // Lấy danh sách các sách trong order từ cơ sở dữ liệu
         const books = await this.Book.find({
             _id: {
                 $in: payload.order.map((book) => new ObjectId(book.masach)),
             },
         }).toArray();
 
-        if (books.length < payload.order.length) {
-            throw new Error('Số lượng sách không đủ');
+        // Kiểm tra từng quyển sách trong order
+        books.forEach((book) => {
+            const orderBook = payload.order.find(
+                (order) => order.masach === book._id.toString()
+            );
+
+            // Kiểm tra xem số lượng sách trong kho có đủ không
+            if (book.soquyen < orderBook.soluong) {
+                insufficientBooks.push({
+                    tensach: book.tensach,
+                    soluong: book.soquyen,
+                }); // Thêm lỗi vào mảng
+            }
+        });
+
+        // Nếu có sách thiếu số lượng, ném lỗi với danh sách thông báo
+        if (insufficientBooks.length > 0) {
+            throw new Error(JSON.stringify(insufficientBooks)); // Chuyển đối tượng thành chuỗi JSON
         }
 
         const fees = payload.order.reduce((acc, cur) => {
@@ -95,6 +112,62 @@ class TrackService {
         };
 
         const updateBorrow = this.extractborrowData(payload);
+
+        // Update book available quantity if status is 'Đã trả'
+        if (payload.trangthai === 'Đã trả') {
+            const borrow = await this.Borrow.findOne(filter);
+            const books = await this.Book.find({
+                _id: {
+                    $in: borrow.sach.map((book) => new ObjectId(book.masach)),
+                },
+            }).toArray();
+
+            books.forEach((book) => {
+                const borrowBook = borrow.sach.find(
+                    (borrowBook) => borrowBook.masach === book._id.toString()
+                );
+
+                const newQuantity = book.soquyen + borrowBook.soluong;
+
+                this.Book.findOneAndUpdate(
+                    {
+                        _id: new ObjectId(book._id),
+                    },
+                    {
+                        $set: {
+                            soquyen: newQuantity,
+                        },
+                    }
+                );
+            });
+        } else if (payload.trangthai === 'Đã xác nhận') {
+            const borrow = await this.Borrow.findOne(filter);
+            const books = await this.Book.find({
+                _id: {
+                    $in: borrow.sach.map((book) => new ObjectId(book.masach)),
+                },
+            }).toArray();
+
+            books.forEach((book) => {
+                const borrowBook = borrow.sach.find(
+                    (borrowBook) => borrowBook.masach === book._id.toString()
+                );
+
+                const newQuantity = book.soquyen - borrowBook.soluong;
+
+                this.Book.findOneAndUpdate(
+                    {
+                        _id: new ObjectId(book._id),
+                    },
+                    {
+                        $set: {
+                            soquyen: newQuantity,
+                        },
+                    }
+                );
+            });
+        }
+
         const updatedBorrow = await this.Borrow.findOneAndUpdate(
             filter,
             {
