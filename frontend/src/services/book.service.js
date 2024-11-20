@@ -1,16 +1,18 @@
 import createApiClient from './api.service';
 class BookService {
     constructor(
-        baseUrl = 'https://d113-2402-800-6343-da28-8d1c-ed72-8492-7fa3.ngrok-free.app'
+        baseUrl = '/api/books' // The base URL for the book service
     ) {
         this.api = createApiClient(baseUrl);
     }
     async getAll({ page = 1, limit = 12, search = '' }) {
         try {
-            const response = await this.api.get('/api/books', {
+            console.log('Fetching books...');
+            const response = await this.api.get('/', {
                 params: { page, limit, search },
             });
             console.log('Fetched books:', response);
+            return response.data;
         } catch (error) {
             console.error('Error fetching books:', error);
             throw error; // Optionally handle or re-throw the error

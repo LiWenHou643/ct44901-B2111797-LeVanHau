@@ -13,7 +13,7 @@ export default defineConfig({
         port: 3001,
         proxy: {
             '/api': {
-                target: 'https://d113-2402-800-6343-da28-8d1c-ed72-8492-7fa3.ngrok-free.app/',
+                target: 'http://localhost:3000',
                 changeOrigin: true,
             },
         },
