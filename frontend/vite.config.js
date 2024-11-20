@@ -18,8 +18,4 @@ export default defineConfig({
             },
         },
     },
-    base:
-        process.env.NODE_ENV === 'production'
-            ? '/ct44901-B2111797-LeVanHau/' // Replace with your GitHub repository name
-            : '/',
 });
