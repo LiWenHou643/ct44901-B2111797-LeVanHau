@@ -1,0 +1,35 @@
+[{
+  "_id": {
+    "$oid": "672e1cacd0fdc3a90c49a803"
+  },
+  "tennxb": "NXB Kim Dong",
+  "diachi": "Ha Noi, Viet Nam"
+},
+{
+  "_id": {
+    "$oid": "672e202fd10a8033d395db4f"
+  },
+  "tennxb": "NXB Hoa Hoe",
+  "diachi": "Da Nang, Viet Nam"
+},
+{
+  "_id": {
+    "$oid": "6732da55b11a92aad74d14cf"
+  },
+  "tennxb": "NXB Tre",
+  "diachi": "Can Tho, Viet Nam"
+},
+{
+  "_id": {
+    "$oid": "6732df65b77d11cd9934cf12"
+  },
+  "tennxb": "NXB Long Hoa",
+  "diachi": "DaLat, VietNam"
+},
+{
+  "_id": {
+    "$oid": "6734ad6cf3c2f373c32eecbb"
+  },
+  "tennxb": "NXB Hắc Thiên",
+  "diachi": "HCM, Viet Nam"
+}]

@@ -1,0 +1,399 @@
+[{
+  "_id": {
+    "$oid": "6730ae77d041d8b9b6f8c692"
+  },
+  "tensach": "Nhập môn lập trình web",
+  "dongia": 24400,
+  "soquyen": 2,
+  "namxuatban": 2021,
+  "manxb": {
+    "$oid": "6734ad6cf3c2f373c32eecbb"
+  },
+  "tacgia": "Khuong Xa",
+  "anhbia": "https://thuquan.ou.edu.vn/cover//2021/02/22/CNTT-TLHT-I14-Lap-trinh-web-30122020-xin-gpxb-eb-01.jpg",
+  "binhluan": [
+    {
+      "customer": "Kan Kan",
+      "comment": "Sách rất hay",
+      "date": "19/11/2024, 11:52:28 am"
+    },
+    {
+      "customer": "Kan Kan",
+      "comment": "10 điểm",
+      "date": "19/11/2024, 11:52:28 am"
+    },
+    {
+      "customer": "Kan Kan",
+      "comment": "Tuyệt cà là vời",
+      "date": "19/11/2024, 11:52:28 am"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6732d9e9b11a92aad74d14ce"
+  },
+  "tensach": "Lập trình C++ từ A đến Z",
+  "dongia": 22000,
+  "soquyen": 9,
+  "namxuatban": 2019,
+  "manxb": {
+    "$oid": "672e202fd10a8033d395db4f"
+  },
+  "tacgia": "Hoa Lan",
+  "anhbia": "https://zendvn.com/images/sachLapTrinh/UYEfVBswSa.png"
+},
+{
+  "_id": {
+    "$oid": "6732da55b11a92aad74d14d0"
+  },
+  "tensach": "Cơ sở dữ liệu",
+  "dongia": 30000,
+  "soquyen": 9,
+  "namxuatban": 2017,
+  "manxb": {
+    "$oid": "6732da55b11a92aad74d14cf"
+  },
+  "tacgia": "Trần Phàm",
+  "anhbia": "https://giaotrinhpdf.com/book_covers/2023/04/2955f02a8d9d47cdafd1516dbcf4510b.jpg"
+},
+{
+  "_id": {
+    "$oid": "6732df65b77d11cd9934cf13"
+  },
+  "tensach": "Nhập môn trí tuệ nhân tạo",
+  "dongia": 20000,
+  "soquyen": 5,
+  "namxuatban": 2022,
+  "manxb": {
+    "$oid": "6732df65b77d11cd9934cf12"
+  },
+  "tacgia": "Thải Vy",
+  "anhbia": "https://vietbooks.info/attachments/upload_2022-3-11_17-38-6-png.7804/",
+  "binhluan": [
+    {
+      "customer": "Kan Kan",
+      "comment": "rất bổ ích",
+      "date": "19/11/2024, 11:59:52 am"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6732dfa4b77d11cd9934cf14"
+  },
+  "tensach": "Quản trị hệ thống",
+  "dongia": 25000,
+  "soquyen": 5,
+  "namxuatban": 2018,
+  "manxb": {
+    "$oid": "672e202fd10a8033d395db4f"
+  },
+  "tacgia": "Quốc Bảo",
+  "anhbia": "https://images.nxbbachkhoa.vn/Picture/2022/6/3/image-20220603162406975.jpg"
+},
+{
+  "_id": {
+    "$oid": "6732e7837560a8c89045f73c"
+  },
+  "tensach": "Lập trình PHP",
+  "dongia": 22000,
+  "soquyen": 4,
+  "namxuatban": 2020,
+  "manxb": {
+    "$oid": "6732df65b77d11cd9934cf12"
+  },
+  "tacgia": "Tạ Hàn",
+  "anhbia": "https://itviec.com/blog/wp-content/uploads/2016/11/41Bgqdnu7kL._SX387_BO1204203200_.jpg"
+},
+{
+  "_id": {
+    "$oid": "6732e7a17560a8c89045f73d"
+  },
+  "tensach": "Thị giác máy tính",
+  "dongia": 23000,
+  "soquyen": 3,
+  "namxuatban": 2022,
+  "manxb": {
+    "$oid": "672e1cacd0fdc3a90c49a803"
+  },
+  "tacgia": "Hồng",
+  "anhbia": "https://ereader.surelrn.vn/readfileupload/imagebook/2022/08/29/Giao-trinh-thi-giac-may-tinh-va-ung-dung.jpg"
+},
+{
+  "_id": {
+    "$oid": "6732e7d27560a8c89045f73e"
+  },
+  "tensach": "Phát triển web với Node và Vue",
+  "dongia": 22500,
+  "soquyen": 7,
+  "namxuatban": 2019,
+  "manxb": {
+    "$oid": "672e202fd10a8033d395db4f"
+  },
+  "tacgia": "Trung",
+  "anhbia": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2_x2XBbQMI5AYinUBWbOzReDI6tNfM1DK-A&s"
+},
+{
+  "_id": {
+    "$oid": "6732e7f47560a8c89045f73f"
+  },
+  "tensach": "Phát triển ứng dụng di động với Flutter Dart",
+  "dongia": 23000,
+  "soquyen": 3,
+  "namxuatban": 2021,
+  "manxb": {
+    "$oid": "6732df65b77d11cd9934cf12"
+  },
+  "tacgia": "Bảo",
+  "anhbia": "https://product.hstatic.net/200000239353/product/ilding_cross-platform_mobile_applications_with_flutter_2.5_and_dart-01_a0004179b16a4a6ab275bc43671598bf_master.jpg"
+},
+{
+  "_id": {
+    "$oid": "6732eaadd94d7f466a493da3"
+  },
+  "tensach": "Xử lý ngôn ngữ tự nhiên",
+  "dongia": 35000,
+  "soquyen": 4,
+  "namxuatban": 2023,
+  "manxb": {
+    "$oid": "672e202fd10a8033d395db4f"
+  },
+  "tacgia": "Khang",
+  "anhbia": "https://images.vnuhcmpress.edu.vn/Picture/2023/2017-11-25-02-50-57_image001.jpg"
+},
+{
+  "_id": {
+    "$oid": "6732ead6d94d7f466a493da4"
+  },
+  "tensach": "Lập trình hướng đối tượng với Java",
+  "dongia": 25000,
+  "soquyen": 5,
+  "namxuatban": 2019,
+  "manxb": {
+    "$oid": "6732da55b11a92aad74d14cf"
+  },
+  "tacgia": "Cang",
+  "anhbia": "https://salt.tikicdn.com/cache/w1200/ts/product/5c/1d/ed/ad299b78f8a5289406ab1936faf066f4.jpg"
+},
+{
+  "_id": {
+    "$oid": "6734ac81f3c2f373c32eecba"
+  },
+  "tensach": "Khai khoáng dữ liệu",
+  "dongia": 30000,
+  "soquyen": 2,
+  "namxuatban": 2022,
+  "manxb": {
+    "$oid": "672e1cacd0fdc3a90c49a803"
+  },
+  "tacgia": "Khang",
+  "anhbia": "https://down-vn.img.susercontent.com/file/0c16a66047bafe8283778c35b261c0dc"
+},
+{
+  "_id": {
+    "$oid": "6734ad6cf3c2f373c32eecbc"
+  },
+  "tensach": "Phân tích thiết kế UI/UX",
+  "dongia": 22000,
+  "soquyen": 4,
+  "namxuatban": 2020,
+  "manxb": {
+    "$oid": "6734ad6cf3c2f373c32eecbb"
+  },
+  "tacgia": "Phương",
+  "anhbia": "https://m.media-amazon.com/images/I/61ycE27dc6L._AC_UF1000,1000_QL80_.jpg"
+},
+{
+  "_id": {
+    "$oid": "6734adcef3c2f373c32eecbd"
+  },
+  "tensach": "Kỹ năng giao tiếp",
+  "dongia": 15000,
+  "soquyen": 10,
+  "namxuatban": 2018,
+  "manxb": {
+    "$oid": "6734ad6cf3c2f373c32eecbb"
+  },
+  "tacgia": "Tâm",
+  "anhbia": "https://cdn0.fahasa.com/media/catalog/product/8/9/8936186545887.png"
+},
+{
+  "_id": {
+    "$oid": "6734adedf3c2f373c32eecbe"
+  },
+  "tensach": "Kỹ năng mềm",
+  "dongia": 14000,
+  "soquyen": 12,
+  "namxuatban": 2019,
+  "manxb": {
+    "$oid": "6734ad6cf3c2f373c32eecbb"
+  },
+  "tacgia": "Tiến",
+  "anhbia": "https://huongtrangbooks.com/wp-content/uploads/2024/05/kiotviet_1f9a29f73deff591c5e59472f35ff4c9.png"
+},
+{
+  "_id": {
+    "$oid": "6734ae13f3c2f373c32eecbf"
+  },
+  "tensach": "Quản trị dự án",
+  "dongia": 22000,
+  "soquyen": 4,
+  "namxuatban": 2020,
+  "manxb": {
+    "$oid": "6732df65b77d11cd9934cf12"
+  },
+  "tacgia": "Hiệp",
+  "anhbia": "https://sachluat.com.vn/library/module_new/sach-quan-tri-du-an-_s2178.jpg"
+},
+{
+  "_id": {
+    "$oid": "6734ae36f3c2f373c32eecc0"
+  },
+  "tensach": "Giao diện người máy",
+  "dongia": 21000,
+  "soquyen": 6,
+  "namxuatban": 2019,
+  "manxb": {
+    "$oid": "6734ad6cf3c2f373c32eecbb"
+  },
+  "tacgia": "Phương",
+  "anhbia": "https://vietbooks.info/attachments/upload_2022-11-15_12-25-9-png.17244/"
+},
+{
+  "_id": {
+    "$oid": "6734ae77f3c2f373c32eecc1"
+  },
+  "tensach": "Lý thuyết đồ thị",
+  "dongia": 29000,
+  "soquyen": 7,
+  "namxuatban": 2019,
+  "manxb": {
+    "$oid": "6734ad6cf3c2f373c32eecbb"
+  },
+  "tacgia": "Hùng",
+  "anhbia": "https://hevobooks.com/wp-content/uploads/2018/09/7B834-1.jpg"
+},
+{
+  "_id": {
+    "$oid": "6734ae91f3c2f373c32eecc2"
+  },
+  "tensach": "Mạng máy tính",
+  "dongia": 19000,
+  "soquyen": 9,
+  "namxuatban": 2019,
+  "manxb": {
+    "$oid": "6732da55b11a92aad74d14cf"
+  },
+  "tacgia": "Hùng",
+  "anhbia": "https://giaotrinhpdf.com/book_covers/2023/04/709cbf2386cf46bbaeef48660c8c756a.jpg"
+},
+{
+  "_id": {
+    "$oid": "6734aeaaf3c2f373c32eecc3"
+  },
+  "tensach": "Mạng và truyền thông dữ liệu",
+  "dongia": 23000,
+  "soquyen": 6,
+  "namxuatban": 2023,
+  "manxb": {
+    "$oid": "6734ad6cf3c2f373c32eecbb"
+  },
+  "tacgia": "Khang",
+  "anhbia": "https://lrc.tvu.edu.vn/images/thuviendhtv/ebook/2023/022023/1553s.jpg"
+},
+{
+  "_id": {
+    "$oid": "6734aed6f3c2f373c32eecc4"
+  },
+  "tensach": "Tư tưởng HCM",
+  "dongia": 9000,
+  "soquyen": 20,
+  "namxuatban": 2016,
+  "manxb": {
+    "$oid": "672e1cacd0fdc3a90c49a803"
+  },
+  "tacgia": "Hồng",
+  "anhbia": "https://images.sachquocgia.vn/Picture/2024/3/21/image-2024032114215276.jpg"
+},
+{
+  "_id": {
+    "$oid": "6734aef6f3c2f373c32eecc5"
+  },
+  "tensach": "Triết học Mác Lênin",
+  "dongia": 8000,
+  "soquyen": 18,
+  "namxuatban": 2018,
+  "manxb": {
+    "$oid": "672e202fd10a8033d395db4f"
+  },
+  "tacgia": "Lâm",
+  "anhbia": "https://images.sachquocgia.vn/Picture/2024/3/21/image-20240321142038119.jpg"
+},
+{
+  "_id": {
+    "$oid": "6734af11f3c2f373c32eecc6"
+  },
+  "tensach": "Vi tích phân A1",
+  "dongia": 11000,
+  "soquyen": 29,
+  "namxuatban": 2018,
+  "manxb": {
+    "$oid": "6732df65b77d11cd9934cf12"
+  },
+  "tacgia": "Dũng",
+  "anhbia": "https://lic.haui.edu.vn/media/88/t88532.jpg"
+},
+{
+  "_id": {
+    "$oid": "6734af27f3c2f373c32eecc7"
+  },
+  "tensach": "Vi tích phân A2",
+  "dongia": 9000,
+  "soquyen": 25,
+  "namxuatban": 2019,
+  "manxb": {
+    "$oid": "6732df65b77d11cd9934cf12"
+  },
+  "tacgia": "Khang",
+  "anhbia": "https://salt.tikicdn.com/cache/280x280/ts/product/a6/84/7a/d72adead77562832a9cb59015620c980.jpeg"
+},
+{
+  "_id": {
+    "$oid": "673c20083cbf8324a45e223d"
+  },
+  "tensach": "Nguyên lý hệ điều hành",
+  "dongia": 17000,
+  "soquyen": 11,
+  "namxuatban": 2019,
+  "manxb": {
+    "$oid": "6732df65b77d11cd9934cf12"
+  },
+  "tacgia": "Cao Đệ"
+},
+{
+  "_id": {
+    "$oid": "673c205f3cbf8324a45e223e"
+  },
+  "tensach": "Blockchain",
+  "dongia": 20000,
+  "soquyen": 13,
+  "namxuatban": 2019,
+  "manxb": {
+    "$oid": "672e202fd10a8033d395db4f"
+  },
+  "tacgia": "Khang"
+},
+{
+  "_id": {
+    "$oid": "673c232ac71160d5407aab66"
+  },
+  "tensach": "Iot",
+  "dongia": 19000,
+  "soquyen": 5,
+  "namxuatban": 2020,
+  "manxb": {
+    "$oid": "6732da55b11a92aad74d14cf"
+  },
+  "tacgia": "Cường"
+}]

@@ -1,0 +1,20 @@
+[{
+  "_id": {
+    "$oid": "672c447713130c0774bbdbfe"
+  },
+  "hotennv": "Nguyen Van B",
+  "matkhau": "111111",
+  "chucvu": "Quản lý",
+  "diachi": "123 Đường ABC, Quận 1, TP.HCM",
+  "dienthoai": "0901234466"
+},
+{
+  "_id": {
+    "$oid": "6730b14b06f56df57edb98aa"
+  },
+  "hotennv": "Nguyen Van B",
+  "matkhau": "111111",
+  "chucvu": "Nhân viên",
+  "diachi": "123 Đường ABC, Quận 1, TP.HCM",
+  "dienthoai": "0901234422"
+}]

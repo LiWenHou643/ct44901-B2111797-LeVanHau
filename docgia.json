@@ -1,0 +1,12 @@
+[{
+  "_id": {
+    "$oid": "673586ac8b5001c578c27537"
+  },
+  "holot": "Kang",
+  "ten": "Kang",
+  "ngaysinh": "2024-11-14T05:12:00.000Z",
+  "phai": "Nam",
+  "diachi": "abc Can Tho, VN",
+  "dienthoai": "0939333333",
+  "matkhau": "111111"
+}]
