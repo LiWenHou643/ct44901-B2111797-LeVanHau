@@ -251,11 +251,17 @@ class BookService {
         const filter = {
             _id: new ObjectId(id),
         };
-
-        const updateBook = this.extractBookData({
-            ...payload,
-            manxb: payload.manxb ? new ObjectId(payload.manxb) : null,
-        });
+        let updateBook;
+        if (payload.mxb) {
+            updateBook = this.extractBookData({
+                ...payload,
+                manxb: new ObjectId(payload.manxb),
+            });
+        } else {
+            updateBook = this.extractBookData({
+                ...payload,
+            });
+        }
 
         const updatedBook = await this.Book.findOneAndUpdate(
             filter,

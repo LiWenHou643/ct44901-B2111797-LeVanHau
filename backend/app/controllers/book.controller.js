@@ -74,6 +74,7 @@ exports.findAllPublishers = async (req, res, next) => {
 
 exports.findOne = async (req, res, next) => {
     try {
+        console.log('hello');
         const bookService = new BookService(MongoDB.client);
         const document = await bookService.findById(req.params.id);
         if (!document) {
